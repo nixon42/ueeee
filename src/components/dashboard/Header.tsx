@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
+import { Logo } from '@/components/common/Logo';
 
 interface Props {
   searchQuery: string;
@@ -64,14 +65,15 @@ export const Header: React.FC<Props> = ({
       {/* Top Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
         {/* Brand Logo */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[#00c4cc] flex items-center justify-center text-white shadow-sm font-black text-xl tracking-tight">
-            u
-          </div>
-          <span className="font-extrabold text-2xl tracking-tight text-slate-900">
-            ueeee
-          </span>
-        </div>
+        <Logo 
+          onClick={() => {
+            sound.playClick();
+            onTabChange('all');
+            onSearchChange('');
+            onGradeChange('Semua Kelas');
+          }}
+          className="group"
+        />
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">

@@ -11,6 +11,7 @@ import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
 import { Heart, Sparkles, BookOpen } from 'lucide-react';
+import { LogoIcon } from '@/components/common/Logo';
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -270,6 +271,7 @@ export default function App() {
       <footer className="w-full border-t border-slate-200/80 bg-white py-6 mb-14 sm:mb-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex flex-wrap items-center gap-2">
+            <LogoIcon size={20} idSuffix="footer" className="rounded-md" />
             <span className="font-extrabold text-slate-900 text-sm">ueeee</span>
             <span>•</span>
             <span className="font-semibold text-purple-700">ueeee.my.id</span>

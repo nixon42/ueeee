@@ -1,4 +1,64 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="28" fill="#00c4cc" />
-  <path d="M 32 30 L 32 58 C 32 68 40 74 50 74 C 60 74 68 68 68 58 L 68 30 L 56 30 L 56 57 C 56 61 53 64 50 64 C 47 64 44 61 44 57 L 44 30 Z" fill="#ffffff" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient: Vibrant Cyan into Radiant Indigo/Purple -->
+    <linearGradient id="ueeee-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"/>
+      <stop offset="28%" stop-color="#00C4CC"/>
+      <stop offset="70%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+
+    <!-- Star Glow Gradient -->
+    <linearGradient id="ueeee-star-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF275"/>
+      <stop offset="50%" stop-color="#FFBE0B"/>
+      <stop offset="100%" stop-color="#FB5607"/>
+    </linearGradient>
+
+    <!-- Top Highlight Glare for a smooth glossy tactile feel -->
+    <linearGradient id="ueeee-glare" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Drop shadow for the squircle -->
+    <filter id="ueeee-shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#0F172A" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Base Squircle Container -->
+  <rect x="6" y="6" width="116" height="116" rx="36" fill="url(#ueeee-grad)" filter="url(#ueeee-shadow)"/>
+
+  <!-- Subtle Top Gloss Accent -->
+  <path d="M 10 38 C 10 22, 22 10, 40 10 L 88 10 C 106 10, 118 22, 118 38 C 84 32, 44 32, 10 38 Z" 
+        fill="url(#ueeee-glare)"/>
+
+  <!-- Crisp Inner Bevel Ring -->
+  <rect x="7" y="7" width="114" height="114" rx="35" fill="none" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="2"/>
+
+  <!-- The Joyful U Curve -->
+  <!-- Left arm starts at (39, 36), goes down to (39, 66), loops through bottom (63.5, 91), rises to (88, 48) -->
+  <path d="M 39 36
+           L 39 65
+           C 39 79.5, 50 91, 63.5 91
+           C 77 91, 88 79.5, 88 65
+           L 88 47"
+        fill="none"
+        stroke="#FFFFFF"
+        stroke-width="14"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- 4-Point Magic Sparkle Star (Discovery & Achievement) -->
+  <!-- Center at (94, 27) -->
+  <path d="M 94 13
+           C 94 22.5, 98.5 27, 108 27
+           C 98.5 27, 94 31.5, 94 41
+           C 94 31.5, 89.5 27, 80 27
+           C 89.5 27, 94 22.5, 94 13 Z"
+        fill="url(#ueeee-star-grad)"/>
+
+  <!-- Secondary Playful Twinkle -->
+  <circle cx="75" cy="18" r="2.8" fill="#FFF275" opacity="0.95"/>
 </svg>
