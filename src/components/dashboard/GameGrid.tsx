@@ -63,7 +63,7 @@ export const GameGrid: React.FC<Props> = ({
               {title}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Pilih dan mainkan tanpa batasan akun, paywall, atau login
+              Pilih game dan mulai petualangan belajar interaktif
             </p>
           </div>
 

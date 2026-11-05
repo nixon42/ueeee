@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Clock, Sparkles, Star, Bookmark } from 'lucide-react';
+import { Play, Clock, Star, Bookmark } from 'lucide-react';
 import { GameItem } from '@/types/game';
 import { sound } from '@/lib/sound';
 
@@ -106,9 +106,8 @@ export const GameCard: React.FC<Props> = ({
 
         {/* Action Footer */}
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-400 group-hover:text-slate-600 transition flex items-center gap-1">
-            <Sparkles size={13} />
-            Gratis • Tanpa Login
+          <span className="text-xs font-medium text-slate-400 group-hover:text-slate-600 transition truncate max-w-[160px]">
+            {game.subjectDetail}
           </span>
 
           <span className="text-xs font-extrabold text-indigo-900 bg-indigo-50 px-3 py-1.5 rounded-xl group-hover:bg-indigo-900 group-hover:text-white transition shadow-sm">
