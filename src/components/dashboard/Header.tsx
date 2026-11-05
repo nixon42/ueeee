@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Search, Volume2, VolumeX, Presentation, Dices, X 
+  Search, Volume2, VolumeX, Dices, X 
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
@@ -12,8 +12,6 @@ interface Props {
   onTabChange?: (tab: string) => void;
   selectedGrade: GradeLevel;
   onGradeChange: (grade: GradeLevel) => void;
-  isClassroomMode: boolean;
-  onToggleClassroomMode: () => void;
   onSurpriseMe: () => void;
 }
 
@@ -31,8 +29,6 @@ export const Header: React.FC<Props> = ({
   onTabChange,
   selectedGrade,
   onGradeChange,
-  isClassroomMode,
-  onToggleClassroomMode,
   onSurpriseMe,
 }) => {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
@@ -72,20 +68,6 @@ export const Header: React.FC<Props> = ({
             <span className="hidden sm:inline">Main Acak</span>
           </button>
 
-          {/* Mode Proyektor Kelas / Guru */}
-          <button
-            onClick={onToggleClassroomMode}
-            className={`px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 border cursor-pointer ${
-              isClassroomMode
-                ? 'bg-purple-600 border-purple-600 text-white shadow-sm'
-                : 'bg-white border-slate-200 text-slate-700 hover:border-purple-300'
-            }`}
-            title="Mode Kelas / Layar Proyektor"
-          >
-            <Presentation size={14} />
-            <span className="hidden md:inline">Mode Guru</span>
-          </button>
-
           {/* Sound Toggle */}
           <button
             onClick={handleToggleSound}
@@ -98,9 +80,7 @@ export const Header: React.FC<Props> = ({
       </div>
 
       {/* Canva-Style Aurora Hero Banner */}
-      <div className={`relative mx-3 sm:mx-6 lg:mx-8 rounded-3xl overflow-hidden bg-gradient-to-r from-sky-100 via-purple-100/90 to-pink-100 border border-purple-200/50 shadow-sm px-6 ${
-        isClassroomMode ? 'py-12 sm:py-16' : 'py-8 sm:py-12'
-      } flex flex-col items-center justify-center text-center`}>
+      <div className="relative mx-3 sm:mx-6 lg:mx-8 rounded-3xl overflow-hidden bg-gradient-to-r from-sky-100 via-purple-100/90 to-pink-100 border border-purple-200/50 shadow-sm px-6 py-8 sm:py-12 flex flex-col items-center justify-center text-center">
         {/* Soft Background Accents */}
         <div className="absolute -top-12 -left-12 w-48 h-48 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-pink-300/30 rounded-full blur-3xl pointer-events-none"></div>
@@ -129,9 +109,7 @@ export const Header: React.FC<Props> = ({
         </div>
 
         {/* Canva Hero Title */}
-        <h1 className={`${
-          isClassroomMode ? 'text-4xl sm:text-5xl md:text-6xl' : 'text-3xl sm:text-4xl md:text-5xl'
-        } font-black text-slate-800 tracking-tight max-w-2xl mb-5 leading-tight`}>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-800 tracking-tight max-w-2xl mb-5 leading-tight">
           Mau belajar apa hari ini?
         </h1>
 

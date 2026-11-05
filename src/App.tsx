@@ -19,9 +19,6 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<SubjectCategory>('all');
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel>('Semua Kelas');
   const [activeTab, setActiveTab] = useState<string>('all');
-  const [isClassroomMode, setIsClassroomMode] = useState<boolean>(() => {
-    return localStorage.getItem('ueeee_classroom_mode') === 'true';
-  });
 
   // Favorites & History from localStorage
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -69,13 +66,6 @@ export default function App() {
       localStorage.setItem('ueeee_favorites', JSON.stringify(updated));
       return updated;
     });
-  };
-
-  // Toggle classroom mode
-  const handleToggleClassroomMode = () => {
-    const next = !isClassroomMode;
-    setIsClassroomMode(next);
-    localStorage.setItem('ueeee_classroom_mode', String(next));
   };
 
   // Record recent play
@@ -177,9 +167,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#fafbff] flex flex-col justify-between selection:bg-purple-100 selection:text-purple-900 ${
-      isClassroomMode ? 'text-lg' : 'text-base'
-    }`}>
+    <div className="min-h-screen bg-[#fafbff] flex flex-col justify-between selection:bg-purple-100 selection:text-purple-900 text-base">
       <main className="flex-1 pb-16">
         {/* Canva-Style Header & Aurora Hero */}
         <Header
@@ -188,8 +176,6 @@ export default function App() {
           onTabChange={setActiveTab}
           selectedGrade={selectedGrade}
           onGradeChange={setSelectedGrade}
-          isClassroomMode={isClassroomMode}
-          onToggleClassroomMode={handleToggleClassroomMode}
           onSurpriseMe={handleSurpriseMe}
         />
 
