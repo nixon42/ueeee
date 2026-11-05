@@ -2,6 +2,7 @@ import React from 'react';
 import { Play, Clock, Star, Bookmark } from 'lucide-react';
 import { GameItem } from '@/types/game';
 import { sound } from '@/lib/sound';
+import { GameIllustration } from '@/components/dashboard/GameIllustration';
 
 interface Props {
   game: GameItem;
@@ -32,14 +33,22 @@ export const GameCard: React.FC<Props> = ({
       onClick={handleClick}
       className="group relative bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
     >
-      {/* Card Header Cover / Thumbnail */}
-      <div className={`relative h-44 w-full bg-gradient-to-tr ${game.gradient} p-4 flex flex-col justify-between overflow-hidden`}>
-        {/* Soft background shape */}
-        <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/10 group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+      {/* Card Header Cover / Thumbnail with Authentic Game Scene Illustration */}
+      <div className="relative h-48 sm:h-52 w-full bg-slate-900 p-4 flex flex-col justify-between overflow-hidden">
+        {/* Game Scene Illustration Mockup */}
+        <GameIllustration
+          gameId={game.id}
+          gameType={game.type}
+          className="group-hover:scale-105 transition-transform duration-500 ease-out"
+        />
 
+        {/* Top & Bottom Vignette Overlays for Maximum Text Contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55 pointer-events-none"></div>
+
+        {/* Top Badges & Controls */}
         <div className="flex items-center justify-between z-10">
           {game.badge ? (
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border shadow-sm ${game.badgeColor || 'bg-white/20 text-white border-white/30 backdrop-blur-sm'}`}>
+            <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border shadow-sm backdrop-blur-md ${game.badgeColor || 'bg-white/20 text-white border-white/30'}`}>
               {game.badge}
             </span>
           ) : (
@@ -50,10 +59,10 @@ export const GameCard: React.FC<Props> = ({
             {/* Bookmark button */}
             <button
               onClick={handleBookmarkClick}
-              className={`p-1.5 rounded-full transition ${
+              className={`p-1.5 rounded-full transition cursor-pointer ${
                 isFavorite
-                  ? 'bg-amber-400 text-slate-900 shadow'
-                  : 'bg-black/20 text-white/80 hover:bg-black/40 hover:text-white backdrop-blur-sm'
+                  ? 'bg-amber-400 text-slate-900 shadow-md'
+                  : 'bg-black/40 text-white/90 hover:bg-black/60 hover:text-white backdrop-blur-md'
               }`}
               title={isFavorite ? 'Hapus dari Favorit' : 'Simpan ke Favorit'}
             >
@@ -61,21 +70,21 @@ export const GameCard: React.FC<Props> = ({
             </button>
 
             {/* Play time */}
-            <div className="flex items-center gap-1 text-[11px] font-medium text-white/95 bg-black/20 backdrop-blur-md px-2 py-0.5 rounded-md">
+            <div className="flex items-center gap-1 text-[11px] font-medium text-white/95 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 shadow-sm">
               <Clock size={12} />
               <span>{game.playTimeMinutes} mnt</span>
             </div>
           </div>
         </div>
 
-        {/* Thumbnail Center Representation */}
-        <div className="z-10 flex items-center justify-between">
-          <div className="w-13 h-13 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-3xl shadow">
-            {game.type === 'ular-tangga' ? '🎲' : game.type === 'point-and-click' ? '🔍' : '🧩'}
+        {/* Bottom Format Pill & Play Button Hover Animation */}
+        <div className="z-10 flex items-end justify-between">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/40 backdrop-blur-md text-white text-xs font-bold border border-white/15 shadow-sm">
+            <span>{game.type === 'ular-tangga' ? '🎲 Ular Tangga' : game.type === 'point-and-click' ? '🔍 Point & Click' : '🧩 Susun Kata'}</span>
           </div>
 
-          <div className="w-11 h-11 rounded-full bg-white text-slate-800 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200">
-            <Play size={18} className="fill-slate-800 ml-0.5" />
+          <div className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200">
+            <Play size={16} className="fill-slate-900 ml-0.5" />
           </div>
         </div>
       </div>
