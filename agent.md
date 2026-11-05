@@ -2,10 +2,10 @@
 
 Selamat datang di proyek **ueeee** (`ueeee.my.id`). Panduan ini berisi aturan, arsitektur, konvensi kode, dan standar visual untuk agen dan developer yang berkontribusi pada repositori ini.
 
-> 📖 **PENTING UNTUK AGENT PENERUS:**
-> Dokumen spesifikasi game lengkap dan batasan mutlak desain proyektor/layar sentuh kelas tersedia di:
-> **[GAME_SPEC.md](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/GAME_SPEC.md)**.
-> Wajib baca dokumen tersebut sebelum memodifikasi atau membuat materi game baru!
+> 📖 **PENTING UNTUK AGENT PENERUS (JANGAN REINVENT THE WHEEL):**
+> 1. **Katalog Komponen Siap Pakai:** Wajib gunakan komponen yang sudah ada di [`COMPONENTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/COMPONENTS.md) (`GameStageShell`, `GameQuizModal`, `GameVictoryModal`, dsb). Jangan buat wrapper modal atau dialog kuis dari nol!
+> 2. **Spesifikasi Game & Batasan Kelas:** Standar rasio proyektor, target sentuh 48px, dan aturan game ada di [`GAME_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/GAME_SPEC.md).
+> Wajib baca kedua dokumen tersebut sebelum memodifikasi atau membuat materi game baru!
 
 ---
 
