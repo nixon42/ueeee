@@ -79,7 +79,8 @@ export const UlarTanggaModal: React.FC<Props> = ({
 
   useEffect(() => {
     setSelectedSubject(defaultSubject);
-  }, [defaultSubject]);
+    resetGame();
+  }, [defaultSubject, isOpen]);
 
   useEffect(() => {
     return () => {
@@ -422,26 +423,18 @@ export const UlarTanggaModal: React.FC<Props> = ({
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
           {/* Papan Ular Tangga Grid 100 dengan Visual Interaktif & SVG Connections */}
           <div className="flex-1 bg-slate-50 p-2 sm:p-3 rounded-3xl border border-slate-200 shadow-inner flex flex-col items-center">
-            {/* Pilihan Topik Mapel */}
+            {/* Informasi Topik Mapel */}
             <div className="w-full flex items-center justify-between mb-3 px-2">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Topik Kuis Papan:
+                Materi Kuis Soal
               </span>
-              <div className="flex gap-1.5">
-                {(['sains', 'matematika', 'sejarah'] as const).map(subj => (
-                  <button
-                    key={subj}
-                    onClick={() => { setSelectedSubject(subj); resetGame(); }}
-                    className={`text-[11px] font-bold px-2.5 py-1 rounded-lg capitalize transition ${
-                      selectedSubject === subj
-                        ? 'bg-purple-600 text-white shadow-sm'
-                        : 'bg-white border border-slate-200 text-slate-600 hover:border-purple-300'
-                    }`}
-                  >
-                    {subj}
-                  </button>
-                ))}
-              </div>
+              <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200/80 px-2.5 py-0.5 rounded-lg capitalize">
+                {selectedSubject === 'matematika'
+                  ? '📐 Matematika'
+                  : selectedSubject === 'sejarah'
+                  ? '🏛️ Sejarah'
+                  : '🔬 Sains & Alam'}
+              </span>
             </div>
 
             {/* Container Papan dengan SVG Overlay */}

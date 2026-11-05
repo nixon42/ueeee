@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, RotateCcw, Volume2, VolumeX, Sparkles, CheckCircle2, 
   Search, Trophy, Backpack, HelpCircle, Check, AlertCircle, ChevronRight, Eye 
@@ -34,6 +34,20 @@ export const PointAndClickModal: React.FC<Props> = ({
   } | null>(null);
   const [puzzleFeedback, setPuzzleFeedback] = useState<{ isCorrect: boolean; text: string } | null>(null);
   const [isSceneFinished, setIsSceneFinished] = useState<boolean>(false);
+
+  // Sync scene with defaultSceneId prop when modal opens or scene changes
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedSceneId(defaultSceneId);
+      setActiveHotspot(null);
+      setActivePuzzle(null);
+      setPuzzleFeedback(null);
+      setShowDiagramModal(false);
+      setIsSceneFinished(false);
+      setDiscoveredIds([]);
+      setInventory([]);
+    }
+  }, [defaultSceneId, isOpen]);
 
   // Find active scene
   const currentScene: PointAndClickScene = 
@@ -114,15 +128,6 @@ export const PointAndClickModal: React.FC<Props> = ({
     }
   };
 
-  const switchScene = (sceneId: string) => {
-    setSelectedSceneId(sceneId);
-    setActiveHotspot(null);
-    setActivePuzzle(null);
-    setPuzzleFeedback(null);
-    setShowDiagramModal(false);
-    setIsSceneFinished(false);
-  };
-
   const resetCurrentScene = () => {
     setDiscoveredIds(prev => prev.filter(id => !currentScene.hotspots.some(h => h.id === id)));
     setActiveHotspot(null);
@@ -138,7 +143,7 @@ export const PointAndClickModal: React.FC<Props> = ({
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-md font-black text-xl">
-              🔍
+              {currentScene.theme === 'lab' ? '🧪' : currentScene.theme === 'candi' ? '🗿' : '🌿'}
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
@@ -172,27 +177,6 @@ export const PointAndClickModal: React.FC<Props> = ({
               <X size={20} />
             </button>
           </div>
-        </div>
-
-        {/* Scene Selection Bar */}
-        <div className="px-5 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center gap-2 overflow-x-auto scrollbar-none">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0 mr-1">
-            Pilih Lokasi:
-          </span>
-          {POINT_CLICK_SCENES.map(scene => (
-            <button
-              key={scene.id}
-              onClick={() => switchScene(scene.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition shrink-0 flex items-center gap-1.5 ${
-                selectedSceneId === scene.id
-                  ? 'bg-teal-600 text-white shadow-sm'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-teal-300'
-              }`}
-            >
-              <span>{scene.theme === 'lab' ? '🧪' : scene.theme === 'candi' ? '🗿' : '🌿'}</span>
-              <span>{scene.title.split(':')[1]?.trim() || scene.title}</span>
-            </button>
-          ))}
         </div>
 
         {/* Main Workspace */}
