@@ -245,20 +245,26 @@ export default function App() {
       </main>
 
       {/* Game Modals */}
-      <UlarTanggaModal
-        isOpen={isUlarTanggaOpen}
-        onClose={() => closeGameModal('ular')}
-        defaultSubject={activeUlarTanggaSubject}
-      />
-      <PointAndClickModal
-        isOpen={isPointAndClickOpen}
-        onClose={() => closeGameModal('point')}
-        defaultSceneId={activePointAndClickScene}
-      />
-      <PuzzleModal
-        isOpen={isPuzzleOpen}
-        onClose={() => closeGameModal('puzzle')}
-      />
+      {isUlarTanggaOpen && (
+        <UlarTanggaModal
+          isOpen={isUlarTanggaOpen}
+          onClose={() => closeGameModal('ular')}
+          defaultSubject={activeUlarTanggaSubject}
+        />
+      )}
+      {isPointAndClickOpen && (
+        <PointAndClickModal
+          isOpen={isPointAndClickOpen}
+          onClose={() => closeGameModal('point')}
+          defaultSceneId={activePointAndClickScene}
+        />
+      )}
+      {isPuzzleOpen && (
+        <PuzzleModal
+          isOpen={isPuzzleOpen}
+          onClose={() => closeGameModal('puzzle')}
+        />
+      )}
       <TeacherSheetModal
         isOpen={isTeacherModalOpen}
         onClose={() => setIsTeacherModalOpen(false)}

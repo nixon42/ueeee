@@ -123,8 +123,6 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
     setStatusMessage('Pilih huruf dengan klik tombol atau ketik di keyboard.');
   };
 
-  if (!isOpen) return null;
-
   const handleTileClick = (tileId: string, letter: string) => {
     sound.playClick();
     setAvailableTiles(prev =>
@@ -206,6 +204,8 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
     setIsCompleted(false);
     initPuzzle(0);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">

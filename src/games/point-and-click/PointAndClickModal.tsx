@@ -56,8 +56,6 @@ export const PointAndClickModal: React.FC<Props> = ({
   const currentScene: PointAndClickScene = 
     POINT_CLICK_SCENES.find(s => s.id === selectedSceneId) || POINT_CLICK_SCENES[0];
 
-  if (!isOpen) return null;
-
   const foundCount = currentScene.hotspots.filter(h => discoveredIds.includes(h.id)).length;
 
   const handleHotspotClick = (h: PointAndClickHotspot) => {
@@ -138,6 +136,8 @@ export const PointAndClickModal: React.FC<Props> = ({
     setShowDiagramModal(false);
     setIsSceneFinished(false);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">

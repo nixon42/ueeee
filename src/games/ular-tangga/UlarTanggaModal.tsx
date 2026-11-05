@@ -81,8 +81,10 @@ export const UlarTanggaModal: React.FC<Props> = ({
   const steppingIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-    setSelectedSubject(defaultSubject);
-    resetGame();
+    if (isOpen) {
+      setSelectedSubject(defaultSubject);
+      resetGame();
+    }
   }, [defaultSubject, isOpen]);
 
   useEffect(() => {
@@ -105,8 +107,6 @@ export const UlarTanggaModal: React.FC<Props> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, isRolling, isStepping, activeQuiz, winner, turn]);
-
-  if (!isOpen) return null;
 
   const currentQuestions = QUESTIONS_BANK[selectedSubject] || QUESTIONS_BANK.sains;
 
@@ -356,6 +356,8 @@ export const UlarTanggaModal: React.FC<Props> = ({
     setQuizFeedback(null);
     setMessage('Permainan dimulai ulang! Lempar dadu untuk jalan.');
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">
