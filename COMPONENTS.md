@@ -10,6 +10,7 @@
    - [`GameStageShell`](#gamestageshell)
    - [`GameQuizModal`](#gamequizmodal)
    - [`GameVictoryModal`](#gamevictorymodal)
+   - [Chess.com-Style Board & Piece Components](#chesscom-style-board--piece-components)
 2. [Dashboard & Content Components](#2-dashboard--content-components)
    - [`GameCard`](#gamecard)
    - [`GameIllustration`](#gameillustration)
@@ -24,7 +25,8 @@
    - [`useFullscreen`](#usefullscreen)
    - [`sound`](#sound)
    - [`isGameMatchingSearch`](#isgamematchingsearch)
-5. [Resep Cepat: Cara Membuat Game Baru dalam 5 Menit](#5-resep-cepat-cara-membuat-game-baru-dalam-5-menit)
+5. [Arsitektur Smooth 60 FPS (Chess.com Deep Dive)](#5-arsitektur-smooth-60-fps-chesscom-deep-dive)
+6. [Resep Cepat: Cara Membuat Game Baru dalam 5 Menit](#6-resep-cepat-cara-membuat-game-baru-dalam-5-menit)
 
 ---
 
@@ -179,6 +181,31 @@ import { GameVictoryModal } from '@/components/game-shell';
 
 ---
 
+### Chess.com-Style Board & Piece Components
+**Lokasi Direktori:** `src/games/chess-puzzle/`  
+**Panduan Arsitektur Lengkap:** [`CHESS_ENGINE_INSIGHTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CHESS_ENGINE_INSIGHTS.md)
+
+#### 1. `ChessPieceSvg`
+**File:** [`src/games/chess-puzzle/ChessPieces.tsx`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/src/games/chess-puzzle/ChessPieces.tsx)
+- Vektor SVG bidak catur standar turnamen (Pion, Benteng, Kuda, Gajah, Ratu, Raja) beresolusi tak terbatas (*infinite crispness*).
+- Dilengkapi efek bayangan halus (`filter: drop-shadow(...)`).
+
+#### 2. `ChessPuzzleModal`
+**File:** [`src/games/chess-puzzle/ChessPuzzleModal.tsx`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/src/games/chess-puzzle/ChessPuzzleModal.tsx)
+- Implementasi penuh arsitektur 4-layer Chess.com:
+  - **Lapisan 1:** Grid statis 8x8 papan hijau turnamen (`#779956` & `#edeed1`).
+  - **Lapisan 2:** Highlight petak kuning (asal & tujuan) serta titik petak sah (*valid move dots*).
+  - **Lapisan 3:** Piece Layer GPU-accelerated (`transform: translate3d(col * 100%, row * 100%, 0)`) dengan Pointer Events ganda (Drag & Drop + Click-to-Move).
+  - **Lapisan 4:** Umpan balik visual instan: Lencana silang merah `(X)` beranimasi saat langkah salah (seperti di screenshot Puzzle Chess.com) dan centang hijau `(✓)` saat langkah benar.
+
+#### 3. `getTileGridPos`
+**File:** [`src/games/ular-tangga/coordinates.ts`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/src/games/ular-tangga/coordinates.ts)
+- Menghitung posisi kolom dan baris (0-9) untuk pion Ular Tangga agar melangkah mulus dengan transisi GPU `translate3d(col * 100%, row * 100%, 0)`.
+
+---
+
+---
+
 ## 2. Dashboard & Content Components
 **Lokasi Direktori:** `src/components/dashboard/`
 
@@ -257,17 +284,35 @@ Otomatis menangani vendor prefix (`webkitRequestFullscreen`, `webkitFullscreenEl
 ```typescript
 import { sound } from '@/lib/sound';
 
-sound.playClick();     // Bunyi klik tombol ramah
-sound.playCorrect();   // Bunyi kuis berhasil / poin bertambah
-sound.playWrong();     // Bunyi kuis keliru
-sound.playDiceRoll();  // Bunyi kocokan dadu
-sound.toggleSound();   // Switch on/off sound effects
+sound.playClick();          // Bunyi klik tombol ramah
+sound.playCorrect();        // Bunyi kuis berhasil / poin bertambah
+sound.playWrong();          // Bunyi kuis keliru
+sound.playDiceRoll();       // Bunyi kocokan dadu
+sound.playStep();           // Bunyi pion melangkah petak
+sound.playChessMove();      // Bunyi ketukan kayu langkah bidak (Chess.com wood move)
+sound.playChessCapture();   // Bunyi dentuman makan bidak (Chess.com capture thud)
+sound.playChessError();     // Buzzer langkah taktik keliru (Chess.com puzzle incorrect)
+sound.playChessSuccess();   // Chime selebrasi taktik selesai (Chess.com puzzle success)
+sound.toggleSound();        // Switch on/off sound effects
 ```
 Berbasis sintetis Web Audio API tanpa perlu memuat aset file MP3 eksternal yang lambat.
 
 ---
 
-## 5. Resep Cepat: Cara Membuat Game Baru dalam 5 Menit
+## 5. Arsitektur Smooth 60 FPS (Chess.com Deep Dive)
+Panduan arsitektur mendalam mengenai rendering game web sekelas Chess.com dan Chessground tersedia di:
+👉 **[`CHESS_ENGINE_INSIGHTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CHESS_ENGINE_INSIGHTS.md)**
+
+### Prinsip Utama yang Wajib Diterapkan:
+1. **Multi-Layer Separation:** Pisahkan grid statis, highlight seleksi, piece layer, dan feedback badges ke 4 layer terpisah.
+2. **GPU Translation (`translate3d`):** Jangan gunakan `top`, `left`, atau `margin` untuk menggerakkan bidak/pion. Selalu gunakan `transform: translate3d(col * 100%, row * 100%, 0)` dengan `will-change: transform`.
+3. **Persentase Koordinat:** Gunakan persentase (`col * 100%`) agar posisi bidak otomatis akurat di segala rasio layar dan proyektor tanpa resize listener.
+4. **Pointer Events:** Gunakan Pointer Events (`pointerdown`, `pointermove`, `pointerup`) dengan `setPointerCapture` untuk mendukung mouse dan layar sentuh sekaligus.
+5. **Instant Synthesized Audio:** Gunakan Web Audio API sintetik agar efek suara berbunyi instan tanpa latensi buffering MP3.
+
+---
+
+## 6. Resep Cepat: Cara Membuat Game Baru dalam 5 Menit
 
 Untuk menambahkan materi game baru ke platform **ueeee**:
 

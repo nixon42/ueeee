@@ -177,7 +177,20 @@ Saat ini platform memiliki 3 engine modular di `src/games/`:
 
 ---
 
-## 7. Panduan Menambahkan Game / Materi Baru (Step-by-Step)
+## 7. Standar Animasi 60 FPS & Arsitektur Chess.com
+
+Seluruh game berbasis grid, papan, atau interaksi bidak/objek di platform **ueeee** **WAJIB** menerapkan arsitektur 4-lapisan (*4-Layer Pipeline*) sesuai standar Chess.com dan Chessground (lihat panduan lengkap di [`CHESS_ENGINE_INSIGHTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CHESS_ENGINE_INSIGHTS.md)):
+
+1. **Layer 1: Static Board Grid:** Rendered sekali tanpa re-render.
+2. **Layer 2: Highlights Layer (`pointer-events: none`):** Asal langkah, tujuan langkah, dan dot petak valid.
+3. **Layer 3: GPU Piece Layer:** Bidak TIDAK BOLEH diletakkan di dalam DOM petak. Posisikan secara absolut dengan `transform: translate3d(col * 100%, row * 100%, 0)` dan `will-change: transform`.
+4. **Layer 4: SVG Feedback & Badges:** Umpan balik instan (lencana silang merah `(X)` beranimasi saat langkah salah, lencana centang hijau `(✓)` saat benar).
+5. **Dukungan Input Ganda:** Wajib mendukung **Pointer Events** (`pointerdown`, `pointermove`, `pointerup` dengan `setPointerCapture`) agar Drag-and-Drop dan Click-to-Move berfungsi mulus di mouse maupun TV layar sentuh kelas.
+6. **Zero-Latency Sound:** Gunakan fungsi audio sintetis di `src/lib/sound.ts` (`playChessMove`, `playChessCapture`, `playChessError`, `playChessSuccess`).
+
+---
+
+## 8. Panduan Menambahkan Game / Materi Baru (Step-by-Step)
 
 Ketika diminta menambahkan materi atau game baru:
 

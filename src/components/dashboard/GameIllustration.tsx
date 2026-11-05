@@ -675,7 +675,6 @@ export const GameIllustration: React.FC<Props> = ({ gameId, className = '' }) =>
 
     // 8. Ular Tangga: Lintasan Sejarah Indonesia
     case 'ular-tangga-sejarah':
-    default:
       return (
         <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>
           <svg className="w-full h-full object-cover" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" fill="none">
@@ -743,6 +742,105 @@ export const GameIllustration: React.FC<Props> = ({ gameId, className = '' }) =>
 
             <text x="25" y="186" fill="#ffedd5" fontSize="8" fontWeight="bold" fontFamily="monospace" opacity="0.8">
               LINTASAN SEJARAH • DARI KERAJAAN HINGGA KEMERDEKAAN
+            </text>
+          </svg>
+        </div>
+      );
+
+    // 8. Teka-Teki Catur & Taktik Logika (Chess.com-Style Board & Tactical Arrow)
+    case 'catur-taktik-logika':
+    default:
+      return (
+        <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>
+          <svg className="w-full h-full object-cover" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" fill="none">
+            <defs>
+              <linearGradient id="chessBgGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#064e3b" />
+                <stop offset="60%" stopColor="#047857" />
+                <stop offset="100%" stopColor="#022c22" />
+              </linearGradient>
+              <marker id="arrowHead" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+                <path d="M 0 0 L 6 3 L 0 6 z" fill="#fbbf24" />
+              </marker>
+            </defs>
+
+            {/* Background */}
+            <rect width="400" height="200" fill="url(#chessBgGrad)" />
+
+            {/* Chessboard Grid in 3D Perspective */}
+            <g transform="translate(195, 105) rotate(-12) skewX(-20) scale(0.95)">
+              {/* 4x4 Sample Mini Chessboard in Isometric View */}
+              {Array.from({ length: 16 }, (_, i) => {
+                const c = i % 4;
+                const r = Math.floor(i / 4);
+                const isLight = (c + r) % 2 === 0;
+                return (
+                  <rect
+                    key={`sq-${c}-${r}`}
+                    x={c * 28 - 56}
+                    y={r * 28 - 56}
+                    width="28"
+                    height="28"
+                    fill={isLight ? '#edeed1' : '#779956'}
+                    stroke="#5b783d"
+                    strokeWidth="0.8"
+                  />
+                );
+              })}
+
+              {/* Highlight Origin & Destination (Yellow Tint) */}
+              <rect x="-28" y="0" width="28" height="28" fill="#facc15" fillOpacity="0.5" />
+              <rect x="0" y="-56" width="28" height="28" fill="#facc15" fillOpacity="0.5" />
+
+              {/* Tactical Arrow from d2 to d4 */}
+              <line
+                x1="-14"
+                y1="14"
+                x2="14"
+                y2="-42"
+                stroke="#fbbf24"
+                strokeWidth="4"
+                strokeLinecap="round"
+                markerEnd="url(#arrowHead)"
+              />
+            </g>
+
+            {/* Big Silhouette Chess Pieces on Left & Right */}
+            {/* White Queen Silhouette on Left */}
+            <g transform="translate(45, 65) scale(0.9)" opacity="0.95">
+              <path
+                d="M9 26c8.5-1.5 21-1.5 27 0l2-12-7 11-4-15-4.5 15-7-11 2.5 12zm0 13h27v-3H9v3zm3-3v-3h21v3H12zm-3-6h27v-3H9v3z"
+                fill="#ffffff"
+                stroke="#064e3b"
+                strokeWidth="1.5"
+              />
+              <circle cx="6" cy="12" r="2" fill="#ffffff" stroke="#064e3b" strokeWidth="1" />
+              <circle cx="14" cy="9" r="2" fill="#ffffff" stroke="#064e3b" strokeWidth="1" />
+              <circle cx="22.5" cy="8" r="2" fill="#ffffff" stroke="#064e3b" strokeWidth="1" />
+              <circle cx="31" cy="9" r="2" fill="#ffffff" stroke="#064e3b" strokeWidth="1" />
+              <circle cx="39" cy="12" r="2" fill="#ffffff" stroke="#064e3b" strokeWidth="1" />
+            </g>
+
+            {/* White Knight Silhouette on Right */}
+            <g transform="translate(325, 70) scale(0.95)" opacity="0.95">
+              <g fill="#ffffff" stroke="#064e3b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 10c10.5 1 16.5 8 16 29H15c0-9 10-6.5 8-21" />
+                <path d="M24 18c.38 2.91-5.55 7.37-8 9-3 2-2.82 4.34-5 4-1.042-.94 1.41-4.04 2-6 2.1-7 6.5-10 11-10 2 0 4.5.5 5 1.5 0 0 .5-1.5 2-2 1.5-.5 3 .5 3 1.5s-1.5 2-2 2z" />
+                <circle cx="9.5" cy="25.5" r="1.5" fill="#064e3b" stroke="none" />
+              </g>
+            </g>
+
+            {/* Green Badge Tag */}
+            <g transform="translate(25, 160)">
+              <rect width="180" height="24" rx="12" fill="#022c22" stroke="#34d399" strokeWidth="1.2" opacity="0.9" />
+              <circle cx="14" cy="12" r="5" fill="#10b981" />
+              <text x="26" y="16" fill="#a7f3d0" fontSize="9" fontWeight="bold">
+                ENGINE 60 FPS • TAKTIK CATUR
+              </text>
+            </g>
+
+            <text x="25" y="195" fill="#d1fae5" fontSize="8" fontWeight="bold" fontFamily="monospace" opacity="0.75">
+              LOGIKA SPASIAL & PEMECAHAN MASALAH
             </text>
           </svg>
         </div>

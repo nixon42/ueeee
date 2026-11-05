@@ -349,4 +349,48 @@ export const GAMES_CATALOG: GameItem[] = [
       ]
     }
   },
+  {
+    id: 'catur-taktik-logika',
+    title: 'Teka-Teki Catur & Taktik Logika',
+    subtitle: 'Asah pola pikir kritis, kalkulasi geometris, dan pemecahan masalah.',
+    description: 'Engine catur super mulus berstandar 60 FPS dengan grafis vektor SVG tajam. Pecahkan taktik garpu kuda, skakmat koridor, kuncian gajah, dan tusukan sate dengan umpan balik instan.',
+    type: 'puzzle',
+    category: 'logika',
+    gradeLevel: 'Semua Kelas',
+    badge: 'Engine 60 FPS',
+    badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+    accentColor: '#059669',
+    gradient: 'from-emerald-600 via-teal-600 to-green-700',
+    iconName: 'Crown',
+    playTimeMinutes: 8,
+    featured: true,
+    subjectDetail: 'Catur, Strategi & Logika Komputasional',
+    rating: 5.0,
+    playsCount: 3120,
+    tags: [
+      'catur', 'chess', 'taktik catur', 'logika', 'skakmat', 
+      'garpu kuda', 'puzzle', 'asah otak', 'strategi', 'problem solving'
+    ],
+    prolog: {
+      story: 'Papan catur adalah laboratorium berpikir terbaik di dunia! Kuasai strategi para grandmaster untuk menganalisis kelemahan lawan, menghitung langkah ke depan, dan menemukan pola geometris tersembunyi yang menentukan kemenangan.',
+      learningGoals: [
+        'Melatih pemikiran komputasional dan kalkulasi sebab-akibat multi-langkah.',
+        'Mengenal taktik fundamental catur: Skakmat Koridor (Back Rank), Garpu (Fork), Kuncian (Pin), dan Tusukan (Skewer).',
+        'Mengembangkan konsentrasi, ketenangan berpikir, dan daya analisis spasial.',
+        'Memahami konsep perlindungan bidak dan koordinasi antar perwira.'
+      ],
+      howToPlay: [
+        'Amati posisi papan catur dan temukan langkah taktis terbaik untuk Putih.',
+        'Gerakkan bidak menggunakan Drag & Drop (seret dan lepas) atau Click-to-Move (klik bidak lalu klik petak tujuan).',
+        'Titik lingkaran abu-abu akan memandu petak-petak gerak yang sah.',
+        'Jika ragu, gunakan tombol "Petunjuk" untuk mendapatkan arahan konseptual dari guru.'
+      ],
+      rules: [
+        'Langkah benar langsung mengeksekusi taktik dan memicu respon balasan otomatis dari bot.',
+        'Jika melangkah keliru, petak akan menyala merah dengan ikon (X) dan penjelasan mengapa langkah tersebut belum tepat.',
+        'Gunakan tombol "Coba Lagi" untuk mengulang posisi tanpa penalti.',
+        'Selesaikan seluruh rangkaian taktik untuk meraih gelar Grandmaster Logika Cilik.'
+      ]
+    }
+  },
 ];

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { getTileCenter } from '../src/games/ular-tangga/coordinates';
+import { getTileCenter, getTileGridPos } from '../src/games/ular-tangga/coordinates';
 
 describe('Ular Tangga Engine & Coordinates', () => {
   test('Tile 1 should be at the bottom left (x: 5, y: 95)', () => {
@@ -34,5 +34,12 @@ describe('Ular Tangga Engine & Coordinates', () => {
       expect(y).toBeGreaterThan(0);
       expect(y).toBeLessThan(100);
     }
+  });
+
+  test('getTileGridPos returns exact 0-9 col and row for GPU transforms', () => {
+    expect(getTileGridPos(1)).toEqual({ col: 0, row: 9 });
+    expect(getTileGridPos(10)).toEqual({ col: 9, row: 9 });
+    expect(getTileGridPos(11)).toEqual({ col: 9, row: 8 });
+    expect(getTileGridPos(100)).toEqual({ col: 0, row: 0 });
   });
 });

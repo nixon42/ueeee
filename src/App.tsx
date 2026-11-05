@@ -6,6 +6,7 @@ import { GameGrid } from '@/components/dashboard/GameGrid';
 import { UlarTanggaModal } from '@/games/ular-tangga/UlarTanggaModal';
 import { PointAndClickModal } from '@/games/point-and-click/PointAndClickModal';
 import { PuzzleModal } from '@/games/puzzle/PuzzleModal';
+import { ChessPuzzleModal } from '@/games/chess-puzzle';
 import { TeacherSheetModal } from '@/components/modals/TeacherSheetModal';
 import { PrologModal } from '@/components/dashboard/PrologModal';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
@@ -44,6 +45,7 @@ export default function App() {
   const [isPointAndClickOpen, setIsPointAndClickOpen] = useState<boolean>(false);
   const [activePointAndClickScene, setActivePointAndClickScene] = useState<string>('lab-sains');
   const [isPuzzleOpen, setIsPuzzleOpen] = useState<boolean>(false);
+  const [isChessOpen, setIsChessOpen] = useState<boolean>(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState<boolean>(false);
   const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
 
@@ -95,7 +97,9 @@ export default function App() {
     url.searchParams.set('game', game.id);
     window.history.replaceState({}, '', url.toString());
 
-    if (game.type === 'ular-tangga') {
+    if (game.id === 'catur-taktik-logika' || game.id.includes('catur') || game.id.includes('chess')) {
+      setIsChessOpen(true);
+    } else if (game.type === 'ular-tangga') {
       if (game.id.includes('matematika')) setActiveUlarTanggaSubject('matematika');
       else if (game.id.includes('sejarah')) setActiveUlarTanggaSubject('sejarah');
       else setActiveUlarTanggaSubject('sains');
@@ -112,10 +116,11 @@ export default function App() {
     }
   };
 
-  const closeGameModal = (which: 'ular' | 'point' | 'puzzle') => {
+  const closeGameModal = (which: 'ular' | 'point' | 'puzzle' | 'chess') => {
     if (which === 'ular') setIsUlarTanggaOpen(false);
     if (which === 'point') setIsPointAndClickOpen(false);
     if (which === 'puzzle') setIsPuzzleOpen(false);
+    if (which === 'chess') setIsChessOpen(false);
 
     // Clean up query param
     const url = new URL(window.location.href);
@@ -263,6 +268,12 @@ export default function App() {
         <PuzzleModal
           isOpen={isPuzzleOpen}
           onClose={() => closeGameModal('puzzle')}
+        />
+      )}
+      {isChessOpen && (
+        <ChessPuzzleModal
+          isOpen={isChessOpen}
+          onClose={() => closeGameModal('chess')}
         />
       )}
       <TeacherSheetModal

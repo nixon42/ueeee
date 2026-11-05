@@ -5,7 +5,8 @@ Selamat datang di proyek **ueeee** (`ueeee.my.id`). Panduan ini berisi aturan, a
 > 📖 **PENTING UNTUK AGENT PENERUS (JANGAN REINVENT THE WHEEL):**
 > 1. **Katalog Komponen Siap Pakai:** Wajib gunakan komponen yang sudah ada di [`COMPONENTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/COMPONENTS.md) (`GameStageShell`, `GameQuizModal`, `GameVictoryModal`, dsb). Jangan buat wrapper modal atau dialog kuis dari nol!
 > 2. **Spesifikasi Game & Batasan Kelas:** Standar rasio proyektor, target sentuh 48px, dan aturan game ada di [`GAME_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/GAME_SPEC.md).
-> Wajib baca kedua dokumen tersebut sebelum memodifikasi atau membuat materi game baru!
+> 3. **Standar Animasi 60 FPS & Arsitektur Chess.com:** Wajib pelajari arsitektur 4-layer rendering, GPU-accelerated `translate3d`, dan audio synthesis di [`CHESS_ENGINE_INSIGHTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CHESS_ENGINE_INSIGHTS.md) saat membangun game papan atau interaktif baru!
+> Wajib baca ketiga dokumen tersebut sebelum memodifikasi atau membuat materi game baru!
 
 ---
 

@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti';
 import { sound } from '@/lib/sound';
 import { QUESTIONS_BANK } from '@/data/questions-bank';
 import { QuizQuestion } from '@/types/game';
-import { getTileCenter } from './coordinates';
+import { getTileCenter, getTileGridPos } from './coordinates';
 import { GameStageShell, GameQuizModal, GameVictoryModal } from '@/components/game-shell';
 
 interface Props {
@@ -375,6 +375,9 @@ export const UlarTanggaModal: React.FC<Props> = ({
     </div>
   );
 
+  const p1PosGrid = getTileGridPos(player1Pos);
+  const p2PosGrid = getTileGridPos(player2Pos);
+
   return (
     <GameStageShell
       isOpen={isOpen}
@@ -491,6 +494,8 @@ export const UlarTanggaModal: React.FC<Props> = ({
                           : tileNum % 2 === 0
                           ? 'bg-white text-slate-700 border-slate-200'
                           : 'bg-orange-50/50 text-slate-700 border-orange-100'
+                      } ${
+                        isP1Here ? 'ring-2 ring-orange-500/80 bg-orange-100/50 z-10' : isP2Here ? 'ring-2 ring-blue-500/80 bg-blue-100/50 z-10' : ''
                       }`}
                     >
                       <div className="w-full flex justify-between items-center leading-none px-0.5 z-20">
@@ -508,30 +513,65 @@ export const UlarTanggaModal: React.FC<Props> = ({
                         {isStar && <span className="text-[9px] text-amber-500">⭐</span>}
                       </div>
 
-                      {/* Pion Pemain */}
-                      <div className="flex items-center justify-center gap-1 my-auto z-20">
-                        {isP1Here && (
-                          <div
-                            className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-tr from-orange-500 to-pink-500 border-2 border-white shadow-md text-[9px] sm:text-[10px] flex items-center justify-center text-white font-black ring-2 ring-orange-400/80 scale-105"
-                            title="Pemain 1"
-                          >
-                            1
-                          </div>
-                        )}
-                        {isP2Here && (
-                          <div
-                            className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-500 border-2 border-white shadow-md text-[9px] sm:text-[10px] flex items-center justify-center text-white font-black"
-                            title={gameMode === 'bot' ? 'Bot' : 'Pemain 2'}
-                          >
-                            {gameMode === 'bot' ? 'B' : '2'}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="h-1"></div>
+                      <div className="h-4 sm:h-5"></div>
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Layer 3: Chess.com-Style GPU-Accelerated Piece Layer */}
+              <div className="absolute inset-0 pointer-events-none z-30">
+                {/* Pion Pemain 1 */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '10%',
+                    height: '10%',
+                    transform: `translate3d(${p1PosGrid.col * 100}%, ${p1PosGrid.row * 100}%, 0)`,
+                    transition: isStepping
+                      ? 'transform 180ms cubic-bezier(0.2, 0, 0, 1)'
+                      : 'transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    willChange: 'transform',
+                  }}
+                  className="flex items-center justify-center p-0.5"
+                >
+                  <div
+                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-tr from-orange-500 to-pink-500 border-2 border-white shadow-md text-[10px] sm:text-xs flex items-center justify-center text-white font-black ring-2 ring-orange-400/80 transition-all ${
+                      player1Pos === player2Pos ? '-translate-x-1.5' : ''
+                    } ${turn === 'p1' ? 'scale-110 shadow-orange-500/50' : 'scale-95 opacity-90'}`}
+                    title="Pemain 1"
+                  >
+                    1
+                  </div>
+                </div>
+
+                {/* Pion Pemain 2 / Bot */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '10%',
+                    height: '10%',
+                    transform: `translate3d(${p2PosGrid.col * 100}%, ${p2PosGrid.row * 100}%, 0)`,
+                    transition: isStepping
+                      ? 'transform 180ms cubic-bezier(0.2, 0, 0, 1)'
+                      : 'transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    willChange: 'transform',
+                  }}
+                  className="flex items-center justify-center p-0.5"
+                >
+                  <div
+                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-tr from-blue-500 to-cyan-500 border-2 border-white shadow-md text-[10px] sm:text-xs flex items-center justify-center text-white font-black transition-all ${
+                      player1Pos === player2Pos ? 'translate-x-1.5' : ''
+                    } ${turn === 'p2' ? 'scale-110 shadow-blue-500/50 ring-2 ring-cyan-400/80' : 'scale-95 opacity-90'}`}
+                    title={gameMode === 'bot' ? 'Bot Teman Belajar' : 'Pemain 2'}
+                  >
+                    {gameMode === 'bot' ? 'B' : '2'}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
