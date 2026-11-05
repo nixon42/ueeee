@@ -27,15 +27,6 @@ const GRADE_LEVELS: GradeLevel[] = [
   'SMA',
 ];
 
-const TRENDING_TAGS = [
-  'Candi Borobudur',
-  'Tata Surya',
-  'Pecahan',
-  'Fotosintesis',
-  'Lab Sains',
-  'Kerajaan Majapahit',
-];
-
 export const Header: React.FC<Props> = ({
   searchQuery,
   onSearchChange,
@@ -52,12 +43,6 @@ export const Header: React.FC<Props> = ({
   const handleToggleSound = () => {
     const next = sound.toggleSound();
     setSoundEnabled(next);
-  };
-
-  const handleTagClick = (tag: string) => {
-    sound.playClick();
-    const cleanWord = tag.replace('#', '');
-    onSearchChange(cleanWord);
   };
 
   return (
@@ -209,20 +194,6 @@ export const Header: React.FC<Props> = ({
               </button>
             )}
           </div>
-        </div>
-
-        {/* Trending Hashtag Chips Canva-Style */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 max-w-2xl">
-          <span className="text-[11px] font-bold text-slate-500 mr-1">Populer:</span>
-          {TRENDING_TAGS.map(tag => (
-            <button
-              key={tag}
-              onClick={() => handleTagClick(tag)}
-              className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white/70 hover:bg-white text-slate-600 hover:text-purple-700 border border-purple-200/50 transition cursor-pointer"
-            >
-              {tag}
-            </button>
-          ))}
         </div>
 
         {/* Jenjang Kelas Pill Selector */}
