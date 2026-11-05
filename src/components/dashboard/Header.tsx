@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Sparkles, Volume2, VolumeX, ShieldCheck, Gamepad2, Presentation, Compass, Puzzle } from 'lucide-react';
+import { 
+  Search, Sparkles, Volume2, VolumeX, ShieldCheck, 
+  Gamepad2, Presentation, Compass, Puzzle, Dices 
+} from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
 
@@ -12,6 +15,7 @@ interface Props {
   onGradeChange: (grade: GradeLevel) => void;
   isClassroomMode: boolean;
   onToggleClassroomMode: () => void;
+  onSurpriseMe: () => void;
 }
 
 const GRADE_LEVELS: GradeLevel[] = [
@@ -20,6 +24,15 @@ const GRADE_LEVELS: GradeLevel[] = [
   'SD Kelas 4-6',
   'SMP',
   'SMA',
+];
+
+const TRENDING_TAGS = [
+  '#SainsSD',
+  '#PecahanMatematika',
+  '#CandiBorobudur',
+  '#TataSurya',
+  '#KonservasiHutan',
+  '#LaboratoriumKimia',
 ];
 
 export const Header: React.FC<Props> = ({
@@ -31,12 +44,19 @@ export const Header: React.FC<Props> = ({
   onGradeChange,
   isClassroomMode,
   onToggleClassroomMode,
+  onSurpriseMe,
 }) => {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
 
   const handleToggleSound = () => {
     const next = sound.toggleSound();
     setSoundEnabled(next);
+  };
+
+  const handleTagClick = (tag: string) => {
+    sound.playClick();
+    const cleanWord = tag.replace('#', '');
+    onSearchChange(cleanWord);
   };
 
   return (
@@ -66,10 +86,23 @@ export const Header: React.FC<Props> = ({
             <span>Terbuka Bebas • Tanpa Login</span>
           </div>
 
+          {/* Tombol Main Acak (Surprise Me) */}
+          <button
+            onClick={() => {
+              sound.playClick();
+              onSurpriseMe();
+            }}
+            className="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-500 hover:to-orange-500 text-slate-900 shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+            title="Pilihkan game secara acak!"
+          >
+            <Dices size={15} />
+            <span className="hidden sm:inline">Main Acak</span>
+          </button>
+
           {/* Mode Proyektor Kelas / Guru */}
           <button
             onClick={onToggleClassroomMode}
-            className={`px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 border ${
+            className={`px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 border cursor-pointer ${
               isClassroomMode
                 ? 'bg-purple-600 border-purple-600 text-white shadow-sm'
                 : 'bg-white border-slate-200 text-slate-700 hover:border-purple-300'
@@ -77,13 +110,13 @@ export const Header: React.FC<Props> = ({
             title="Mode Kelas / Layar Proyektor"
           >
             <Presentation size={14} />
-            <span className="hidden md:inline">Mode Guru & Kelas</span>
+            <span className="hidden md:inline">Mode Guru</span>
           </button>
 
           {/* Sound Toggle */}
           <button
             onClick={handleToggleSound}
-            className="p-2 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-purple-600 transition shadow-sm"
+            className="p-2 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-purple-600 transition shadow-sm cursor-pointer"
             title={soundEnabled ? 'Matikan Suara Efek' : 'Aktifkan Suara Efek'}
           >
             {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
@@ -103,7 +136,7 @@ export const Header: React.FC<Props> = ({
         <div className="inline-flex items-center p-1 rounded-full bg-white/80 backdrop-blur-sm border border-purple-200/70 shadow-sm mb-5">
           <button
             onClick={() => onTabChange('all')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-purple-600 text-white shadow-sm'
                 : 'text-slate-600 hover:text-purple-700'
@@ -115,7 +148,7 @@ export const Header: React.FC<Props> = ({
 
           <button
             onClick={() => onTabChange('ular-tangga')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'ular-tangga'
                 ? 'bg-purple-600 text-white shadow-sm'
                 : 'text-slate-600 hover:text-purple-700'
@@ -127,7 +160,7 @@ export const Header: React.FC<Props> = ({
 
           <button
             onClick={() => onTabChange('point-and-click')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'point-and-click'
                 ? 'bg-purple-600 text-white shadow-sm'
                 : 'text-slate-600 hover:text-purple-700'
@@ -139,7 +172,7 @@ export const Header: React.FC<Props> = ({
 
           <button
             onClick={() => onTabChange('puzzle')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'puzzle'
                 ? 'bg-purple-600 text-white shadow-sm'
                 : 'text-slate-600 hover:text-purple-700'
@@ -174,12 +207,26 @@ export const Header: React.FC<Props> = ({
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-4 text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1 rounded-full bg-slate-100"
+                className="absolute right-4 text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1 rounded-full bg-slate-100 cursor-pointer"
               >
                 Reset
               </button>
             )}
           </div>
+        </div>
+
+        {/* Trending Hashtag Chips Canva-Style */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 max-w-2xl">
+          <span className="text-[11px] font-bold text-slate-500 mr-1">Populer:</span>
+          {TRENDING_TAGS.map(tag => (
+            <button
+              key={tag}
+              onClick={() => handleTagClick(tag)}
+              className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white/70 hover:bg-white text-slate-600 hover:text-purple-700 border border-purple-200/50 transition cursor-pointer"
+            >
+              {tag}
+            </button>
+          ))}
         </div>
 
         {/* Jenjang Kelas Pill Selector */}
@@ -189,7 +236,7 @@ export const Header: React.FC<Props> = ({
             <button
               key={grade}
               onClick={() => onGradeChange(grade)}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
                 selectedGrade === grade
                   ? 'bg-slate-900 text-white shadow-sm'
                   : 'bg-white/80 text-slate-700 hover:bg-white border border-purple-200/60'

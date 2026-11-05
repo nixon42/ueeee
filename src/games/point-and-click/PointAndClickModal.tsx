@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   X, RotateCcw, Volume2, VolumeX, Sparkles, CheckCircle2, 
-  Search, Trophy, Backpack, HelpCircle, Check, AlertCircle, ChevronRight 
+  Search, Trophy, Backpack, HelpCircle, Check, AlertCircle, ChevronRight, Eye 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '@/lib/sound';
@@ -24,6 +24,7 @@ export const PointAndClickModal: React.FC<Props> = ({
   const [inventory, setInventory] = useState<{ id: string; name: string; icon: string; description: string }[]>([]);
   const [activeHotspot, setActiveHotspot] = useState<PointAndClickHotspot | null>(null);
   const [discoveredIds, setDiscoveredIds] = useState<string[]>([]);
+  const [showDiagramModal, setShowDiagramModal] = useState<boolean>(false);
   const [activePuzzle, setActivePuzzle] = useState<{
     question: string;
     options: string[];
@@ -55,7 +56,6 @@ export const PointAndClickModal: React.FC<Props> = ({
       return;
     }
 
-    // Jika tidak ada puzzle atau sudah terpecahkan
     unlockHotspot(h);
   };
 
@@ -119,6 +119,7 @@ export const PointAndClickModal: React.FC<Props> = ({
     setActiveHotspot(null);
     setActivePuzzle(null);
     setPuzzleFeedback(null);
+    setShowDiagramModal(false);
     setIsSceneFinished(false);
   };
 
@@ -126,6 +127,7 @@ export const PointAndClickModal: React.FC<Props> = ({
     setDiscoveredIds(prev => prev.filter(id => !currentScene.hotspots.some(h => h.id === id)));
     setActiveHotspot(null);
     setActivePuzzle(null);
+    setShowDiagramModal(false);
     setIsSceneFinished(false);
   };
 
@@ -279,16 +281,29 @@ export const PointAndClickModal: React.FC<Props> = ({
                 {currentScene.theme === 'lab' ? '🔬' : currentScene.theme === 'candi' ? '📜' : '🌿'}
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-black text-teal-800 uppercase tracking-wider">
-                    {currentScene.mentorName} ({currentScene.mentorRole})
-                  </span>
-                  {activeHotspot && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-200/80 text-teal-900">
-                      {activeHotspot.name}
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-teal-800 uppercase tracking-wider">
+                      {currentScene.mentorName} ({currentScene.mentorRole})
                     </span>
+                    {activeHotspot && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-200/80 text-teal-900">
+                        {activeHotspot.name}
+                      </span>
+                    )}
+                  </div>
+
+                  {activeHotspot && (
+                    <button
+                      onClick={() => setShowDiagramModal(true)}
+                      className="px-2.5 py-1 bg-white hover:bg-teal-100 text-teal-800 border border-teal-300 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm"
+                    >
+                      <Eye size={13} />
+                      <span>Lihat Diagram Ilmiah</span>
+                    </button>
                   )}
                 </div>
+
                 <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
                   {activeHotspot ? activeHotspot.dialogue : currentScene.missionDescription}
                 </p>
@@ -394,6 +409,52 @@ export const PointAndClickModal: React.FC<Props> = ({
             )}
           </div>
         </div>
+
+        {/* Modal Diagram Ilmiah Interaktif */}
+        {showDiagramModal && activeHotspot && (
+          <div className="absolute inset-0 bg-slate-900/75 backdrop-blur-sm z-40 flex items-center justify-center p-4 rounded-3xl animate-fadeIn">
+            <div className="bg-white max-w-lg w-full p-6 rounded-3xl shadow-2xl border border-teal-200 space-y-4 animate-scaleUp">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{activeHotspot.itemReward?.icon || '🔬'}</span>
+                  <div>
+                    <h4 className="font-black text-base text-slate-800">
+                      Diagram Visual: {activeHotspot.name}
+                    </h4>
+                    <p className="text-xs text-slate-500 font-medium">
+                      {activeHotspot.title}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowDiagramModal(false)}
+                  className="p-1.5 text-slate-400 hover:text-slate-700 rounded-xl bg-slate-100"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Render Diagram Content based on Hotspot */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                  {activeHotspot.educationalFact}
+                </p>
+
+                <div className="p-3 bg-teal-50 text-teal-900 rounded-xl text-xs font-semibold border border-teal-200/80">
+                  <span className="font-bold">Artefak Terkait: </span>
+                  {activeHotspot.itemReward?.name} — {activeHotspot.itemReward?.description}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowDiagramModal(false)}
+                className="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs rounded-xl transition"
+              >
+                Kembali ke Eksplorasi
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Modal Tantangan Teka-Teki Hotspot */}
         {activePuzzle && (

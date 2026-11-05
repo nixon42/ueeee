@@ -30,6 +30,18 @@ typography:
     fontSize: "0.9375rem"
     fontWeight: 500
     lineHeight: 1.6
+  caption:
+    fontFamily: "Plus Jakarta Sans, -apple-system, sans-serif"
+    fontSize: "11px"
+    fontWeight: 700
+  micro:
+    fontFamily: "Plus Jakarta Sans, -apple-system, sans-serif"
+    fontSize: "10px"
+    fontWeight: 800
+  pico:
+    fontFamily: "Plus Jakarta Sans, -apple-system, sans-serif"
+    fontSize: "9px"
+    fontWeight: 800
 rounded:
   sm: "8px"
   md: "12px"

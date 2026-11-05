@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, RotateCcw, Volume2, VolumeX, Sparkles, CheckCircle2, HelpCircle, Trophy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, RotateCcw, Volume2, VolumeX, Sparkles, CheckCircle2, HelpCircle, Trophy, Lightbulb } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '@/lib/sound';
 
@@ -9,40 +9,46 @@ interface Props {
 }
 
 interface WordPuzzle {
-  word: string; // The target word in uppercase
+  word: string;
   category: string;
   clue: string;
   explanation: string;
+  subject: string;
 }
 
 const PUZZLES: WordPuzzle[] = [
   {
     word: 'FOTOSINTESIS',
     category: 'Biologi & Sains',
+    subject: 'IPA',
     clue: 'Proses pembentukan makanan oleh tumbuhan hijau dengan bantuan cahaya matahari dan klorofil.',
     explanation: 'Fotosintesis mengubah karbondioksida (CO2) dan air (H2O) menjadi glukosa dan oksigen (O2).',
   },
   {
     word: 'GRAVITASI',
-    category: 'Fisika',
+    category: 'Fisika & Alam',
+    subject: 'Fisika',
     clue: 'Gaya tarik antara dua massa yang menyebabkan apel jatuh dari pohon ke tanah.',
     explanation: 'Hukum gravitasi universal pertama kali dirumuskan secara matematis oleh Sir Isaac Newton.',
   },
   {
     word: 'SRIWIJAYA',
     category: 'Sejarah Nusantara',
+    subject: 'IPS',
     clue: 'Kerajaan maritim Buddha terbesar di Nusantara yang berpusat di muara Sungai Musi, Palembang.',
     explanation: 'Sriwijaya menguasai Selat Malaka dan menjadi pusat perdagangan serta kebudayaan di Asia Tenggara.',
   },
   {
     word: 'ATMOSFER',
     category: 'Geografi & Astronomi',
+    subject: 'Geografi',
     clue: 'Lapisan gas yang menyelimuti planet bumi dan melindungi kita dari radiasi matahari berbahaya.',
     explanation: 'Atmosfer bumi terdiri dari troposfer, stratosfer, mesosfer, termosfer, dan eksosfer.',
   },
   {
     word: 'EKOSISTEM',
     category: 'Biologi Lingkungan',
+    subject: 'IPA',
     clue: 'Hubungan timbal balik antara makhluk hidup dengan lingkungan sekitarnya.',
     explanation: 'Ekosistem terdiri dari komponen biotik (organisme hidup) dan komponen abiotik (tanah, air, udara).',
   },
@@ -54,22 +60,48 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [availableTiles, setAvailableTiles] = useState<{ id: string; letter: string; used: boolean }[]>([]);
   const [soundOn, setSoundOn] = useState<boolean>(true);
   const [score, setScore] = useState<number>(0);
-  const [showHint, setShowHint] = useState<boolean>(false);
+  const [streak, setStreak] = useState<number>(0);
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
+  const [hintUsed, setHintUsed] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
-  const [statusMessage, setStatusMessage] = useState<string>('Susun huruf-huruf di bawah untuk membentuk kata yang tepat!');
+  const [statusMessage, setStatusMessage] = useState<string>('Susun huruf dengan mengklik atau ketik langsung di keyboard!');
 
   const currentPuzzle = PUZZLES[currentIndex];
 
-  // Initialize current puzzle tiles
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) return;
     initPuzzle(currentIndex);
   }, [currentIndex, isOpen]);
 
+  // Physical keyboard listener (Typing & Backspace)
+  useEffect(() => {
+    if (!isOpen || isCompleted) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        if (selectedLetters.length > 0) {
+          handleRemoveLetter(selectedLetters.length - 1);
+        }
+      } else if (e.key === 'Escape') {
+        onClose();
+      } else if (/^[a-zA-Z]$/.test(e.key)) {
+        const char = e.key.toUpperCase();
+        // Cari tile huruf tersebut yang belum used
+        const tile = availableTiles.find(t => t.letter === char && !t.used);
+        if (tile && selectedLetters.length < currentPuzzle.word.length) {
+          handleTileClick(tile.id, tile.letter);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isCompleted, availableTiles, selectedLetters, currentPuzzle]);
+
   const initPuzzle = (idx: number) => {
     const puzzle = PUZZLES[idx];
     const letters = puzzle.word.split('');
-    // Shuffle letters
     const shuffled = [...letters]
       .map((letter, i) => ({ letter, sort: Math.random(), originalIndex: i }))
       .sort((a, b) => a.sort - b.sort)
@@ -81,8 +113,9 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
     setAvailableTiles(shuffled);
     setSelectedLetters([]);
-    setShowHint(false);
-    setStatusMessage('Pilih dan klik huruf untuk menyusun kata.');
+    setShowExplanation(false);
+    setHintUsed(false);
+    setStatusMessage('Pilih huruf dengan klik tombol atau ketik di keyboard.');
   };
 
   if (!isOpen) return null;
@@ -95,14 +128,15 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
     const newSelected = [...selectedLetters, letter];
     setSelectedLetters(newSelected);
 
-    // Cek apakah sudah penuh panjangnya
     if (newSelected.length === currentPuzzle.word.length) {
       const assembledWord = newSelected.join('');
       if (assembledWord === currentPuzzle.word) {
         sound.playCorrect();
-        const nextScore = score + 100;
-        setScore(nextScore);
-        setStatusMessage(`🎉 Hebat! "${currentPuzzle.word}" tersusun sempurna!`);
+        const streakBonus = streak * 25;
+        const earned = (hintUsed ? 70 : 100) + streakBonus;
+        setScore(prev => prev + earned);
+        setStreak(prev => prev + 1);
+        setStatusMessage(`🎉 Hebat! "${currentPuzzle.word}" tersusun sempurna (+${earned} poin)!`);
 
         confetti({
           particleCount: 80,
@@ -119,7 +153,8 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
         }, 1500);
       } else {
         sound.playWrong();
-        setStatusMessage('❌ Susunan kata belum tepat. Klik huruf di kotak jawaban untuk membatalkan!');
+        setStreak(0);
+        setStatusMessage('❌ Susunan huruf belum tepat. Tekan Backspace atau klik huruf untuk koreksi!');
       }
     }
   };
@@ -130,7 +165,6 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
     const newSelected = selectedLetters.filter((_, i) => i !== indexToRemove);
     setSelectedLetters(newSelected);
 
-    // Tandai salah satu tile yang sesuai menjadi used: false kembali
     let restored = false;
     setAvailableTiles(prev =>
       prev.map(t => {
@@ -143,9 +177,27 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
     );
   };
 
+  const useSmartHint = () => {
+    if (hintUsed || selectedLetters.length >= currentPuzzle.word.length) return;
+    sound.playClick();
+    setHintUsed(true);
+
+    // Cari huruf pertama dari puzzle
+    const firstLetter = currentPuzzle.word[0];
+    const availableTile = availableTiles.find(t => t.letter === firstLetter && !t.used);
+
+    if (availableTile && selectedLetters.length === 0) {
+      handleTileClick(availableTile.id, availableTile.letter);
+      setStatusMessage(`💡 Petunjuk: Huruf pertama adalah "${firstLetter}"`);
+    } else {
+      setStatusMessage(`💡 Petunjuk: Huruf pertama dari kata ini adalah "${firstLetter}"`);
+    }
+  };
+
   const resetAll = () => {
     setCurrentIndex(0);
     setScore(0);
+    setStreak(0);
     setIsCompleted(false);
     initPuzzle(0);
   };
@@ -164,7 +216,7 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 Teka-Teki: Susun Kata & Rumus Sains
               </h3>
               <p className="text-xs text-slate-500 font-medium">
-                Soal {currentIndex + 1} dari {PUZZLES.length} • Skor: {score} Poin
+                Soal {currentIndex + 1} dari {PUZZLES.length} • Skor: {score} Poin {streak > 1 && `(Streak ${streak}x 🔥)`}
               </p>
             </div>
           </div>
@@ -227,23 +279,40 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
               {/* Petunjuk Soal */}
               <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black uppercase tracking-wider text-teal-700 bg-teal-100 px-2.5 py-0.5 rounded-full">
-                    {currentPuzzle.category}
-                  </span>
-                  <button
-                    onClick={() => setShowHint(!showHint)}
-                    className="text-xs text-teal-700 hover:text-teal-800 font-bold flex items-center gap-1"
-                  >
-                    <HelpCircle size={14} />
-                    {showHint ? 'Tutup Penjelasan' : 'Lihat Penjelasan'}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-teal-700 bg-teal-100 px-2.5 py-0.5 rounded-full">
+                      {currentPuzzle.category}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400">
+                      Mendukung ketik keyboard A-Z
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={useSmartHint}
+                      disabled={hintUsed}
+                      className="text-xs text-amber-700 hover:text-amber-800 font-bold flex items-center gap-1 disabled:opacity-50"
+                      title="Buka petunjuk huruf pertama"
+                    >
+                      <Lightbulb size={14} />
+                      {hintUsed ? 'Petunjuk Aktif' : 'Gunakan Petunjuk'}
+                    </button>
+                    <button
+                      onClick={() => setShowExplanation(!showExplanation)}
+                      className="text-xs text-teal-700 hover:text-teal-800 font-bold flex items-center gap-1"
+                    >
+                      <HelpCircle size={14} />
+                      {showExplanation ? 'Tutup Fakta' : 'Fakta Konsep'}
+                    </button>
+                  </div>
                 </div>
 
                 <p className="text-sm font-semibold text-slate-800 leading-relaxed">
                   "{currentPuzzle.clue}"
                 </p>
 
-                {showHint && (
+                {showExplanation && (
                   <div className="p-3 bg-teal-50/80 rounded-xl text-xs text-teal-900 border border-teal-200/60 animate-fadeIn">
                     <span className="font-bold">Fakta Edukatif: </span>
                     {currentPuzzle.explanation}
@@ -257,7 +326,7 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   Susunan Jawaban ({selectedLetters.length} / {currentPuzzle.word.length} Huruf)
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-2 min-h-14 p-2 bg-slate-100/70 rounded-2xl border-2 border-dashed border-slate-300 w-full">
+                <div className="flex flex-wrap justify-center gap-2 min-h-14 p-2.5 bg-slate-100/70 rounded-2xl border-2 border-dashed border-slate-300 w-full">
                   {Array.from({ length: currentPuzzle.word.length }).map((_, idx) => {
                     const letter = selectedLetters[idx];
                     return (
@@ -270,7 +339,7 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                             ? 'bg-gradient-to-tr from-teal-500 to-emerald-500 text-white shadow-md hover:scale-105 active:scale-95 cursor-pointer'
                             : 'bg-white/80 border border-slate-200 text-transparent cursor-default'
                         }`}
-                        title={letter ? 'Klik untuk membatalkan' : ''}
+                        title={letter ? 'Klik atau tekan Backspace untuk membatalkan' : ''}
                       >
                         {letter || ''}
                       </button>
@@ -279,10 +348,10 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Huruf Acak Yang Tersedia Untuk Diklik */}
+              {/* Huruf Acak Yang Tersedia Untuk Diklik / Diketik */}
               <div className="space-y-2">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider text-center">
-                  Pilihan Huruf
+                  Pilihan Huruf (Klik atau Ketik)
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-2">

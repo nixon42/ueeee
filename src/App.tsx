@@ -164,6 +164,11 @@ export default function App() {
     setActiveTab('all');
   };
 
+  const handleSurpriseMe = () => {
+    const randomGame = GAMES_CATALOG[Math.floor(Math.random() * GAMES_CATALOG.length)];
+    launchGame(randomGame);
+  };
+
   return (
     <div className={`min-h-screen bg-[#fafbff] flex flex-col justify-between selection:bg-purple-100 selection:text-purple-900 ${
       isClassroomMode ? 'text-lg' : 'text-base'
@@ -184,6 +189,7 @@ export default function App() {
           onGradeChange={setSelectedGrade}
           isClassroomMode={isClassroomMode}
           onToggleClassroomMode={handleToggleClassroomMode}
+          onSurpriseMe={handleSurpriseMe}
         />
 
         {/* Canva Horizontal Category Pills */}
