@@ -363,16 +363,11 @@ export const UlarTanggaModal: React.FC<Props> = ({
               🎲
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
-                  Ular Tangga Edukatif 100 Petak
-                </h3>
-                <span className="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800">
-                  Kurikulum Merdeka
-                </span>
-              </div>
+              <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
+                Ular Tangga Edukatif 100 Petak
+              </h3>
               <p className="text-xs text-slate-500 font-medium">
-                Papan Visual Interaktif • Berbasis Langkah Bertahap • Zero-Login
+                Papan Visual Interaktif • Langkah Bertahap & Kuis Soal
               </p>
             </div>
           </div>

@@ -141,14 +141,9 @@ export const PointAndClickModal: React.FC<Props> = ({
               🔍
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
-                  {currentScene.title}
-                </h3>
-                <span className="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
-                  ueeee.my.id
-                </span>
-              </div>
+              <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
+                {currentScene.title}
+              </h3>
               <p className="text-xs text-slate-500 font-medium">
                 {currentScene.subtitle}
               </p>
@@ -287,8 +282,8 @@ export const PointAndClickModal: React.FC<Props> = ({
                       {currentScene.mentorName} ({currentScene.mentorRole})
                     </span>
                     {activeHotspot && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-200/80 text-teal-900">
-                        {activeHotspot.name}
+                      <span className="text-xs font-semibold text-teal-700">
+                        • {activeHotspot.name}
                       </span>
                     )}
                   </div>

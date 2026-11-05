@@ -65,13 +65,6 @@ export const CategoryPills: React.FC<Props> = ({
                 >
                   <IconComponent size={24} className="stroke-[2.2]" />
                 </div>
-
-                {/* Floating Pill Badge (Canva Style - centered neatly above the top rim) */}
-                {cat.badge && (
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm z-10 pointer-events-none uppercase tracking-wider">
-                    {cat.badge}
-                  </span>
-                )}
               </div>
 
               {/* Category Label */}

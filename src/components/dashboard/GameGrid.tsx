@@ -67,8 +67,8 @@ export const GameGrid: React.FC<Props> = ({
             </p>
           </div>
 
-          <span className="text-xs font-extrabold px-3 py-1 bg-purple-50 text-purple-700 border border-purple-200 rounded-full">
-            {games.length} Materi Tersedia
+          <span className="text-xs font-bold text-slate-400">
+            {games.length} materi
           </span>
         </div>
 

@@ -20,7 +20,6 @@ export const CATEGORIES: CategoryTab[] = [
   {
     id: 'sains',
     name: 'Sains & Alam',
-    badge: 'Baru',
     iconBg: 'bg-gradient-to-tr from-emerald-500 to-teal-500 text-white shadow-emerald-200',
     textColor: 'text-emerald-700',
     iconName: 'FlaskConical',
