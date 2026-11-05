@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Search, Sparkles, Volume2, VolumeX, ShieldCheck, 
+  Search, Sparkles, Volume2, VolumeX, 
   Gamepad2, Presentation, Compass, Puzzle, Dices 
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
@@ -63,29 +63,18 @@ export const Header: React.FC<Props> = ({
     <header className="relative w-full">
       {/* Top Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-        {/* Brand Logo & Tag */}
-        <div className="flex items-center gap-3">
+        {/* Brand Logo */}
+        <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-[#00c4cc] flex items-center justify-center text-white shadow-sm font-black text-xl tracking-tight">
             u
           </div>
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-2xl tracking-tight text-slate-900">
-              ueeee
-            </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              ueeee.my.id
-            </span>
-          </div>
+          <span className="font-extrabold text-2xl tracking-tight text-slate-900">
+            ueeee
+          </span>
         </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Zero-Login Badge */}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
-            <ShieldCheck size={14} className="text-emerald-600" />
-            <span>Terbuka Bebas • Tanpa Login</span>
-          </div>
-
           {/* Tombol Main Acak (Surprise Me) */}
           <button
             onClick={() => {
