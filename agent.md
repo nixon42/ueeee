@@ -2,6 +2,11 @@
 
 Selamat datang di proyek **ueeee** (`ueeee.my.id`). Panduan ini berisi aturan, arsitektur, konvensi kode, dan standar visual untuk agen dan developer yang berkontribusi pada repositori ini.
 
+> 📖 **PENTING UNTUK AGENT PENERUS:**
+> Dokumen spesifikasi game lengkap dan batasan mutlak desain proyektor/layar sentuh kelas tersedia di:
+> **[GAME_SPEC.md](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/GAME_SPEC.md)**.
+> Wajib baca dokumen tersebut sebelum memodifikasi atau membuat materi game baru!
+
 ---
 
 ## 1. Visi & Filosofi Produk
