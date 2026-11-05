@@ -28,12 +28,12 @@ const GRADE_LEVELS: GradeLevel[] = [
 ];
 
 const TRENDING_TAGS = [
-  '#SainsSD',
-  '#PecahanMatematika',
-  '#CandiBorobudur',
-  '#TataSurya',
-  '#KonservasiHutan',
-  '#LaboratoriumKimia',
+  'Candi Borobudur',
+  'Tata Surya',
+  'Pecahan',
+  'Fotosintesis',
+  'Lab Sains',
+  'Kerajaan Majapahit',
 ];
 
 export const Header: React.FC<Props> = ({
@@ -186,14 +186,14 @@ export const Header: React.FC<Props> = ({
           <div className="relative flex items-center">
             <Search
               size={20}
-              className="absolute left-4.5 text-slate-400 pointer-events-none z-10"
+              className="absolute left-[22px] top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none z-10"
             />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Cari game, materi, atau topik (misal: Sains, Pecahan, Borobudur)..."
-              className="w-full pl-[52px] pr-20 py-3.5 sm:py-4 rounded-full bg-white border-2 border-purple-200/80 hover:border-purple-300 focus:border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-200/50 shadow-md text-slate-800 text-sm sm:text-base font-medium transition placeholder:text-slate-400"
+              className="w-full pl-[56px] pr-20 py-3.5 sm:py-4 rounded-full bg-white border-2 border-purple-200/80 hover:border-purple-300 focus:border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-200/50 shadow-md text-slate-800 text-sm sm:text-base font-medium transition placeholder:text-slate-400"
             />
             {searchQuery && (
               <button
@@ -201,7 +201,7 @@ export const Header: React.FC<Props> = ({
                   sound.playClick();
                   onSearchChange('');
                 }}
-                className="absolute right-3.5 z-10 text-xs font-bold text-slate-500 hover:text-slate-800 px-2.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer flex items-center gap-1 shadow-2xs"
+                className="absolute right-[14px] top-1/2 -translate-y-1/2 z-10 text-xs font-bold text-slate-500 hover:text-slate-800 px-2.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer flex items-center gap-1 shadow-2xs"
                 title="Hapus pencarian"
               >
                 <X size={14} />
