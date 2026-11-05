@@ -11,6 +11,7 @@
    - [`GameQuizModal`](#gamequizmodal)
    - [`GameVictoryModal`](#gamevictorymodal)
    - [Chess.com-Style Board & Piece Components](#chesscom-style-board--piece-components)
+   - [Canva Education Interactive & Story Presentation Components](#canva-education-interactive--story-presentation-components)
 2. [Dashboard & Content Components](#2-dashboard--content-components)
    - [`GameCard`](#gamecard)
    - [`GameIllustration`](#gameillustration)
@@ -26,7 +27,8 @@
    - [`sound`](#sound)
    - [`isGameMatchingSearch`](#isgamematchingsearch)
 5. [Arsitektur Smooth 60 FPS (Chess.com Deep Dive)](#5-arsitektur-smooth-60-fps-chesscom-deep-dive)
-6. [Resep Cepat: Cara Membuat Game Baru dalam 5 Menit](#6-resep-cepat-cara-membuat-game-baru-dalam-5-menit)
+6. [Spesifikasi Game Interaktif Canva Education](#6-spesifikasi-game-interaktif-canva-education)
+7. [Resep Cepat: Cara Membuat Game Baru dalam 5 Menit](#7-resep-cepat-cara-membuat-game-baru-dalam-5-menit)
 
 ---
 
@@ -203,6 +205,32 @@ import { GameVictoryModal } from '@/components/game-shell';
 - Menghitung posisi kolom dan baris (0-9) untuk pion Ular Tangga agar melangkah mulus dengan transisi GPU `translate3d(col * 100%, row * 100%, 0)`.
 
 ---
+
+### Canva Education Interactive & Story Presentation Components
+**Lokasi Direktori:** `src/components/canva-games/`  
+**Panduan Spesifikasi Lengkap:** [`CANVA_INTERACTIVE_GAMES_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CANVA_INTERACTIVE_GAMES_SPEC.md)
+
+#### 1. `CanvaSequenceGame`
+**File:** [`src/components/canva-games/CanvaSequenceGame.tsx`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/src/components/canva-games/CanvaSequenceGame.tsx)
+- Replikasi game Canva *"Put the steps in order"*.
+- Kartu tahapan dengan nomor urut, emoji, judul, dan penjelasan.
+- Mendukung tombol geser panah `[ ← ]` `[ → ]` (proyektor/touchscreen friendly), tombol `Acak Ulang`, dan `Periksa Urutan` dengan feedback border hijau/merah.
+
+#### 2. `CanvaMatchPairsGame`
+**File:** [`src/components/canva-games/CanvaMatchPairsGame.tsx`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/src/components/canva-games/CanvaMatchPairsGame.tsx)
+- Replikasi game Canva *"Match the Pairs / Match A to B"*.
+- Dua kolom konsep sejajar yang dihubungkan dengan **garis SVG putus-putus dinamis (*rubber-band lines*)**.
+- Tombol `Reset Garis` dan `Periksa Pasangan` dengan indikator centang/silang.
+
+#### 3. `InteractiveStoryPresentationModal`
+**File:** [`src/components/canva-games/InteractiveStoryPresentationModal.tsx`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/src/components/canva-games/InteractiveStoryPresentationModal.tsx)
+- Format presentasi slide bercerita:
+  - **Slide 1:** Narasi pengantar misi (dialog Prof. Maya).
+  - **Slide 2:** Infografis materi konsep kunci (3 tingkat trofik).
+  - **Slide 3:** Mini-game Canva Sequence (urutkan fotosintesis).
+  - **Slide 4:** Mini-game Canva Match Pairs (jodohkan peran satwa).
+  - **Slide 5:** Kelanjutan resolusi cerita & laporan konservasi.
+  - **Slide 6:** Lembar refleksi & pertanyaan pemantik diskusi guru.
 
 ---
 

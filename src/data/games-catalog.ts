@@ -393,4 +393,49 @@ export const GAMES_CATALOG: GameItem[] = [
       ]
     }
   },
+  {
+    id: 'presentasi-ekosistem-hutan',
+    title: 'Presentasi Interaktif: Ekspedisi Hutan Tropis',
+    subtitle: 'Alur presentasi cerita dengan mini-game urutan langkah & jodohkan pasangan Canva.',
+    description: 'Format presentasi interaktif kelas: diawali kisah narasi petualangan Prof. Maya, dilanjutkan infografis materi fotosintesis, dan mini-game Canva Sequence serta Match Pairs untuk menggantikan kuis biasa.',
+    type: 'point-and-click',
+    category: 'sains',
+    gradeLevel: 'SD Kelas 4-6',
+    badge: 'Format Slide Interaktif',
+    badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+    accentColor: '#059669',
+    gradient: 'from-emerald-600 via-teal-600 to-green-700',
+    iconName: 'Presentation',
+    playTimeMinutes: 12,
+    featured: true,
+    subjectDetail: 'Biologi, Fotosintesis & Rantai Makanan Tropis',
+    rating: 5.0,
+    playsCount: 3820,
+    tags: [
+      'presentasi', 'slide interaktif', 'canva', 'sequence', 'match pairs', 
+      'fotosintesis', 'ekosistem', 'rantai makanan', 'hutan', 'sains'
+    ],
+    prolog: {
+      story: 'Bosan dengan presentasi slide yang pasif dan kuis pilihan ganda yang monoton? Masuki era presentasi interaktif bercerita! Bergabunglah dalam tim ekspedisi Prof. Maya untuk memecahkan misteri rantai energi pohon ara purba di pedalaman hutan tropis.',
+      learningGoals: [
+        'Memahami tahapan berurutan proses fotosintesis tumbuhan dan pertukaran gas.',
+        'Mengidentifikasi relasi peran produsen, konsumen herbivora/karnivora, dan dekomposer.',
+        'Mengembangkan keterampilan menyusun tahapan algoritmik (Sequence ordering).',
+        'Mendorong partisipasi aktif kelas melalui diskusi pemantik nalar kritis guru.'
+      ],
+      howToPlay: [
+        'Buka slide presentasi bersama guru di layar proyektor kelas.',
+        'Simak narasi misi pada Slide 1, lalu pelajari intisari konsep pada Slide 2.',
+        'Selesaikan Tantangan 1: Geser kartu urutan fotosintesis (Sequence Game) di Slide 3.',
+        'Selesaikan Tantangan 2: Tarik garis pasangkan komponen ekosistem (Match Pairs) di Slide 4.',
+        'Saksikan kelanjutan cerita dan diskusikan kartu refleksi kelas di Slide 5 & 6.'
+      ],
+      rules: [
+        'Setiap tantangan mini-game dapat diselesaikan bersama-sama secara kolaboratif.',
+        'Gunakan tombol "Periksa Urutan" dan "Periksa Pasangan" untuk mendapatkan feedback instan.',
+        'Tombol Acak Ulang dan Reset Garis dapat digunakan tanpa penalti skor.',
+        'Selesaikan seluruh slide untuk membuka trofi Cendekiawan Konservasi Hutan Tropis.'
+      ]
+    }
+  },
 ];

@@ -747,6 +747,83 @@ export const GameIllustration: React.FC<Props> = ({ gameId, className = '' }) =>
         </div>
       );
 
+    // 9. Presentasi Interaktif: Ekspedisi Hutan Tropis (Canva Slides + Sequence & Match Pairs)
+    case 'presentasi-ekosistem-hutan':
+      return (
+        <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>
+          <svg className="w-full h-full object-cover" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" fill="none">
+            <defs>
+              <linearGradient id="slideDeckGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#064e3b" />
+                <stop offset="50%" stopColor="#065f46" />
+                <stop offset="100%" stopColor="#022c22" />
+              </linearGradient>
+            </defs>
+
+            {/* Background */}
+            <rect width="400" height="200" fill="url(#slideDeckGrad)" />
+
+            {/* Floating Presentation Slide Frame */}
+            <g transform="translate(140, 35) scale(0.95)">
+              {/* Slide Card Shadow & Border */}
+              <rect width="240" height="135" rx="14" fill="#ffffff" stroke="#34d399" strokeWidth="2" opacity="0.95" />
+              {/* Top Slide Header Bar */}
+              <rect width="240" height="24" rx="14" fill="#f0fdf4" />
+              <circle cx="15" cy="12" r="3.5" fill="#f87171" />
+              <circle cx="26" cy="12" r="3.5" fill="#fbbf24" />
+              <circle cx="37" cy="12" r="3.5" fill="#34d399" />
+              <text x="50" y="15" fill="#065f46" fontSize="8" fontWeight="bold">
+                SLIDE 3: TANTANGAN URUTAN FOTOSINTESIS
+              </text>
+
+              {/* 3 Interactive Sequence Step Cards inside the Slide */}
+              {[
+                { label: '1. Sinar Surya', emoji: '☀️', x: 12 },
+                { label: '2. Klorofil H2O', emoji: '🌱', x: 88 },
+                { label: '3. Glukosa O2', emoji: '🍎', x: 164 },
+              ].map((step, idx) => (
+                <g key={`step-${idx}`} transform={`translate(${step.x}, 40)`}>
+                  <rect width="64" height="68" rx="8" fill="#ecfdf5" stroke="#10b981" strokeWidth="1.2" />
+                  <text x="32" y="32" textAnchor="middle" fontSize="20">
+                    {step.emoji}
+                  </text>
+                  <text x="32" y="52" textAnchor="middle" fill="#047857" fontSize="7" fontWeight="bold">
+                    {step.label}
+                  </text>
+                  <rect x="8" y="58" width="48" height="3" rx="1.5" fill="#34d399" />
+                </g>
+              ))}
+
+              {/* Connecting Arrows between Cards */}
+              <path d="M 80 74 L 84 74" stroke="#059669" strokeWidth="2" strokeLinecap="round" />
+              <path d="M 156 74 L 160 74" stroke="#059669" strokeWidth="2" strokeLinecap="round" />
+            </g>
+
+            {/* Character Silhouette / Explorer on Left */}
+            <g transform="translate(30, 45)">
+              <circle cx="35" cy="35" r="24" fill="#10b981" opacity="0.3" />
+              <circle cx="35" cy="35" r="18" fill="#ffffff" />
+              <text x="35" y="42" textAnchor="middle" fontSize="20">
+                🌿
+              </text>
+              <rect x="8" y="70" width="54" height="18" rx="9" fill="#022c22" stroke="#34d399" strokeWidth="1" />
+              <text x="35" y="82" textAnchor="middle" fill="#a7f3d0" fontSize="7" fontWeight="bold">
+                PROF. MAYA
+              </text>
+            </g>
+
+            {/* Bottom Tag */}
+            <g transform="translate(25, 165)">
+              <rect width="210" height="22" rx="11" fill="#022c22" stroke="#34d399" strokeWidth="1" opacity="0.95" />
+              <circle cx="12" cy="11" r="4" fill="#f59e0b" />
+              <text x="22" y="14" fill="#a7f3d0" fontSize="8" fontWeight="bold">
+                PRESENTASI CERITA • MINI-GAME CANVA
+              </text>
+            </g>
+          </svg>
+        </div>
+      );
+
     // 8. Teka-Teki Catur & Taktik Logika (Chess.com-Style Board & Tactical Arrow)
     case 'catur-taktik-logika':
     default:

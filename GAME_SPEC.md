@@ -190,7 +190,22 @@ Seluruh game berbasis grid, papan, atau interaksi bidak/objek di platform **ueee
 
 ---
 
-## 8. Panduan Menambahkan Game / Materi Baru (Step-by-Step)
+## 8. Format Presentasi Cerita & Game Interaktif Canva Education
+
+Untuk menggantikan presentasi slide statis dan kuis pilihan ganda yang monoton, platform **ueeee** menyediakan arsitektur **Story-Driven Interactive Slide Presentation** (lihat panduan lengkap di [`CANVA_INTERACTIVE_GAMES_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CANVA_INTERACTIVE_GAMES_SPEC.md)):
+
+1. **Alur 5 Babak Pembelajaran:**
+   - **Slide 1:** Narasi pembuka misi (*Story Narrative Hook*) dengan karakter pemandu (Profesor / Penjelajah).
+   - **Slide 2:** Konsep inti (*Visual Concept Bite*) dengan 3 pilar materi yang jelas.
+   - **Slide 3:** Mini-game Canva Sequence (`CanvaSequenceGame`): Siswa mengurutkan tahapan siklus atau linimasa.
+   - **Slide 4:** Mini-game Canva Match Pairs (`CanvaMatchPairsGame`): Siswa menjodohkan konsep via garis penghubung SVG.
+   - **Slide 5:** Kelanjutan cerita & resolusi dampak dari solusi siswa.
+   - **Slide 6:** Lembar diskusi kelas & pertanyaan refleksi guru.
+2. **Komponen Siap Pakai:** Wajib gunakan `CanvaSequenceGame` dan `CanvaMatchPairsGame` dari `@/components/canva-games`.
+
+---
+
+## 9. Panduan Menambahkan Game / Materi Baru (Step-by-Step)
 
 Ketika diminta menambahkan materi atau game baru:
 

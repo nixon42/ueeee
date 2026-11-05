@@ -7,6 +7,7 @@ import { UlarTanggaModal } from '@/games/ular-tangga/UlarTanggaModal';
 import { PointAndClickModal } from '@/games/point-and-click/PointAndClickModal';
 import { PuzzleModal } from '@/games/puzzle/PuzzleModal';
 import { ChessPuzzleModal } from '@/games/chess-puzzle';
+import { InteractiveStoryPresentationModal } from '@/components/canva-games';
 import { TeacherSheetModal } from '@/components/modals/TeacherSheetModal';
 import { PrologModal } from '@/components/dashboard/PrologModal';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
@@ -46,6 +47,7 @@ export default function App() {
   const [activePointAndClickScene, setActivePointAndClickScene] = useState<string>('lab-sains');
   const [isPuzzleOpen, setIsPuzzleOpen] = useState<boolean>(false);
   const [isChessOpen, setIsChessOpen] = useState<boolean>(false);
+  const [isPresentationOpen, setIsPresentationOpen] = useState<boolean>(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState<boolean>(false);
   const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
 
@@ -97,7 +99,9 @@ export default function App() {
     url.searchParams.set('game', game.id);
     window.history.replaceState({}, '', url.toString());
 
-    if (game.id === 'catur-taktik-logika' || game.id.includes('catur') || game.id.includes('chess')) {
+    if (game.id === 'presentasi-ekosistem-hutan' || game.id.includes('presentasi')) {
+      setIsPresentationOpen(true);
+    } else if (game.id === 'catur-taktik-logika' || game.id.includes('catur') || game.id.includes('chess')) {
       setIsChessOpen(true);
     } else if (game.type === 'ular-tangga') {
       if (game.id.includes('matematika')) setActiveUlarTanggaSubject('matematika');
@@ -116,11 +120,12 @@ export default function App() {
     }
   };
 
-  const closeGameModal = (which: 'ular' | 'point' | 'puzzle' | 'chess') => {
+  const closeGameModal = (which: 'ular' | 'point' | 'puzzle' | 'chess' | 'presentation') => {
     if (which === 'ular') setIsUlarTanggaOpen(false);
     if (which === 'point') setIsPointAndClickOpen(false);
     if (which === 'puzzle') setIsPuzzleOpen(false);
     if (which === 'chess') setIsChessOpen(false);
+    if (which === 'presentation') setIsPresentationOpen(false);
 
     // Clean up query param
     const url = new URL(window.location.href);
@@ -274,6 +279,12 @@ export default function App() {
         <ChessPuzzleModal
           isOpen={isChessOpen}
           onClose={() => closeGameModal('chess')}
+        />
+      )}
+      {isPresentationOpen && (
+        <InteractiveStoryPresentationModal
+          isOpen={isPresentationOpen}
+          onClose={() => closeGameModal('presentation')}
         />
       )}
       <TeacherSheetModal
