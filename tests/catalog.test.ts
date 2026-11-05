@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { GAMES_CATALOG } from '../src/data/games-catalog';
 import { POINT_CLICK_SCENES } from '../src/data/point-click-scenes';
+import { CATEGORIES } from '../src/data/categories';
 import { isGameMatchingSearch } from '../src/lib/search';
 
 describe('Games & Scenes Catalog Integrity', () => {
@@ -16,6 +17,22 @@ describe('Games & Scenes Catalog Integrity', () => {
       expect(game.rating).toBeLessThanOrEqual(5.0);
       expect(game.playTimeMinutes).toBeGreaterThan(0);
       expect(game.title.length).toBeGreaterThan(3);
+    }
+  });
+
+  test('Category bubbles are strictly uniform academic subjects without game mechanics', () => {
+    const categoryIds = CATEGORIES.map(c => c.id);
+    expect(categoryIds).not.toContain('ular-tangga' as any);
+    expect(categoryIds).not.toContain('point-and-click' as any);
+    expect(categoryIds).toContain('all');
+    expect(categoryIds).toContain('sains');
+    expect(categoryIds).toContain('matematika');
+    expect(categoryIds).toContain('sejarah');
+    expect(categoryIds).toContain('bahasa');
+    expect(categoryIds).toContain('logika');
+
+    for (const game of GAMES_CATALOG) {
+      expect(categoryIds).toContain(game.category);
     }
   });
 

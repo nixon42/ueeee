@@ -140,10 +140,7 @@ export default function App() {
 
       // Default category, tab, and grade filtering when not searching
       const matchCategory =
-        selectedCategory === 'all' ||
-        game.category === selectedCategory ||
-        (selectedCategory === 'ular-tangga' && game.type === 'ular-tangga') ||
-        (selectedCategory === 'point-and-click' && game.type === 'point-and-click');
+        selectedCategory === 'all' || game.category === selectedCategory;
 
       const matchTab =
         activeTab === 'all' ||
@@ -189,12 +186,7 @@ export default function App() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           activeTab={activeTab}
-          onTabChange={(tab) => {
-            setActiveTab(tab);
-            if (tab === 'ular-tangga') setSelectedCategory('ular-tangga');
-            else if (tab === 'point-and-click') setSelectedCategory('point-and-click');
-            else setSelectedCategory('all');
-          }}
+          onTabChange={setActiveTab}
           selectedGrade={selectedGrade}
           onGradeChange={setSelectedGrade}
           isClassroomMode={isClassroomMode}
@@ -205,16 +197,11 @@ export default function App() {
         {/* Canva Horizontal Category Pills */}
         <CategoryPills
           selectedCategory={selectedCategory}
-          onSelectCategory={(cat) => {
-            setSelectedCategory(cat);
-            if (cat === 'ular-tangga') setActiveTab('ular-tangga');
-            else if (cat === 'point-and-click') setActiveTab('point-and-click');
-            else setActiveTab('all');
-          }}
+          onSelectCategory={setSelectedCategory}
         />
 
         {/* Canva Feature Banner Cards */}
-        {!searchQuery && selectedCategory === 'all' && selectedGrade === 'Semua Kelas' && (
+        {!searchQuery && selectedCategory === 'all' && selectedGrade === 'Semua Kelas' && activeTab === 'all' && (
           <FeaturedBanner
             onPlayUlarTangga={() => {
               setActiveUlarTanggaSubject('sains');
@@ -234,16 +221,24 @@ export default function App() {
           title={
             searchQuery
               ? `Hasil Pencarian: "${searchQuery}"`
-              : selectedCategory === 'ular-tangga'
+              : activeTab === 'ular-tangga'
               ? 'Papan Ular Tangga Edukatif'
-              : selectedCategory === 'point-and-click'
+              : activeTab === 'point-and-click'
               ? 'Petualangan Point & Click'
-              : selectedCategory === 'matematika'
-              ? 'Materi Pembelajaran Matematika'
+              : activeTab === 'puzzle'
+              ? 'Teka-Teki Asah Otak'
+              : activeTab === 'favorites'
+              ? 'Koleksi Favorit Saya'
               : selectedCategory === 'sains'
               ? 'Materi Pembelajaran Sains & Alam'
+              : selectedCategory === 'matematika'
+              ? 'Materi Pembelajaran Matematika'
               : selectedCategory === 'sejarah'
               ? 'Materi Sejarah & Budaya Nusantara'
+              : selectedCategory === 'bahasa'
+              ? 'Materi Bahasa & Kosakata'
+              : selectedCategory === 'logika'
+              ? 'Materi Logika & Asah Otak'
               : 'Semua Koleksi Materi Belajar'
           }
           onPlayGame={launchGame}

@@ -2,12 +2,10 @@ export type GameType = 'ular-tangga' | 'point-and-click' | 'quiz' | 'puzzle';
 
 export type SubjectCategory = 
   | 'all'
-  | 'ular-tangga'
-  | 'point-and-click'
-  | 'matematika'
   | 'sains'
-  | 'bahasa'
+  | 'matematika'
   | 'sejarah'
+  | 'bahasa'
   | 'logika';
 
 export type GradeLevel = 'Semua Kelas' | 'SD Kelas 1-3' | 'SD Kelas 4-6' | 'SMP' | 'SMA';
