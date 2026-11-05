@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Search, Sparkles, Volume2, VolumeX, 
-  Gamepad2, Presentation, Compass, Puzzle, Dices 
+  Gamepad2, Presentation, Compass, Puzzle, Dices, X 
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
@@ -186,21 +186,26 @@ export const Header: React.FC<Props> = ({
           <div className="relative flex items-center">
             <Search
               size={20}
-              className="absolute left-5 text-slate-400 pointer-events-none"
+              className="absolute left-4.5 text-slate-400 pointer-events-none z-10"
             />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Cari game, topik materi, atau jenjang (misal: Sains, Pecahan, Borobudur)..."
-              className="w-full pl-13 pr-12 py-3.5 sm:py-4 rounded-full bg-white border-2 border-purple-200/80 hover:border-purple-300 focus:border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-200/50 shadow-md text-slate-800 text-sm sm:text-base font-medium transition placeholder:text-slate-400"
+              placeholder="Cari game, materi, atau topik (misal: Sains, Pecahan, Borobudur)..."
+              className="w-full pl-[52px] pr-20 py-3.5 sm:py-4 rounded-full bg-white border-2 border-purple-200/80 hover:border-purple-300 focus:border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-200/50 shadow-md text-slate-800 text-sm sm:text-base font-medium transition placeholder:text-slate-400"
             />
             {searchQuery && (
               <button
-                onClick={() => onSearchChange('')}
-                className="absolute right-4 text-xs font-bold text-slate-400 hover:text-slate-700 px-2 py-1 rounded-full bg-slate-100 cursor-pointer"
+                onClick={() => {
+                  sound.playClick();
+                  onSearchChange('');
+                }}
+                className="absolute right-3.5 z-10 text-xs font-bold text-slate-500 hover:text-slate-800 px-2.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer flex items-center gap-1 shadow-2xs"
+                title="Hapus pencarian"
               >
-                Reset
+                <X size={14} />
+                <span>Reset</span>
               </button>
             )}
           </div>

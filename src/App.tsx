@@ -12,6 +12,7 @@ import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
 import { Heart, Sparkles, BookOpen } from 'lucide-react';
 import { LogoIcon } from '@/components/common/Logo';
+import { isGameMatchingSearch } from '@/lib/search';
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -125,13 +126,19 @@ export default function App() {
 
   // Filter games based on search, category, tab, and grade
   const filteredGames = useMemo(() => {
-    return GAMES_CATALOG.filter((game) => {
-      const matchSearch =
-        game.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        game.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        game.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        game.subjectDetail.toLowerCase().includes(searchQuery.toLowerCase());
+    const trimmedQuery = searchQuery.trim();
 
+    return GAMES_CATALOG.filter((game) => {
+      // If user typed in search bar, match across whole catalog (unless on Favorites tab)
+      if (trimmedQuery) {
+        const matchesQuery = isGameMatchingSearch(game, trimmedQuery);
+        if (activeTab === 'favorites') {
+          return matchesQuery && favorites.includes(game.id);
+        }
+        return matchesQuery;
+      }
+
+      // Default category, tab, and grade filtering when not searching
       const matchCategory =
         selectedCategory === 'all' ||
         game.category === selectedCategory ||
@@ -150,9 +157,9 @@ export default function App() {
         game.gradeLevel === selectedGrade ||
         game.gradeLevel === 'Semua Kelas';
 
-      return matchSearch && matchCategory && matchTab && matchGrade;
+      return matchCategory && matchTab && matchGrade;
     });
-  }, [searchQuery, selectedCategory, activeTab, selectedGrade]);
+  }, [searchQuery, selectedCategory, activeTab, selectedGrade, favorites]);
 
   const recentGames = useMemo(() => {
     return recentGameIds

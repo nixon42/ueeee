@@ -30,6 +30,7 @@ export interface GameItem {
   subjectDetail: string;
   rating: number; // 4.8, 4.9, etc.
   playsCount: number;
+  tags?: string[];
 }
 
 export interface QuizQuestion {

@@ -5,7 +5,7 @@ export const GAMES_CATALOG: GameItem[] = [
     id: 'ular-tangga-sains',
     title: 'Ular Tangga: Petualangan Sains',
     subtitle: 'Taklukkan tantangan petak dan hindari ular dengan kuis sains!',
-    description: 'Game papan Ular Tangga 100 petak yang dilengkapi dengan pertanyaan fisika, biologi, dan tata surya. Naik tangga jika benar, hindari ular jika salah!',
+    description: 'Game papan Ular Tangga 100 petak yang dilengkapi dengan pertanyaan fisika, biologi, fotosintesis tumbuhan, dan fenomena alam. Naik tangga jika benar, hindari ular jika salah!',
     type: 'ular-tangga',
     category: 'ular-tangga',
     gradeLevel: 'SD Kelas 4-6',
@@ -19,12 +19,16 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'IPA / Sains & Fenomena Alam',
     rating: 4.9,
     playsCount: 2480,
+    tags: [
+      'sains', 'ipa', 'fotosintesis', 'tata surya', 'biologi', 
+      'fisika', 'energi', 'ekosistem', 'ular tangga', 'kuis sains'
+    ],
   },
   {
     id: 'point-click-lab',
     title: 'Point & Click: Misteri Lab Sains Maya',
     subtitle: 'Temukan alat-alat lab tersembunyi dan pecahkan teka-teki reaksi kimia!',
-    description: 'Petualangan interaktif di dalam laboratorium sains virtual. Klik berbagai tabung reaksi, mikroskop elektron, dan jurnal riset untuk meracik formula netral.',
+    description: 'Petualangan interaktif di dalam laboratorium sains virtual. Klik berbagai tabung reaksi kimia, mikroskop elektron, klorofil fotosintesis daun, dan jurnal riset untuk meracik formula netral.',
     type: 'point-and-click',
     category: 'point-and-click',
     gradeLevel: 'SD Kelas 4-6',
@@ -38,12 +42,16 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Kimia & Biologi Eksperimental',
     rating: 4.9,
     playsCount: 1940,
+    tags: [
+      'lab sains', 'sains', 'kimia', 'biologi', 'fotosintesis', 
+      'eksperimen', 'mikroskop', 'larutan', 'point and click'
+    ],
   },
   {
     id: 'ular-tangga-matematika',
     title: 'Ular Tangga: Master Berhitung Cepat',
     subtitle: 'Lompat ke puncak dengan menguasai perkalian, pecahan, dan logika!',
-    description: 'Setiap dadu dilempar, pemain yang berhenti di petak kuis harus menghitung cepat operasi matematika untuk mengamankan langkah bonus.',
+    description: 'Setiap dadu dilempar, pemain yang berhenti di petak kuis harus menghitung cepat operasi matematika, pecahan desimal, perkalian, dan geometri untuk mengamankan langkah bonus.',
     type: 'ular-tangga',
     category: 'matematika',
     gradeLevel: 'SD Kelas 1-3',
@@ -56,12 +64,16 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Aritmatika, Geometri, Pecahan',
     rating: 4.8,
     playsCount: 1620,
+    tags: [
+      'matematika', 'pecahan', 'hitung cepat', 'perkalian', 'pembagian', 
+      'aritmatika', 'geometri', 'angka', 'ular tangga'
+    ],
   },
   {
     id: 'point-click-candi',
-    title: 'Point & Click: Relief Sejarah Nusantara',
-    subtitle: 'Eksplorasi situs candi dan temukan jejak peradaban masa lalu.',
-    description: 'Jelajahi relief candi batu andesit dan museum virtual. Klik perahu bercadik, terjemahkan prasasti Pallawa kuno, dan pelajari kebesaran Sriwijaya & Majapahit.',
+    title: 'Point & Click: Candi Borobudur & Relief Nusantara',
+    subtitle: 'Eksplorasi situs Candi Borobudur dan temukan jejak peradaban masa lalu.',
+    description: 'Jelajahi relief Candi Borobudur batu andesit, stupa, dan museum virtual. Klik perahu bercadik Borobudur, terjemahkan prasasti kuno, dan pelajari kebesaran Sriwijaya serta Kerajaan Majapahit.',
     type: 'point-and-click',
     category: 'sejarah',
     gradeLevel: 'SMP',
@@ -74,12 +86,17 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Sejarah Nasional & Arkeologi',
     rating: 4.9,
     playsCount: 1350,
+    tags: [
+      'candi borobudur', 'borobudur', 'candi', 'candiborobudur', 'relief', 
+      'sejarah', 'nusantara', 'kerajaan majapahit', 'majapahit', 'sriwijaya', 
+      'prasasti', 'arkeologi', 'point and click'
+    ],
   },
   {
     id: 'point-click-hutan',
     title: 'Point & Click: Ekspedisi Satwa Endemik',
     subtitle: 'Jelajah kanopi hutan hujan tropis & konservasi biodiversitas.',
-    description: 'Amati Orangutan Sumatera, tarian Burung Cendrawasih Papua, dan naga purba Komodo di habitat aslinya dengan teropong lapangan.',
+    description: 'Amati Orangutan Sumatera, tarian Burung Cendrawasih Papua, dan naga purba Komodo di habitat aslinya dengan teropong lapangan. Pelajari ekosistem dan fotosintesis hutan.',
     type: 'point-and-click',
     category: 'sains',
     gradeLevel: 'Semua Kelas',
@@ -92,12 +109,17 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Biologi Lingkungan & Biodiversitas',
     rating: 4.9,
     playsCount: 1470,
+    tags: [
+      'satwa endemik', 'hutan', 'hewan', 'fauna', 'orangutan', 
+      'cendrawasih', 'komodo', 'biodiversitas', 'fotosintesis', 
+      'konservasi', 'biologi', 'point and click'
+    ],
   },
   {
     id: 'ular-tangga-tatasurya',
     title: 'Ular Tangga: Orbit Tata Surya',
     subtitle: 'Meluncur di antara planet, sabuk asteroid, dan gravitasi antariksa!',
-    description: 'Papan antariksa seru dari Merkurius sampai sabuk Kuiper. Dadu roket dan petak gravitasi yang menguji wawasan astronomi dan fisika antariksa.',
+    description: 'Papan antariksa seru dari Merkurius sampai sabuk Kuiper. Dadu roket dan petak gravitasi yang menguji wawasan astronomi, planet, bintang, dan gravitasi antariksa.',
     type: 'ular-tangga',
     category: 'sains',
     gradeLevel: 'SD Kelas 4-6',
@@ -110,12 +132,16 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Tata Surya, Planet & Bintang',
     rating: 4.8,
     playsCount: 1810,
+    tags: [
+      'tata surya', 'tatasurya', 'planet', 'astronomi', 'antariksa', 
+      'roket', 'mars', 'jupiter', 'bumi', 'matahari', 'gravitasi', 'ular tangga'
+    ],
   },
   {
     id: 'teka-teki-kata',
     title: 'Teka-Teki: Susun Kata & Rumus Sains',
     subtitle: 'Game interaktif susun huruf, istilah ilmiah, dan sinonim kata.',
-    description: 'Susun huruf acak menjadi istilah sains dan kosakata baku bahasa Indonesia. Dapatkan skor streak dan buka lencana peneliti!',
+    description: 'Susun huruf acak menjadi istilah sains, rumus, fotosintesis, gravitasi, dan kosakata baku bahasa Indonesia. Dapatkan skor streak dan buka lencana peneliti!',
     type: 'puzzle',
     category: 'bahasa',
     gradeLevel: 'SMP',
@@ -128,12 +154,16 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Kosakata, Bahasa & Istilah Ilmiah',
     rating: 4.7,
     playsCount: 980,
+    tags: [
+      'teka teki', 'teka-teki', 'puzzle', 'susun kata', 'kata', 
+      'bahasa', 'bahasa indonesia', 'istilah sains', 'asah otak', 'logika'
+    ],
   },
   {
     id: 'ular-tangga-sejarah',
     title: 'Ular Tangga: Lintasan Sejarah Indonesia',
     subtitle: 'Mengarungi linimasa dari zaman prasasti hingga kemerdekaan.',
-    description: 'Setiap tangga melambangkan peristiwa persatuan dan perjuangan bangsa, sedangkan ular melambangkan tantangan sejarah yang harus diatasi dengan persatuan.',
+    description: 'Setiap tangga melambangkan peristiwa persatuan dan perjuangan bangsa, Kerajaan Majapahit, Sriwijaya, sedangkan ular melambangkan tantangan sejarah yang harus diatasi dengan persatuan.',
     type: 'ular-tangga',
     category: 'sejarah',
     gradeLevel: 'SMA',
@@ -146,5 +176,9 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Perjalanan Sejarah Bangsa',
     rating: 4.8,
     playsCount: 1120,
+    tags: [
+      'sejarah', 'sejarah indonesia', 'kerajaan majapahit', 'majapahit', 
+      'kemerdekaan', 'pahlawan', 'prasasti', 'proklamasi', 'ular tangga'
+    ],
   },
 ];

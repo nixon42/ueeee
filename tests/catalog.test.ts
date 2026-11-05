@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { GAMES_CATALOG } from '../src/data/games-catalog';
 import { POINT_CLICK_SCENES } from '../src/data/point-click-scenes';
+import { isGameMatchingSearch } from '../src/lib/search';
 
 describe('Games & Scenes Catalog Integrity', () => {
   test('Games Catalog has unique IDs', () => {
@@ -32,5 +33,31 @@ describe('Games & Scenes Catalog Integrity', () => {
         expect(spot.dialogue.length).toBeGreaterThan(10);
       }
     }
+  });
+
+  test('Search matcher correctly finds games with various query formats', () => {
+    // 1. Spaceless search: "candiborobudur"
+    const candiMatches = GAMES_CATALOG.filter(g => isGameMatchingSearch(g, 'candiborobudur'));
+    expect(candiMatches.length).toBeGreaterThanOrEqual(1);
+    expect(candiMatches.some(g => g.id === 'point-click-candi')).toBe(true);
+
+    // 2. Standard search with space: "Candi Borobudur"
+    const candiSpaceMatches = GAMES_CATALOG.filter(g => isGameMatchingSearch(g, 'Candi Borobudur'));
+    expect(candiSpaceMatches.length).toBeGreaterThanOrEqual(1);
+    expect(candiSpaceMatches.some(g => g.id === 'point-click-candi')).toBe(true);
+
+    // 3. Substring: "Borobudur"
+    const borobudurMatches = GAMES_CATALOG.filter(g => isGameMatchingSearch(g, 'Borobudur'));
+    expect(borobudurMatches.length).toBeGreaterThanOrEqual(1);
+    expect(borobudurMatches[0].id).toBe('point-click-candi');
+
+    // 4. Science keyword: "fotosintesis"
+    const fotoMatches = GAMES_CATALOG.filter(g => isGameMatchingSearch(g, 'fotosintesis'));
+    expect(fotoMatches.length).toBeGreaterThanOrEqual(1);
+
+    // 5. Spaceless astronomy keyword: "tatasurya"
+    const tataMatches = GAMES_CATALOG.filter(g => isGameMatchingSearch(g, 'tatasurya'));
+    expect(tataMatches.length).toBeGreaterThanOrEqual(1);
+    expect(tataMatches.some(g => g.id === 'ular-tangga-tatasurya')).toBe(true);
   });
 });
