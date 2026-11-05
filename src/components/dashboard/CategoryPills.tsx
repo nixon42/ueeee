@@ -40,8 +40,8 @@ export const CategoryPills: React.FC<Props> = ({
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex items-center gap-3 sm:gap-6 overflow-x-auto pb-3 pt-1 scrollbar-none no-scrollbar">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto pb-3 pt-3 scrollbar-none no-scrollbar justify-start md:justify-center">
         {CATEGORIES.map((cat: CategoryTab) => {
           const IconComponent = ICON_MAP[cat.iconName] || LayoutGrid;
           const isSelected = selectedCategory === cat.id;
@@ -50,12 +50,12 @@ export const CategoryPills: React.FC<Props> = ({
             <button
               key={cat.id}
               onClick={() => handleClick(cat.id)}
-              className="flex flex-col items-center gap-2 group shrink-0 focus:outline-none"
+              className="flex flex-col items-center gap-2 group shrink-0 focus:outline-none cursor-pointer select-none transition"
             >
               <div className="relative">
-                {/* Circular Icon Bubble Canva Style */}
+                {/* Circular Icon Bubble Canva Style (w-12 h-12 on mobile, w-14 h-14 on desktop) */}
                 <div
-                  className={`w-13 h-13 sm:w-15 sm:h-15 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm ${
+                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm ${
                     cat.iconBg
                   } ${
                     isSelected
@@ -66,15 +66,15 @@ export const CategoryPills: React.FC<Props> = ({
                   <IconComponent size={24} className="stroke-[2.2]" />
                 </div>
 
-                {/* Badge (e.g. Populer, Baru) */}
+                {/* Floating Pill Badge (Canva Style - centered neatly above the top rim) */}
                 {cat.badge && (
-                  <span className="absolute -top-1.5 -right-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-sm">
+                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm z-10 pointer-events-none uppercase tracking-wider">
                     {cat.badge}
                   </span>
                 )}
               </div>
 
-              {/* Label */}
+              {/* Category Label */}
               <span
                 className={`text-xs font-bold transition whitespace-nowrap ${
                   isSelected
