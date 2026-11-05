@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  X, RotateCcw, Volume2, VolumeX, Sparkles, Trophy, 
-  Users, User, HelpCircle, Check, AlertCircle, BarChart3,
-  ArrowLeft, Maximize2, Minimize2
-} from 'lucide-react';
+import { Sparkles, Users, User, BarChart3 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '@/lib/sound';
-import { useFullscreen } from '@/lib/fullscreen';
 import { QUESTIONS_BANK } from '@/data/questions-bank';
 import { QuizQuestion } from '@/types/game';
 import { getTileCenter } from './coordinates';
+import { GameStageShell, GameQuizModal, GameVictoryModal } from '@/components/game-shell';
 
 interface Props {
   isOpen: boolean;
@@ -47,7 +43,6 @@ export const UlarTanggaModal: React.FC<Props> = ({
   onClose,
   defaultSubject = 'sains',
 }) => {
-  const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [selectedSubject, setSelectedSubject] = useState<string>(defaultSubject);
   const [gameMode, setGameMode] = useState<'bot' | 'pvp'>('bot');
   const [player1Pos, setPlayer1Pos] = useState<number>(1);
@@ -357,113 +352,58 @@ export const UlarTanggaModal: React.FC<Props> = ({
     setMessage('Permainan dimulai ulang! Lempar dadu untuk jalan.');
   };
 
-  if (!isOpen) return null;
+  const modeSelector = (
+    <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
+      <button
+        onClick={() => { setGameMode('bot'); resetGame(); }}
+        className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
+          gameMode === 'bot' ? 'bg-orange-500 text-white shadow-sm font-extrabold' : 'hover:text-orange-600'
+        }`}
+      >
+        <User size={14} />
+        <span>Vs Bot</span>
+      </button>
+      <button
+        onClick={() => { setGameMode('pvp'); resetGame(); }}
+        className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
+          gameMode === 'pvp' ? 'bg-orange-500 text-white shadow-sm font-extrabold' : 'hover:text-orange-600'
+        }`}
+      >
+        <Users size={14} />
+        <span>2 Pemain</span>
+      </button>
+    </div>
+  );
 
   return (
-    <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">
-      {/* Top Fullscreen Stage Navbar */}
-      <div className="px-4 sm:px-6 py-3 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-2xs">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button
-            onClick={onClose}
-            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
-            title="Kembali ke Beranda Materi"
-          >
-            <ArrowLeft size={16} />
-            <span className="hidden sm:inline">Kembali ke Beranda</span>
-          </button>
-
-          <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
-
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-pink-500 flex items-center justify-center text-white shadow-md font-black text-xl shrink-0">
-              🎲
-            </div>
-            <div>
-              <h3 className="font-extrabold text-sm sm:text-base md:text-lg text-slate-800 line-clamp-1">
-                Ular Tangga Edukatif 100 Petak
-              </h3>
-              <p className="text-xs text-slate-500 font-medium line-clamp-1">
-                Materi: {selectedSubject === 'matematika' ? 'Matematika' : selectedSubject === 'sejarah' ? 'Sejarah' : 'Sains & Alam'} • Langkah Bertahap & Kuis Soal
-              </p>
-            </div>
-          </div>
+    <GameStageShell
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Ular Tangga Edukatif 100 Petak"
+      subtitle={`Materi: ${selectedSubject === 'matematika' ? 'Matematika' : selectedSubject === 'sejarah' ? 'Sejarah' : 'Sains & Alam'} • Langkah Bertahap & Kuis Soal`}
+      icon="🎲"
+      themeColor="orange"
+      soundOn={soundOn}
+      onToggleSound={() => setSoundOn(sound.toggleSound())}
+      onReset={resetGame}
+      extraControls={modeSelector}
+      contentClassName="flex-1 min-h-0 p-3 sm:p-5 flex flex-col lg:flex-row gap-4 sm:gap-6 overflow-hidden relative"
+    >
+      {/* Papan Ular Tangga Grid 100 dengan Visual Interaktif & SVG Connections */}
+      <div className="flex-1 min-h-0 bg-slate-50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-inner flex flex-col items-center justify-center overflow-hidden">
+        {/* Informasi Topik Mapel */}
+        <div className="w-full flex items-center justify-between mb-2 px-2 shrink-0">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            Materi Kuis Soal
+          </span>
+          <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200/80 px-2.5 py-0.5 rounded-lg capitalize">
+            {selectedSubject === 'matematika'
+              ? '📐 Matematika'
+              : selectedSubject === 'sejarah'
+              ? '🏛️ Sejarah'
+              : '🔬 Sains & Alam'}
+          </span>
         </div>
-
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mode Selector */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
-            <button
-              onClick={() => { setGameMode('bot'); resetGame(); }}
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
-                gameMode === 'bot' ? 'bg-orange-500 text-white shadow-sm font-extrabold' : 'hover:text-orange-600'
-              }`}
-            >
-              <User size={14} />
-              <span>Vs Bot</span>
-            </button>
-            <button
-              onClick={() => { setGameMode('pvp'); resetGame(); }}
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
-                gameMode === 'pvp' ? 'bg-orange-500 text-white shadow-sm font-extrabold' : 'hover:text-orange-600'
-              }`}
-            >
-              <Users size={14} />
-              <span>2 Pemain</span>
-            </button>
-          </div>
-
-          {/* Fullscreen Toggle (Projector / Smartboard) */}
-          <button
-            onClick={toggleFullscreen}
-            className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-orange-700 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer border border-slate-200 hover:border-orange-200"
-            title={isFullscreen ? 'Keluar dari Layar Penuh' : 'Mode Layar Penuh (Proyektor/TV Kelas)'}
-          >
-            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            <span className="hidden md:inline">{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh (Proyektor)'}</span>
-          </button>
-
-          <button
-            onClick={() => setSoundOn(sound.toggleSound())}
-            className="p-2 text-slate-500 hover:text-orange-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
-            title="Toggle Suara"
-          >
-            {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-          </button>
-          <button
-            onClick={resetGame}
-            className="p-2 text-slate-500 hover:text-orange-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
-            title="Mulai Ulang"
-          >
-            <RotateCcw size={18} />
-          </button>
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
-            title="Tutup Game"
-          >
-            <X size={20} />
-          </button>
-        </div>
-      </div>
-
-      {/* Content Body */}
-      <div className="flex-1 min-h-0 p-3 sm:p-5 flex flex-col lg:flex-row gap-4 sm:gap-6 overflow-hidden">
-        {/* Papan Ular Tangga Grid 100 dengan Visual Interaktif & SVG Connections */}
-        <div className="flex-1 min-h-0 bg-slate-50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-inner flex flex-col items-center justify-center overflow-hidden">
-          {/* Informasi Topik Mapel */}
-          <div className="w-full flex items-center justify-between mb-2 px-2 shrink-0">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Materi Kuis Soal
-            </span>
-            <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200/80 px-2.5 py-0.5 rounded-lg capitalize">
-              {selectedSubject === 'matematika'
-                ? '📐 Matematika'
-                : selectedSubject === 'sejarah'
-                ? '🏛️ Sejarah'
-                : '🔬 Sains & Alam'}
-            </span>
-          </div>
 
           {/* Container Papan dengan SVG Overlay */}
           <div className="relative aspect-square w-full max-w-[min(calc(100vh-160px),580px)]">
@@ -693,108 +633,54 @@ export const UlarTanggaModal: React.FC<Props> = ({
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Modal Tantangan Soal Interaktif */}
-        {activeQuiz && (
-          <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-30 flex items-center justify-center p-4 rounded-3xl animate-fadeIn">
-            <div className="bg-white max-w-lg w-full p-6 rounded-3xl shadow-2xl border border-purple-200 space-y-4 animate-scaleUp">
-              <div className="flex items-center justify-between">
-                <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border flex items-center gap-1 ${
-                  activeQuiz.type === 'ladder'
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                    : activeQuiz.type === 'snake'
-                    ? 'bg-rose-50 border-rose-200 text-rose-800'
-                    : 'bg-amber-50 border-amber-200 text-amber-800'
-                }`}>
-                  <HelpCircle size={14} />
-                  {activeQuiz.type === 'ladder'
-                    ? `Kuis Tangga (Petak ${activeQuiz.tile} → ${activeQuiz.destTile})`
-                    : activeQuiz.type === 'snake'
-                    ? `Kuis Jinakkan Ular (Petak ${activeQuiz.tile})`
-                    : `Kuis Bintang Bonus (Petak ${activeQuiz.tile})`}
-                </span>
-                <span className="text-xs font-bold text-slate-400 capitalize">
-                  Topik: {activeQuiz.question.topic}
-                </span>
-              </div>
+      {/* Modal Tantangan Soal Interaktif (Reusable Component) */}
+      {activeQuiz && (
+        <GameQuizModal
+          isOpen={!!activeQuiz}
+          badgeText={
+            activeQuiz.type === 'ladder'
+              ? `Kuis Tangga (Petak ${activeQuiz.tile} → ${activeQuiz.destTile})`
+              : activeQuiz.type === 'snake'
+              ? `Kuis Jinakkan Ular (Petak ${activeQuiz.tile})`
+              : `Kuis Bintang Bonus (Petak ${activeQuiz.tile})`
+          }
+          badgeVariant={
+            activeQuiz.type === 'ladder'
+              ? 'emerald'
+              : activeQuiz.type === 'snake'
+              ? 'rose'
+              : 'amber'
+          }
+          topic={activeQuiz.question.topic}
+          question={activeQuiz.question.question}
+          options={activeQuiz.question.options}
+          onSelectOption={handleAnswerQuiz}
+          feedback={quizFeedback}
+        />
+      )}
 
-              <h4 className="font-extrabold text-base sm:text-lg text-slate-800 leading-snug">
-                {activeQuiz.question.question}
-              </h4>
-
-              {/* Feedback box */}
-              {quizFeedback && (
-                <div className={`p-3.5 rounded-2xl text-xs font-bold flex items-start gap-2 animate-fadeIn ${
-                  quizFeedback.isCorrect ? 'bg-emerald-100 text-emerald-900' : 'bg-rose-100 text-rose-900'
-                }`}>
-                  {quizFeedback.isCorrect ? (
-                    <Check size={18} className="text-emerald-600 shrink-0 mt-0.5" />
-                  ) : (
-                    <AlertCircle size={18} className="text-rose-600 shrink-0 mt-0.5" />
-                  )}
-                  <p className="leading-relaxed">{quizFeedback.text}</p>
-                </div>
-              )}
-
-              {/* Pilihan Jawaban */}
-              <div className="space-y-2 pt-1">
-                {activeQuiz.question.options.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    disabled={!!quizFeedback}
-                    onClick={() => handleAnswerQuiz(idx)}
-                    className="w-full text-left p-3.5 rounded-2xl border border-slate-200 hover:border-purple-500 hover:bg-purple-50/70 text-sm font-semibold text-slate-700 transition disabled:opacity-60 flex items-center justify-between group cursor-pointer"
-                  >
-                    <div>
-                      <span className="font-black text-purple-600 mr-2.5">
-                        {String.fromCharCode(65 + idx)}.
-                      </span>
-                      <span>{opt}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Modal Kemenangan */}
-        {winner && (
-          <div className="absolute inset-0 bg-slate-900/75 backdrop-blur-sm z-30 flex items-center justify-center p-4 rounded-3xl animate-fadeIn">
-            <div className="bg-white max-w-sm w-full p-6 rounded-3xl shadow-2xl text-center space-y-4 border border-amber-300 animate-scaleUp">
-              <div className="w-16 h-16 mx-auto bg-amber-100 rounded-full flex items-center justify-center text-amber-600 shadow-inner">
-                <Trophy size={36} />
-              </div>
-              <h3 className="font-black text-2xl text-slate-800">
-                {winner === 'p1'
-                  ? 'Hore, Pemain 1 Menang!'
-                  : gameMode === 'bot'
-                  ? 'Bot Finish Lebih Dulu!'
-                  : 'Pemain 2 Menang!'}
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                {winner === 'p1'
-                  ? 'Luar biasa! Pengetahuan dan strategi kuis berhasil membawamu mencapai garis finish petak 100!'
-                  : 'Pertandingan yang seru! Coba lagi dan buktikan siapa ahli materi berikutnya.'}
-              </p>
-              <div className="flex gap-2 pt-2">
-                <button
-                  onClick={resetGame}
-                  className="flex-1 py-3 bg-orange-600 hover:bg-orange-700 text-white font-extrabold rounded-2xl text-sm transition shadow"
-                >
-                  Main Lagi
-                </button>
-                <button
-                  onClick={onClose}
-                  className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-sm transition"
-                >
-                  Tutup
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Modal Kemenangan (Reusable Component) */}
+      {winner && (
+        <GameVictoryModal
+          isOpen={!!winner}
+          title={
+            winner === 'p1'
+              ? 'Hore, Pemain 1 Menang!'
+              : gameMode === 'bot'
+              ? 'Bot Finish Lebih Dulu!'
+              : 'Pemain 2 Menang!'
+          }
+          description={
+            winner === 'p1'
+              ? 'Luar biasa! Pengetahuan dan strategi kuis berhasil membawamu mencapai garis finish petak 100!'
+              : 'Pertandingan yang seru! Coba lagi dan buktikan siapa ahli materi berikutnya.'
+          }
+          onPlayAgain={resetGame}
+          onClose={onClose}
+          themeColor="orange"
+        />
+      )}
+    </GameStageShell>
   );
 };

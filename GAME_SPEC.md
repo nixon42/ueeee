@@ -33,102 +33,77 @@ Setiap agent **WAJIB** mematuhi aturan berikut dan **DILARANG** melanggarnya:
 
 ---
 
-## 3. Arsitektur Tampilan: Full-Screen Stage Mode
+## 3. Komponen Reusable Standar: `GameStageShell`, `GameQuizModal`, & `GameVictoryModal`
 
-Setiap game yang dibuka dari dashboard **wajib** menggunakan template Full-Screen Stage:
+Seluruh game di platform **ueeee** **WAJIB** menggunakan komponen reusable siap pakai yang telah disediakan di `@/components/game-shell`. Jangan membuat ulang navbar, overlay fullscreen, atau modal kuis dari awal!
+
+### A. Template Panggung Game: `<GameStageShell />`
+
+Komponen ini membungkus game ke dalam **Full-Screen Stage Mode**, menangani HTML5 Fullscreen API secara otomatis, audio toggle, tombol kembali, dan tombol reset/close:
 
 ```tsx
-import React from 'react';
-import { ArrowLeft, Maximize2, Minimize2, Volume2, VolumeX, RotateCcw, X } from 'lucide-react';
-import { useFullscreen } from '@/lib/fullscreen';
+import React, { useState } from 'react';
+import { GameStageShell, GameQuizModal, GameVictoryModal } from '@/components/game-shell';
 import { sound } from '@/lib/sound';
 
 export const SampleGameModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [soundOn, setSoundOn] = useState<boolean>(true);
-
-  if (!isOpen) return null;
+  const [activeQuiz, setActiveQuiz] = useState<any>(null);
+  const [winner, setWinner] = useState<boolean>(false);
 
   return (
-    // 1. Container Panggung Satu Layar Penuh (Edge-to-Edge)
-    <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">
-      
-      {/* 2. Top Stage Navbar */}
-      <div className="px-4 sm:px-6 py-3 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-2xs">
-        
-        {/* Kiri: Tombol Kembali & Identitas Game */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button
-            onClick={onClose}
-            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
-            title="Kembali ke Beranda Materi"
-          >
-            <ArrowLeft size={16} />
-            <span className="hidden sm:inline">Kembali ke Beranda</span>
-          </button>
-
-          <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
-
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-md font-black text-xl shrink-0">
-              🎮
-            </div>
-            <div>
-              <h3 className="font-extrabold text-sm sm:text-base md:text-lg text-slate-800 line-clamp-1">
-                Judul Materi Game
-              </h3>
-              <p className="text-xs text-slate-500 font-medium line-clamp-1">
-                Mata Pelajaran • Jenjang • Deskripsi Singkat
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Kanan: Kontrol Proyektor & Alat Bantu */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Tombol Native Fullscreen HTML5 untuk Proyektor/Smartboard */}
-          <button
-            onClick={toggleFullscreen}
-            className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer border border-slate-200 hover:border-purple-200"
-            title={isFullscreen ? 'Keluar Layar Penuh' : 'Mode Layar Penuh (Proyektor/TV Kelas)'}
-          >
-            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            <span className="hidden md:inline">{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh (Proyektor)'}</span>
-          </button>
-
-          <button
-            onClick={() => setSoundOn(sound.toggleSound())}
-            className="p-2 text-slate-500 hover:text-purple-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
-            title="Toggle Suara"
-          >
-            {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-          </button>
-
-          <button
-            onClick={resetGame}
-            className="p-2 text-slate-500 hover:text-purple-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
-            title="Mulai Ulang"
-          >
-            <RotateCcw size={18} />
-          </button>
-
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
-            title="Tutup Game"
-          >
-            <X size={20} />
-          </button>
-        </div>
+    <GameStageShell
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Judul Materi Game Edukatif"
+      subtitle="Mata Pelajaran • Jenjang • Deskripsi Singkat"
+      icon="🎮"
+      themeColor="purple" // Pilihan: 'orange' | 'teal' | 'purple' | 'emerald' | 'blue' | 'indigo' | 'rose' | 'amber'
+      soundOn={soundOn}
+      onToggleSound={() => setSoundOn(sound.toggleSound())}
+      onReset={resetGame}
+      resetTooltip="Mulai Ulang Permainan"
+      extraControls={<YourCustomControls />} // Opsional: switcher mode, petunjuk, dsb.
+      contentClassName="flex-1 min-h-0 p-4 sm:p-6 flex flex-col overflow-hidden relative"
+    >
+      {/* 1. Canvas / Arena Permainan di sini */}
+      <div className="flex-1">
+        ...
       </div>
 
-      {/* 3. Panggung Utama Game (Flex-1) */}
-      <div className="flex-1 min-h-0 p-4 sm:p-6 flex flex-col overflow-hidden">
-        {/* Game Canvas / Arena di sini */}
-      </div>
-    </div>
+      {/* 2. Reusable Modal Kuis Tantangan */}
+      {activeQuiz && (
+        <GameQuizModal
+          isOpen={!!activeQuiz}
+          badgeText="Kuis Pemahaman Konsep"
+          badgeVariant="purple" // 'emerald' | 'rose' | 'amber' | 'purple' | 'teal'
+          topic="Biologi Sel"
+          question={activeQuiz.question}
+          options={activeQuiz.options}
+          onSelectOption={handleAnswerQuiz}
+          feedback={quizFeedback}
+          onClose={() => setActiveQuiz(null)}
+        />
+      )}
+
+      {/* 3. Reusable Modal Kemenangan / Selesai */}
+      {winner && (
+        <GameVictoryModal
+          isOpen={winner}
+          title="Hore, Kamu Berhasil Menuntaskan Misi!"
+          description="Kamu telah menguasai seluruh indikator pembelajaran pada materi ini."
+          score={150}
+          onPlayAgain={resetGame}
+          onClose={onClose}
+          playAgainText="Main Lagi"
+          closeText="Kembali ke Beranda"
+          themeColor="purple"
+        />
+      )}
+    </GameStageShell>
   );
 };
+```
 ```
 
 ---
