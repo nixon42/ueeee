@@ -282,8 +282,6 @@ export default function App() {
             <span className="font-extrabold text-slate-900 text-sm">ueeee</span>
             <span>•</span>
             <span className="font-semibold text-purple-700">ueeee.my.id</span>
-            <span>—</span>
-            <span>Platform Gamified Learning Terbuka Tanpa Perlu Login</span>
             <button
               onClick={() => setIsTeacherModalOpen(true)}
               className="ml-2 font-bold text-purple-700 hover:text-purple-900 underline flex items-center gap-1 cursor-pointer"

@@ -150,7 +150,7 @@ export const PointAndClickModal: React.FC<Props> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-500 font-medium">
-                {currentScene.subtitle} • Eksplorasi Terbuka Tanpa Perlu Login
+                {currentScene.subtitle}
               </p>
             </div>
           </div>
