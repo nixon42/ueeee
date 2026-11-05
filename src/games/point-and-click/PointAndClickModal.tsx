@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, RotateCcw, Volume2, VolumeX, Sparkles, CheckCircle2, 
-  Search, Trophy, Backpack, HelpCircle, Check, AlertCircle, ChevronRight, Eye 
+  Search, Trophy, Backpack, HelpCircle, Check, AlertCircle, ChevronRight, Eye,
+  ArrowLeft, Maximize2, Minimize2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '@/lib/sound';
+import { useFullscreen } from '@/lib/fullscreen';
 import { POINT_CLICK_SCENES } from '@/data/point-click-scenes';
 import { PointAndClickHotspot, PointAndClickScene } from '@/types/game';
 
@@ -34,6 +36,7 @@ export const PointAndClickModal: React.FC<Props> = ({
   } | null>(null);
   const [puzzleFeedback, setPuzzleFeedback] = useState<{ isCorrect: boolean; text: string } | null>(null);
   const [isSceneFinished, setIsSceneFinished] = useState<boolean>(false);
+  const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   // Sync scene with defaultSceneId prop when modal opens or scene changes
   useEffect(() => {
@@ -137,59 +140,82 @@ export const PointAndClickModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-5xl max-h-[95vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-teal-100 flex flex-col">
-        {/* Header Modal Canva-Style */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50">
+    <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">
+      {/* Top Fullscreen Stage Navbar */}
+      <div className="px-4 sm:px-6 py-3 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-2xs">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <button
+            onClick={onClose}
+            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
+            title="Kembali ke Beranda Materi"
+          >
+            <ArrowLeft size={16} />
+            <span className="hidden sm:inline">Kembali ke Beranda</span>
+          </button>
+
+          <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
+
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-md font-black text-xl">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-md font-black text-xl shrink-0">
               {currentScene.theme === 'lab' ? '🧪' : currentScene.theme === 'candi' ? '🗿' : '🌿'}
             </div>
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
+              <h3 className="font-extrabold text-sm sm:text-base md:text-lg text-slate-800 line-clamp-1">
                 {currentScene.title}
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
+              <p className="text-xs text-slate-500 font-medium line-clamp-1">
                 {currentScene.subtitle}
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSoundOn(sound.toggleSound())}
-              className="p-2 text-slate-500 hover:text-teal-600 hover:bg-white rounded-xl transition"
-              title="Toggle Suara"
-            >
-              {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            </button>
-            <button
-              onClick={resetCurrentScene}
-              className="p-2 text-slate-500 hover:text-teal-600 hover:bg-white rounded-xl transition"
-              title="Reset Scene Ini"
-            >
-              <RotateCcw size={18} />
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
-            >
-              <X size={20} />
-            </button>
-          </div>
         </div>
 
-        {/* Main Workspace */}
-        <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
-          {/* Interactive Visual Canvas */}
-          <div className="flex-1 flex flex-col space-y-4">
-            <div className={`relative w-full aspect-video rounded-3xl overflow-hidden border-2 shadow-inner group ${
-              currentScene.theme === 'lab'
-                ? 'border-teal-300 bg-gradient-to-b from-slate-900 via-teal-950 to-slate-900'
-                : currentScene.theme === 'candi'
-                ? 'border-amber-300 bg-gradient-to-b from-amber-950 via-stone-900 to-amber-950'
-                : 'border-emerald-300 bg-gradient-to-b from-emerald-950 via-teal-950 to-green-950'
-            }`}>
+        <div className="flex items-center gap-2">
+          {/* Fullscreen Toggle (Projector / Smartboard) */}
+          <button
+            onClick={toggleFullscreen}
+            className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-teal-50 text-slate-700 hover:text-teal-700 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer border border-slate-200 hover:border-teal-200"
+            title={isFullscreen ? 'Keluar dari Layar Penuh' : 'Mode Layar Penuh (Proyektor/TV Kelas)'}
+          >
+            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            <span className="hidden md:inline">{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh (Proyektor)'}</span>
+          </button>
+
+          <button
+            onClick={() => setSoundOn(sound.toggleSound())}
+            className="p-2 text-slate-500 hover:text-teal-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+            title="Toggle Suara"
+          >
+            {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          </button>
+          <button
+            onClick={resetCurrentScene}
+            className="p-2 text-slate-500 hover:text-teal-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+            title="Reset Scene Ini"
+          >
+            <RotateCcw size={18} />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
+            title="Tutup Game"
+          >
+            <X size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* Main Workspace */}
+      <div className="flex-1 min-h-0 p-3 sm:p-5 flex flex-col lg:flex-row gap-4 sm:gap-6 overflow-hidden">
+        {/* Interactive Visual Canvas */}
+        <div className="flex-1 min-h-0 flex flex-col space-y-3.5">
+          <div className={`relative w-full flex-1 min-h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden border-2 shadow-inner group ${
+            currentScene.theme === 'lab'
+              ? 'border-teal-300 bg-gradient-to-b from-slate-900 via-teal-950 to-slate-900'
+              : currentScene.theme === 'candi'
+              ? 'border-amber-300 bg-gradient-to-b from-amber-950 via-stone-900 to-amber-950'
+              : 'border-emerald-300 bg-gradient-to-b from-emerald-950 via-teal-950 to-green-950'
+          }`}>
               {/* Theme Decorative Atmosphere Layers */}
               {currentScene.theme === 'lab' && (
                 <div className="absolute inset-0 pointer-events-none opacity-40">
@@ -476,7 +502,6 @@ export const PointAndClickModal: React.FC<Props> = ({
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 };

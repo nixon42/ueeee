@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, RotateCcw, Volume2, VolumeX, Sparkles, Trophy, 
-  Users, User, HelpCircle, Check, AlertCircle, BarChart3 
+  Users, User, HelpCircle, Check, AlertCircle, BarChart3,
+  ArrowLeft, Maximize2, Minimize2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '@/lib/sound';
+import { useFullscreen } from '@/lib/fullscreen';
 import { QUESTIONS_BANK } from '@/data/questions-bank';
 import { QuizQuestion } from '@/types/game';
 import { getTileCenter } from './coordinates';
@@ -45,6 +47,7 @@ export const UlarTanggaModal: React.FC<Props> = ({
   onClose,
   defaultSubject = 'sains',
 }) => {
+  const { isFullscreen, toggleFullscreen } = useFullscreen();
   const [selectedSubject, setSelectedSubject] = useState<string>(defaultSubject);
   const [gameMode, setGameMode] = useState<'bot' | 'pvp'>('bot');
   const [player1Pos, setPlayer1Pos] = useState<number>(1);
@@ -355,90 +358,113 @@ export const UlarTanggaModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-5xl max-h-[95vh] overflow-y-auto bg-white rounded-3xl shadow-2xl border border-orange-100 flex flex-col">
-        {/* Header Modal */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-gradient-to-r from-orange-50 via-amber-50 to-pink-50">
+    <div className="fixed inset-0 z-50 w-screen h-screen bg-[#f8fafc] flex flex-col overflow-hidden select-none animate-fadeIn">
+      {/* Top Fullscreen Stage Navbar */}
+      <div className="px-4 sm:px-6 py-3 border-b border-slate-200 bg-white flex items-center justify-between shrink-0 shadow-2xs">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <button
+            onClick={onClose}
+            className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-2xs"
+            title="Kembali ke Beranda Materi"
+          >
+            <ArrowLeft size={16} />
+            <span className="hidden sm:inline">Kembali ke Beranda</span>
+          </button>
+
+          <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
+
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-pink-500 flex items-center justify-center text-white shadow-md font-black text-xl">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-pink-500 flex items-center justify-center text-white shadow-md font-black text-xl shrink-0">
               🎲
             </div>
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg text-slate-800">
+              <h3 className="font-extrabold text-sm sm:text-base md:text-lg text-slate-800 line-clamp-1">
                 Ular Tangga Edukatif 100 Petak
               </h3>
-              <p className="text-xs text-slate-500 font-medium">
-                Papan Visual Interaktif • Langkah Bertahap & Kuis Soal
+              <p className="text-xs text-slate-500 font-medium line-clamp-1">
+                Materi: {selectedSubject === 'matematika' ? 'Matematika' : selectedSubject === 'sejarah' ? 'Sejarah' : 'Sains & Alam'} • Langkah Bertahap & Kuis Soal
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2">
-            {/* Mode Selector */}
-            <div className="hidden sm:flex items-center bg-white p-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
-              <button
-                onClick={() => { setGameMode('bot'); resetGame(); }}
-                className={`px-2.5 py-1 rounded-lg transition flex items-center gap-1 ${
-                  gameMode === 'bot' ? 'bg-orange-500 text-white shadow-sm' : 'hover:text-orange-600'
-                }`}
-              >
-                <User size={13} />
-                <span>Vs Bot</span>
-              </button>
-              <button
-                onClick={() => { setGameMode('pvp'); resetGame(); }}
-                className={`px-2.5 py-1 rounded-lg transition flex items-center gap-1 ${
-                  gameMode === 'pvp' ? 'bg-orange-500 text-white shadow-sm' : 'hover:text-orange-600'
-                }`}
-              >
-                <Users size={13} />
-                <span>2 Pemain</span>
-              </button>
-            </div>
-
-            <button
-              onClick={() => setSoundOn(sound.toggleSound())}
-              className="p-2 text-slate-500 hover:text-orange-600 hover:bg-white rounded-xl transition"
-              title="Toggle Suara"
-            >
-              {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            </button>
-            <button
-              onClick={resetGame}
-              className="p-2 text-slate-500 hover:text-orange-600 hover:bg-white rounded-xl transition"
-              title="Mulai Ulang"
-            >
-              <RotateCcw size={18} />
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
-            >
-              <X size={20} />
-            </button>
-          </div>
         </div>
 
-        {/* Content Body */}
-        <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
-          {/* Papan Ular Tangga Grid 100 dengan Visual Interaktif & SVG Connections */}
-          <div className="flex-1 bg-slate-50 p-2 sm:p-3 rounded-3xl border border-slate-200 shadow-inner flex flex-col items-center">
-            {/* Informasi Topik Mapel */}
-            <div className="w-full flex items-center justify-between mb-3 px-2">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Materi Kuis Soal
-              </span>
-              <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200/80 px-2.5 py-0.5 rounded-lg capitalize">
-                {selectedSubject === 'matematika'
-                  ? '📐 Matematika'
-                  : selectedSubject === 'sejarah'
-                  ? '🏛️ Sejarah'
-                  : '🔬 Sains & Alam'}
-              </span>
-            </div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mode Selector */}
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
+            <button
+              onClick={() => { setGameMode('bot'); resetGame(); }}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
+                gameMode === 'bot' ? 'bg-orange-500 text-white shadow-sm font-extrabold' : 'hover:text-orange-600'
+              }`}
+            >
+              <User size={14} />
+              <span>Vs Bot</span>
+            </button>
+            <button
+              onClick={() => { setGameMode('pvp'); resetGame(); }}
+              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer ${
+                gameMode === 'pvp' ? 'bg-orange-500 text-white shadow-sm font-extrabold' : 'hover:text-orange-600'
+              }`}
+            >
+              <Users size={14} />
+              <span>2 Pemain</span>
+            </button>
+          </div>
 
-            {/* Container Papan dengan SVG Overlay */}
-            <div className="relative aspect-square w-full max-w-[500px]">
+          {/* Fullscreen Toggle (Projector / Smartboard) */}
+          <button
+            onClick={toggleFullscreen}
+            className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-orange-700 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer border border-slate-200 hover:border-orange-200"
+            title={isFullscreen ? 'Keluar dari Layar Penuh' : 'Mode Layar Penuh (Proyektor/TV Kelas)'}
+          >
+            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            <span className="hidden md:inline">{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh (Proyektor)'}</span>
+          </button>
+
+          <button
+            onClick={() => setSoundOn(sound.toggleSound())}
+            className="p-2 text-slate-500 hover:text-orange-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+            title="Toggle Suara"
+          >
+            {soundOn ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          </button>
+          <button
+            onClick={resetGame}
+            className="p-2 text-slate-500 hover:text-orange-600 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+            title="Mulai Ulang"
+          >
+            <RotateCcw size={18} />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
+            title="Tutup Game"
+          >
+            <X size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* Content Body */}
+      <div className="flex-1 min-h-0 p-3 sm:p-5 flex flex-col lg:flex-row gap-4 sm:gap-6 overflow-hidden">
+        {/* Papan Ular Tangga Grid 100 dengan Visual Interaktif & SVG Connections */}
+        <div className="flex-1 min-h-0 bg-slate-50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-inner flex flex-col items-center justify-center overflow-hidden">
+          {/* Informasi Topik Mapel */}
+          <div className="w-full flex items-center justify-between mb-2 px-2 shrink-0">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Materi Kuis Soal
+            </span>
+            <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200/80 px-2.5 py-0.5 rounded-lg capitalize">
+              {selectedSubject === 'matematika'
+                ? '📐 Matematika'
+                : selectedSubject === 'sejarah'
+                ? '🏛️ Sejarah'
+                : '🔬 Sains & Alam'}
+            </span>
+          </div>
+
+          {/* Container Papan dengan SVG Overlay */}
+          <div className="relative aspect-square w-full max-w-[min(calc(100vh-160px),580px)]">
               {/* SVG Overlay Garis Tangga & Ular */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100">
                 <defs>
@@ -768,6 +794,5 @@ export const UlarTanggaModal: React.FC<Props> = ({
           </div>
         )}
       </div>
-    </div>
   );
 };
