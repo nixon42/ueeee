@@ -61,9 +61,13 @@ Struktur modular di bawah folder `src/games/`:
 - Deteksi hotspot klik untuk menemukan petunjuk, dialog interaktif, dan menyelesaikan misi pembelajaran.
 - Mini-inventory atau catatan jurnal siswa selama eksplorasi.
 
-### C. Game Edukasi Pendukung Lainnya
-- Kuis Cepat & Flashcard Interaktif.
-- Drag-and-Drop Matching (menghubungkan konsep, rumus, atau gambar).
+### C. Teka-Teki Kata & Rumus Sains (`src/games/puzzle/`)
+- Permainan susun huruf interaktif untuk membentuk istilah ilmiah, rumus, dan peribahasa.
+- Sistem validasi instan, bantuan/penjelasan konsep, dan skor streak.
+
+### D. Fitur Guru & Mode Kelas (`src/components/modals/TeacherSheetModal.tsx`)
+- Tampilan lembar kerja dan bank soal yang dapat dicetak langsung (`window.print()`).
+- Mode Proyektor Kelas dengan teks diperbesar untuk kenyamanan pandangan proyektor sekolah.
 
 ---
 

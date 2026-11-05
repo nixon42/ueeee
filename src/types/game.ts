@@ -10,6 +10,8 @@ export type SubjectCategory =
   | 'sejarah'
   | 'logika';
 
+export type GradeLevel = 'Semua Kelas' | 'SD Kelas 1-3' | 'SD Kelas 4-6' | 'SMP' | 'SMA';
+
 export interface GameItem {
   id: string;
   title: string;
@@ -17,21 +19,68 @@ export interface GameItem {
   description: string;
   type: GameType;
   category: SubjectCategory;
-  gradeLevel: string; // e.g. "SD Kelas 4-6", "SMP", "Semua Kelas"
-  badge?: string; // e.g. "Baru", "Populer", "Favorit Guru"
+  gradeLevel: GradeLevel;
+  badge?: string;
   badgeColor?: string;
-  accentColor: string; // HEX or Tailwind color for card glow/border
-  gradient: string; // Tailwind gradient classes
+  accentColor: string;
+  gradient: string;
   iconName: string;
   playTimeMinutes: number;
   featured?: boolean;
+  subjectDetail: string;
+  rating: number; // 4.8, 4.9, etc.
+  playsCount: number;
 }
 
 export interface QuizQuestion {
   id: string;
+  subject: string;
   question: string;
   options: string[];
   correctIndex: number;
   explanation: string;
-  subject: string;
+  difficulty: 'mudah' | 'sedang' | 'sulit';
+  topic: string;
+}
+
+export interface PointAndClickHotspot {
+  id: string;
+  name: string;
+  x: number; // percentage 0-100
+  y: number; // percentage 0-100
+  iconName: string;
+  title: string;
+  dialogue: string;
+  educationalFact: string;
+  itemReward?: {
+    id: string;
+    name: string;
+    icon: string;
+    description: string;
+  };
+  puzzle?: {
+    question: string;
+    options: string[];
+    correctIndex: number;
+    hint: string;
+  };
+}
+
+export interface PointAndClickScene {
+  id: string;
+  title: string;
+  subtitle: string;
+  theme: 'lab' | 'candi' | 'hutan';
+  accentGradient: string;
+  missionDescription: string;
+  mentorName: string;
+  mentorRole: string;
+  hotspots: PointAndClickHotspot[];
+}
+
+export interface PlayerHistory {
+  gameId: string;
+  playedAt: string;
+  score: number;
+  completed: boolean;
 }
