@@ -185,7 +185,6 @@ export default function App() {
         <Header
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          activeTab={activeTab}
           onTabChange={setActiveTab}
           selectedGrade={selectedGrade}
           onGradeChange={setSelectedGrade}

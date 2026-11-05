@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Search, Sparkles, Volume2, VolumeX, 
-  Gamepad2, Presentation, Compass, Puzzle, Dices, X 
+  Search, Volume2, VolumeX, Presentation, Dices, X 
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
@@ -10,8 +9,7 @@ import { Logo } from '@/components/common/Logo';
 interface Props {
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  onTabChange?: (tab: string) => void;
   selectedGrade: GradeLevel;
   onGradeChange: (grade: GradeLevel) => void;
   isClassroomMode: boolean;
@@ -30,7 +28,6 @@ const GRADE_LEVELS: GradeLevel[] = [
 export const Header: React.FC<Props> = ({
   searchQuery,
   onSearchChange,
-  activeTab,
   onTabChange,
   selectedGrade,
   onGradeChange,
@@ -53,7 +50,7 @@ export const Header: React.FC<Props> = ({
         <Logo 
           onClick={() => {
             sound.playClick();
-            onTabChange('all');
+            if (onTabChange) onTabChange('all');
             onSearchChange('');
             onGradeChange('Semua Kelas');
           }}
@@ -108,55 +105,27 @@ export const Header: React.FC<Props> = ({
         <div className="absolute -top-12 -left-12 w-48 h-48 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-pink-300/30 rounded-full blur-3xl pointer-events-none"></div>
 
-        {/* Rounded Pills Nav Tab (like Canva's Home / Templates) */}
-        <div className="inline-flex items-center p-1 rounded-full bg-white/80 backdrop-blur-sm border border-purple-200/70 shadow-sm mb-5">
-          <button
-            onClick={() => onTabChange('all')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'all'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-purple-700'
-            }`}
-          >
-            <Sparkles size={13} />
-            <span>Semua Materi</span>
-          </button>
-
-          <button
-            onClick={() => onTabChange('ular-tangga')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'ular-tangga'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-purple-700'
-            }`}
-          >
-            <Gamepad2 size={13} />
-            <span>Ular Tangga</span>
-          </button>
-
-          <button
-            onClick={() => onTabChange('point-and-click')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'point-and-click'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-purple-700'
-            }`}
-          >
-            <Compass size={13} />
-            <span>Point & Click</span>
-          </button>
-
-          <button
-            onClick={() => onTabChange('puzzle')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'puzzle'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-purple-700'
-            }`}
-          >
-            <Puzzle size={13} />
-            <span>Teka-Teki</span>
-          </button>
+        {/* Rounded Pills Grade Switcher (Canva Home / Templates style) */}
+        <div className="inline-flex items-center p-1 rounded-full bg-white/85 backdrop-blur-sm border border-purple-200/80 shadow-sm mb-5 overflow-x-auto max-w-full no-scrollbar">
+          {GRADE_LEVELS.map((grade) => {
+            const isSelected = selectedGrade === grade;
+            return (
+              <button
+                key={grade}
+                onClick={() => {
+                  sound.playClick();
+                  onGradeChange(grade);
+                }}
+                className={`px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  isSelected
+                    ? 'bg-purple-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-purple-700 hover:bg-white/60'
+                }`}
+              >
+                {grade}
+              </button>
+            );
+          })}
         </div>
 
         {/* Canva Hero Title */}
@@ -194,24 +163,6 @@ export const Header: React.FC<Props> = ({
               </button>
             )}
           </div>
-        </div>
-
-        {/* Jenjang Kelas Pill Selector */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4">
-          <span className="text-xs font-bold text-slate-500 mr-1">Tingkat:</span>
-          {GRADE_LEVELS.map(grade => (
-            <button
-              key={grade}
-              onClick={() => onGradeChange(grade)}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
-                selectedGrade === grade
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white/80 text-slate-700 hover:bg-white border border-purple-200/60'
-              }`}
-            >
-              {grade}
-            </button>
-          ))}
         </div>
       </div>
     </header>
