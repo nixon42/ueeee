@@ -582,8 +582,8 @@ export const UlarTanggaModal: React.FC<Props> = ({
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Status Pertandingan
                 </span>
-                <span className={`text-xs font-black px-2.5 py-0.5 rounded-full ${
-                  turn === 'p1' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'
+                <span className={`text-xs font-bold px-2.5 py-0.5 rounded-lg border ${
+                  turn === 'p1' ? 'bg-orange-50 border-orange-200 text-orange-800' : 'bg-blue-50 border-blue-200 text-blue-800'
                 }`}>
                   {turn === 'p1' ? 'Giliran Pemain 1' : gameMode === 'bot' ? 'Giliran Bot' : 'Giliran Pemain 2'}
                 </span>
@@ -679,12 +679,12 @@ export const UlarTanggaModal: React.FC<Props> = ({
           <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-30 flex items-center justify-center p-4 rounded-3xl animate-fadeIn">
             <div className="bg-white max-w-lg w-full p-6 rounded-3xl shadow-2xl border border-purple-200 space-y-4 animate-scaleUp">
               <div className="flex items-center justify-between">
-                <span className={`text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1 ${
+                <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border flex items-center gap-1 ${
                   activeQuiz.type === 'ladder'
-                    ? 'bg-emerald-100 text-emerald-800'
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
                     : activeQuiz.type === 'snake'
-                    ? 'bg-rose-100 text-rose-800'
-                    : 'bg-yellow-100 text-yellow-800'
+                    ? 'bg-rose-50 border-rose-200 text-rose-800'
+                    : 'bg-amber-50 border-amber-200 text-amber-800'
                 }`}>
                   <HelpCircle size={14} />
                   {activeQuiz.type === 'ladder'

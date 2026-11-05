@@ -280,7 +280,7 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
               <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-teal-700 bg-teal-100 px-2.5 py-0.5 rounded-full">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-teal-800 bg-teal-50 border border-teal-200/80 px-2.5 py-0.5 rounded-lg">
                       {currentPuzzle.category}
                     </span>
                     <span className="text-[10px] font-bold text-slate-400">

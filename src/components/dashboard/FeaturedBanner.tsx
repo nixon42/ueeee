@@ -32,7 +32,7 @@ export const FeaturedBanner: React.FC<Props> = ({
           <div className="absolute top-0 right-0 -mr-8 -mt-8 w-36 h-36 rounded-full bg-white/10 blur-xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
           
           <div className="relative z-10 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-black tracking-wide uppercase">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/20 backdrop-blur-md text-white text-[11px] font-bold tracking-wide uppercase">
               <Sparkles size={12} className="text-yellow-300" />
               <span>Papan 100 Petak</span>
             </div>
@@ -63,7 +63,7 @@ export const FeaturedBanner: React.FC<Props> = ({
           <div className="absolute top-0 right-0 -mr-8 -mt-8 w-36 h-36 rounded-full bg-white/10 blur-xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
 
           <div className="relative z-10 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-black tracking-wide uppercase">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/20 backdrop-blur-md text-white text-[11px] font-bold tracking-wide uppercase">
               <Compass size={12} className="text-yellow-200" />
               <span>Eksplorasi Maya</span>
             </div>
@@ -94,7 +94,7 @@ export const FeaturedBanner: React.FC<Props> = ({
           <div className="absolute top-0 right-0 -mr-8 -mt-8 w-36 h-36 rounded-full bg-white/10 blur-xl group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
 
           <div className="relative z-10 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-black tracking-wide uppercase">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-white/20 backdrop-blur-md text-white text-[11px] font-bold tracking-wide uppercase">
               <Puzzle size={12} className="text-yellow-300" />
               <span>Asah Otak & Kata</span>
             </div>

@@ -264,7 +264,7 @@ export const PointAndClickModal: React.FC<Props> = ({
               })}
 
               {/* Hint badge */}
-              <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[11px] px-3 py-1.5 rounded-full flex items-center gap-1.5">
+              <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[11px] px-3 py-1.5 rounded-xl flex items-center gap-1.5">
                 <Search size={13} className="text-teal-400" />
                 <span>Klik objek yang berkilau untuk menganalisis</span>
               </div>
@@ -321,7 +321,7 @@ export const PointAndClickModal: React.FC<Props> = ({
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Target Eksplorasi
                 </span>
-                <span className="text-xs font-black text-teal-700 bg-teal-100 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200/80 px-2 py-0.5 rounded-lg">
                   {foundCount} / {currentScene.hotspots.length} Ditemukan
                 </span>
               </div>
@@ -363,7 +363,7 @@ export const PointAndClickModal: React.FC<Props> = ({
                   <Backpack size={14} className="text-purple-600" />
                   Tas Ekspedisi Siswa
                 </span>
-                <span className="text-xs font-black text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200/80 px-2 py-0.5 rounded-lg">
                   {inventory.length} Item
                 </span>
               </div>
@@ -455,7 +455,7 @@ export const PointAndClickModal: React.FC<Props> = ({
         {activePuzzle && (
           <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-30 flex items-center justify-center p-4 rounded-3xl animate-fadeIn">
             <div className="bg-white max-w-md w-full p-6 rounded-3xl shadow-2xl border border-teal-200 space-y-4 animate-scaleUp">
-              <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-teal-700 bg-teal-100 px-3 py-1 rounded-full w-fit">
+              <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-800 bg-teal-50 border border-teal-200/80 px-2.5 py-1 rounded-lg w-fit">
                 <HelpCircle size={14} /> Tantangan Analisis Objek
               </div>
 

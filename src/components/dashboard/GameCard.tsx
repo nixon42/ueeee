@@ -39,7 +39,7 @@ export const GameCard: React.FC<Props> = ({
 
         <div className="flex items-center justify-between z-10">
           {game.badge ? (
-            <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border shadow-sm ${game.badgeColor || 'bg-white/20 text-white border-white/30 backdrop-blur-sm'}`}>
+            <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border shadow-sm ${game.badgeColor || 'bg-white/20 text-white border-white/30 backdrop-blur-sm'}`}>
               {game.badge}
             </span>
           ) : (
@@ -61,7 +61,7 @@ export const GameCard: React.FC<Props> = ({
             </button>
 
             {/* Play time */}
-            <div className="flex items-center gap-1 text-[11px] font-semibold text-white/90 bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-full">
+            <div className="flex items-center gap-1 text-[11px] font-medium text-white/95 bg-black/20 backdrop-blur-md px-2 py-0.5 rounded-md">
               <Clock size={12} />
               <span>{game.playTimeMinutes} mnt</span>
             </div>
