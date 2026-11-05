@@ -14,24 +14,39 @@ Siswa & Guru K-12 di Indonesia (SD, SMP, SMA).
 - Guru: Mencari media pembelajaran interaktif untuk ice-breaking, kuis interaktif di kelas, atau tugas mandiri siswa.
 
 ## Product Purpose
-ueeee (ueeee.my.id) adalah platform edukasi terbuka berbasis kumpulan game interaktif (seperti Ular Tangga edukasi, Point and Click eksplorasi sains/sejarah, puzzle, dan kuis visual) yang dapat diakses secara gratis dan langsung tanpa login.
+ueeee (ueeee.my.id) adalah platform edukasi terbuka berbasis kumpulan presentasi interaktif dan game edukatif (seperti Presentasi Cerita Canva Sequence/Match Pairs, Ular Tangga edukasi GPU-accelerated, Point and Click ekspedisi sains/sejarah, Teka-Teki Catur & Taktik Logika 60 FPS, dan puzzle kata) yang dapat diakses secara gratis dan langsung tanpa login.
 
-## Positioning
-Berbeda dari Learning Management System (LMS) konvensional yang kaku dan mewajibkan akun login atau paywall, ueeee langsung menyambut pengunjung ke dashboard Canva-style yang vibrant, fun, dan langsung bisa dimainkan dalam 1 klik.
+## Positioning & Core Philosophy ("Presentasi Bercerita + Mini-Game")
+Berbeda dari Learning Management System (LMS) konvensional yang kaku dan kuis pilihan ganda terisolasi (seperti Kahoot/Quizizz kering tanpa cerita), **ueeee memadukan alur presentasi bercerita (*Story-Driven Slide Presentation*) dengan mini-game interaktif Canva Education**:
+1. **Narasi Kontekstual di Awal:** Setiap materi dibuka dengan cerita, pengantar misi, dan dialog karakter mentor (bukan langsung dilempar soal kuis tiba-tiba).
+2. **Mini-Game Interaktif Pengganti Kuis:** Kuis pilihan ganda yang monoton digantikan oleh mini-game aktif Canva Education:
+   - *Sequence Order:* Mengurutkan proses/siklus (fotosintesis, rantai makanan, linimasa sejarah).
+   - *Match A to B:* Menjodohkan konsep dua kolom via garis elastis SVG dinamis.
+   - *3D Flashcards:* Kartu balik pemahaman konsep dengan CSS 3D transform.
+   - *Chess Tactics & Logic:* Papan catur 60 FPS untuk mengasah logika geometri dan sebab-akibat.
+3. **Resolusi Cerita & Diskusi Kelas:** Siswa melihat dampak nyata dari solusi mereka terhadap dunia cerita, diakhiri kartu refleksi pemantik diskusi untuk guru.
+4. **Desain Canva-Style Langsung:** Begitu website dibuka, pengguna langsung menyambut dashboard visual yang ceria, flat, modern, dan langsung bisa dimainkan dalam 1 klik tanpa login.
 
 ## Operating Context
-- Web browser pada desktop, laptop, tablet, dan smartphone di ruang kelas maupun di rumah.
-- Dihosting secara statis di GitHub Pages dengan custom domain ueeee.my.id.
+- **Target Utama: Guru di Depan Kelas** yang memproyeksikan materi ke:
+  - Proyektor ruang kelas (resolusi 1080p / SVGA)
+  - Interactive Flat Panel (IFP) / Smartboard sentuh
+  - TV layar sentuh kelas
+- **Target Sekunder:** Siswa yang belajar mandiri via laptop, tablet, atau smartphone.
+- Dihosting secara statis di GitHub Pages dengan custom domain `ueeee.my.id`.
 - Akses terbuka tanpa otentikasi (guest-first), dengan arsitektur client-side yang siap berintegrasi dengan Supabase untuk leaderboard global, sync kuis, dan data materi dinamis.
 
 ## Capabilities and Constraints
 - Direct Entry Dashboard: Tidak ada landing page pemasaran terpisah; pengguna langsung masuk ke dashboard visual Canva-style.
-- Modul Game Interaktif:
-  1. Ular Tangga Edukatif (Board game interaktif dengan dadu animasi, tantangan kuis/trivia di petak khusus, mode solo / vs bot / multiplayer lokal).
-  2. Point & Click Adventure/Exploration (Eksplorasi adegan interaktif, laboratorium sains virtual, museum sejarah, tebak objek tersembunyi).
-  3. Mini-Games & Puzzles (Kuis interaktif, drag & drop susun kata/formula, flashcards).
-- Client-side State & Storage: Penyimpanan skor dan progres lokal via `localStorage`, dengan skema yang siap sinkronisasi ke Supabase.
-- Responsive & Touch-friendly: Optimal untuk layar proyektor kelas, laptop, maupun HP siswa.
+- Modul Engine Interaktif:
+  1. **Story-Driven Interactive Slide Presentation:** Shell presentasi guru dengan babak cerita, materi infografis, mini-game Sequence/Match Pairs Canva, dan diskusi kelas.
+  2. **Canva Interactive Games:** Komponen `CanvaSequenceGame` (drag/tap urutkan langkah) dan `CanvaMatchPairsGame` (jodohkan dua kolom dengan garis SVG putus-putus).
+  3. **Chess.com-Style 60 FPS Board Engine:** Arsitektur 4-layer (Static Grid, Highlights, GPU Piece Layer dengan `transform: translate3d`, Feedback Badges) dan sintesis Web Audio API instan.
+  4. **Ular Tangga Edukatif:** Papan 100 petak dengan pion meluncur mulus via GPU transforms, tangga/ular SVG, kuis kurikulum, dan mode Vs Bot / 2 Pemain.
+  5. **Point & Click Adventure/Exploration:** Adegan laboratorium sains virtual, relief candi sejarah nusantara, dan ekspedisi satwa hutan endemik.
+  6. **Teka-Teki Kata & Asah Otak:** Susun kosakata ilmiah, EYD, dan sinonim kata.
+- Client-side State & Storage: Penyimpanan skor, favorit, dan riwayat lokal via `localStorage`.
+- Responsive & Touch-friendly: Fullscreen stage mode (`100vw × 100vh`) tanpa margin gelap yang membuang area proyektor, target sentuh minimal 48px-56px.
 
 ## Brand Commitments
 - Nama Produk: ueeee

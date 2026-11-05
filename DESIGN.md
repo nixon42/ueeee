@@ -101,11 +101,22 @@ components:
 ## Components
 - **Search Pill:** Bilah pencarian kapsul putih dengan fokus ring aksen ungu dan tombol reset instan.
 - **Category Bubble:** Ikon melingkar warna-warni berdiameter 60px dengan label status (*"Populer"*, *"Baru"*).
-- **Interactive Modals:** Game modal dengan tombol kontrol audio, reset cepat, tombol pintasan keyboard (Spacebar roll, Escape close), dan efek kemenangan confetti.
+- **Interactive Modals (`GameStageShell`):** Panggung permainan satu layar penuh (*edge-to-edge* `100vw × 100vh`) dengan tombol kembali beranda di kiri atas, tombol native proyektor layar penuh (`[ ⛶ Layar Penuh ]`), audio switcher, reset instan, dan listener `Escape`.
+- **Canva Education Sequence Cards:** Kartu horizontal/vertikal dengan nomor langkah melingkar, emoji cerah, dan kontrol geser panah kiri/kanan (`[ ← ]` `[ → ]`) ramah tongkat proyektor.
+- **Canva Education Match Pairs:** Garis penghubung SVG dinamis elastis (*rubber-band lines*) dengan titik temu sirkular di antara Kolom A (lavender) dan Kolom B (cyan/blue).
+- **Chess.com-Style Board Layering:** Lapisan terpisah: Grid Statis (Layer 1) -> Highlight Asal/Tujuan/Valid Dots (Layer 2) -> GPU Piece Layer (Layer 3 via `translate3d(col*100%, row*100%, 0)`) -> Umpan Balik Lencana Silang/Centang (Layer 4).
 - **Teacher Print Sheet:** Modal lembar soal cetak yang siap dicetak langsung (`window.print()`) untuk aktivitas kelas offline.
 
+## Projector & Classroom Ergonomics
+- **Full-Screen Stage Mode (`100vw × 100vh`):** Menghilangkan seluruh margin hitam yang membuang ~40% display proyektor kelas.
+- **Touch Target Standard:** Seluruh tombol dan kartu interaktif memiliki tinggi minimal 48px – 56px untuk memudahkan sentuhan jari pada TV Smartboard/IFP.
+- **High-Contrast Text:** Teks pertanyaan dan judul berukuran minimal 18px – 28px agar terbaca jelas oleh siswa di barisan belakang kelas.
+
 ## Do's and Don'ts
+- **DO:** Awali game dengan slide narasi cerita / pengantar misi sebelum masuk ke tantangan teknis.
+- **DO:** Gunakan `transform: translate3d(col * 100%, row * 100%, 0)` untuk menggerakkan bidak atau pion di atas papan (NOL layout reflow).
 - **DO:** Gunakan warna solid untuk teks judul utama demi keterbacaan proyektor kelas.
-- **DO:** Berikan umpan balik audio instan melalui Web Audio API pada setiap interaksi penting.
+- **DO:** Berikan umpan balik audio instan melalui Web Audio API pada setiap interaksi penting (langkah, makan, salah, benar).
+- **DON'T:** Jangan membuat modal melayang di tengah layar dengan backdrop gelap (`max-w-2xl max-h-[90vh] bg-black/60`). Wajib gunakan Full-Screen Stage Mode.
 - **DON'T:** Jangan memasukkan form pendaftaran atau modal login yang membatasi akses materi.
-- **DON'T:** Hindari penggunaan efek bounce animasi yang berlebihan; gunakan transisi eksponensial yang halus.
+- **DON'T:** Jangan meletakkan bidak di dalam `<div>` petak papan (menghindari DOM recreation). Letakkan di Layer 3 independen.
