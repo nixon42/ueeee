@@ -10,6 +10,13 @@ export type SubjectCategory =
 
 export type GradeLevel = 'Semua Kelas' | 'SD Kelas 1-3' | 'SD Kelas 4-6' | 'SMP' | 'SMA';
 
+export interface GameProlog {
+  story: string;
+  learningGoals: string[];
+  howToPlay: string[];
+  rules: string[];
+}
+
 export interface GameItem {
   id: string;
   title: string;
@@ -29,6 +36,7 @@ export interface GameItem {
   rating: number; // 4.8, 4.9, etc.
   playsCount: number;
   tags?: string[];
+  prolog?: GameProlog;
 }
 
 export interface QuizQuestion {

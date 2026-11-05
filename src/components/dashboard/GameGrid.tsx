@@ -7,6 +7,7 @@ interface Props {
   games: GameItem[];
   title?: string;
   onPlayGame: (game: GameItem) => void;
+  onOpenProlog?: (game: GameItem) => void;
   onResetFilter?: () => void;
   favorites: string[];
   onToggleFavorite: (gameId: string) => void;
@@ -17,6 +18,7 @@ export const GameGrid: React.FC<Props> = ({
   games,
   title = 'Koleksi Game Interaktif',
   onPlayGame,
+  onOpenProlog,
   onResetFilter,
   favorites,
   onToggleFavorite,
@@ -47,6 +49,7 @@ export const GameGrid: React.FC<Props> = ({
                 key={`recent-${game.id}`}
                 game={game}
                 onPlay={onPlayGame}
+                onOpenProlog={onOpenProlog}
                 isFavorite={favorites.includes(game.id)}
                 onToggleFavorite={onToggleFavorite}
               />
@@ -100,6 +103,7 @@ export const GameGrid: React.FC<Props> = ({
                 key={game.id}
                 game={game}
                 onPlay={onPlayGame}
+                onOpenProlog={onOpenProlog}
                 isFavorite={favorites.includes(game.id)}
                 onToggleFavorite={onToggleFavorite}
               />

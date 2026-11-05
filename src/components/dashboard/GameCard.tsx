@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Clock, Star, Bookmark } from 'lucide-react';
+import { Play, Clock, Star, Bookmark, BookOpen, ChevronRight } from 'lucide-react';
 import { GameItem } from '@/types/game';
 import { sound } from '@/lib/sound';
 import { GameIllustration } from '@/components/dashboard/GameIllustration';
@@ -7,6 +7,7 @@ import { GameIllustration } from '@/components/dashboard/GameIllustration';
 interface Props {
   game: GameItem;
   onPlay: (game: GameItem) => void;
+  onOpenProlog?: (game: GameItem) => void;
   isFavorite?: boolean;
   onToggleFavorite?: (gameId: string) => void;
 }
@@ -14,12 +15,19 @@ interface Props {
 export const GameCard: React.FC<Props> = ({
   game,
   onPlay,
+  onOpenProlog,
   isFavorite = false,
   onToggleFavorite,
 }) => {
   const handleClick = () => {
     sound.playClick();
     onPlay(game);
+  };
+
+  const handlePrologClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    sound.playClick();
+    if (onOpenProlog) onOpenProlog(game);
   };
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
@@ -114,14 +122,23 @@ export const GameCard: React.FC<Props> = ({
         </div>
 
         {/* Action Footer */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-          <span className="text-xs font-medium text-slate-400 group-hover:text-slate-600 transition truncate max-w-[160px]">
-            {game.subjectDetail}
-          </span>
+        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+          <button
+            onClick={handlePrologClick}
+            className="px-2.5 py-1.5 rounded-xl text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100/80 border border-purple-200/80 hover:border-purple-300 transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+            title="Lihat sinopsis cerita, materi kurikulum, cara bermain, dan aturan main"
+          >
+            <BookOpen size={13} className="text-purple-600" />
+            <span>Prolog & Aturan</span>
+          </button>
 
-          <span className="text-xs font-extrabold text-indigo-900 bg-indigo-50 px-3 py-1.5 rounded-xl group-hover:bg-indigo-900 group-hover:text-white transition shadow-sm">
-            Main Sekarang →
-          </span>
+          <button
+            onClick={handleClick}
+            className="text-xs font-extrabold text-indigo-900 bg-indigo-50 hover:bg-indigo-900 hover:text-white px-3 py-1.5 rounded-xl transition shadow-sm flex items-center gap-1 cursor-pointer"
+          >
+            <span>Main</span>
+            <ChevronRight size={14} />
+          </button>
         </div>
       </div>
     </div>

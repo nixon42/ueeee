@@ -7,6 +7,7 @@ import { UlarTanggaModal } from '@/games/ular-tangga/UlarTanggaModal';
 import { PointAndClickModal } from '@/games/point-and-click/PointAndClickModal';
 import { PuzzleModal } from '@/games/puzzle/PuzzleModal';
 import { TeacherSheetModal } from '@/components/modals/TeacherSheetModal';
+import { PrologModal } from '@/components/dashboard/PrologModal';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
@@ -44,8 +45,9 @@ export default function App() {
   const [activePointAndClickScene, setActivePointAndClickScene] = useState<string>('lab-sains');
   const [isPuzzleOpen, setIsPuzzleOpen] = useState<boolean>(false);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState<boolean>(false);
+  const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
 
-  // Read URL query parameter for deep linking (?game=...)
+  // Read URL query parameter for deep linking (?game=... or ?prolog=...)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const gameParam = params.get('game');
@@ -53,6 +55,13 @@ export default function App() {
       const match = GAMES_CATALOG.find(g => g.id === gameParam);
       if (match) {
         launchGame(match);
+      }
+    }
+    const prologParam = params.get('prolog');
+    if (prologParam) {
+      const match = GAMES_CATALOG.find(g => g.id === prologParam);
+      if (match) {
+        setActivePrologGame(match);
       }
     }
   }, []);
@@ -227,6 +236,7 @@ export default function App() {
               : 'Semua Koleksi Materi Belajar'
           }
           onPlayGame={launchGame}
+          onOpenProlog={setActivePrologGame}
           onResetFilter={handleResetFilter}
           favorites={favorites}
           onToggleFavorite={toggleFavorite}
@@ -252,6 +262,12 @@ export default function App() {
       <TeacherSheetModal
         isOpen={isTeacherModalOpen}
         onClose={() => setIsTeacherModalOpen(false)}
+      />
+      <PrologModal
+        game={activePrologGame}
+        isOpen={!!activePrologGame}
+        onClose={() => setActivePrologGame(null)}
+        onPlay={launchGame}
       />
 
       {/* Clean Canva-style Footer */}

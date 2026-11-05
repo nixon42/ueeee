@@ -77,4 +77,14 @@ describe('Games & Scenes Catalog Integrity', () => {
     expect(tataMatches.length).toBeGreaterThanOrEqual(1);
     expect(tataMatches.some(g => g.id === 'ular-tangga-tatasurya')).toBe(true);
   });
+
+  test('All games have rich prolog data (story, learning goals, how to play, rules)', () => {
+    for (const game of GAMES_CATALOG) {
+      expect(game.prolog).toBeDefined();
+      expect(game.prolog!.story.length).toBeGreaterThan(20);
+      expect(game.prolog!.learningGoals.length).toBeGreaterThanOrEqual(3);
+      expect(game.prolog!.howToPlay.length).toBeGreaterThanOrEqual(3);
+      expect(game.prolog!.rules.length).toBeGreaterThanOrEqual(3);
+    }
+  });
 });
