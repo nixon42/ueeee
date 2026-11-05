@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ueeee.my.id/sitemap.xml

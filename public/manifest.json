@@ -1,0 +1,22 @@
+{
+  "name": "ueeee - Belajar Lewat Game Interaktif",
+  "short_name": "ueeee",
+  "description": "Platform kumpulan materi pembelajaran interaktif berbasis game: Ular Tangga, Point & Click sains, dan teka-teki edukasi terbuka tanpa perlu login.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafbff",
+  "theme_color": "#00c4cc",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png"
+    }
+  ]
+}

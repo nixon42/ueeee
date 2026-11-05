@@ -326,7 +326,7 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   Susunan Jawaban ({selectedLetters.length} / {currentPuzzle.word.length} Huruf)
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-2 min-h-14 p-2.5 bg-slate-100/70 rounded-2xl border-2 border-dashed border-slate-300 w-full">
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 min-h-12 sm:min-h-14 p-2 sm:p-2.5 bg-slate-100/70 rounded-2xl border-2 border-dashed border-slate-300 w-full">
                   {Array.from({ length: currentPuzzle.word.length }).map((_, idx) => {
                     const letter = selectedLetters[idx];
                     return (
@@ -334,7 +334,7 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         key={idx}
                         onClick={() => letter && handleRemoveLetter(idx)}
                         disabled={!letter}
-                        className={`w-11 h-11 rounded-xl font-black text-lg flex items-center justify-center transition-all ${
+                        className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl font-black text-base sm:text-lg flex items-center justify-center transition-all ${
                           letter
                             ? 'bg-gradient-to-tr from-teal-500 to-emerald-500 text-white shadow-md hover:scale-105 active:scale-95 cursor-pointer'
                             : 'bg-white/80 border border-slate-200 text-transparent cursor-default'
@@ -354,13 +354,13 @@ export const PuzzleModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   Pilihan Huruf (Klik atau Ketik)
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
                   {availableTiles.map(tile => (
                     <button
                       key={tile.id}
                       onClick={() => !tile.used && handleTileClick(tile.id, tile.letter)}
                       disabled={tile.used}
-                      className={`w-12 h-12 rounded-2xl font-black text-lg transition-all duration-200 ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg transition-all duration-200 cursor-pointer ${
                         tile.used
                           ? 'bg-slate-100 text-slate-300 border border-slate-200 cursor-not-allowed scale-90'
                           : 'bg-white hover:bg-teal-50 border-2 border-slate-200 hover:border-teal-400 text-slate-800 shadow-sm hover:shadow hover:-translate-y-0.5 active:scale-95'

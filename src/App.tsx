@@ -7,6 +7,7 @@ import { UlarTanggaModal } from '@/games/ular-tangga/UlarTanggaModal';
 import { PointAndClickModal } from '@/games/point-and-click/PointAndClickModal';
 import { PuzzleModal } from '@/games/puzzle/PuzzleModal';
 import { TeacherSheetModal } from '@/components/modals/TeacherSheetModal';
+import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
 import { Heart, Sparkles, BookOpen } from 'lucide-react';
@@ -140,7 +141,8 @@ export default function App() {
         activeTab === 'all' ||
         (activeTab === 'ular-tangga' && game.type === 'ular-tangga') ||
         (activeTab === 'point-and-click' && game.type === 'point-and-click') ||
-        (activeTab === 'puzzle' && game.type === 'puzzle');
+        (activeTab === 'puzzle' && game.type === 'puzzle') ||
+        (activeTab === 'favorites' && favorites.includes(game.id));
 
       const matchGrade =
         selectedGrade === 'Semua Kelas' ||
@@ -265,7 +267,7 @@ export default function App() {
       />
 
       {/* Clean Canva-style Footer */}
-      <footer className="w-full border-t border-slate-200/80 bg-white py-6">
+      <footer className="w-full border-t border-slate-200/80 bg-white py-6 mb-14 sm:mb-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-extrabold text-slate-900 text-sm">ueeee</span>
@@ -290,6 +292,27 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Canva-Style Mobile Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          setActiveTab(tab);
+          if (tab === 'favorites') {
+            setSelectedCategory('all');
+          }
+        }}
+        onSurpriseMe={handleSurpriseMe}
+        favoritesCount={favorites.length}
+        onOpenTeacherModal={() => setIsTeacherModalOpen(true)}
+        onFocusSearch={() => {
+          const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }}
+      />
     </div>
   );
 }
