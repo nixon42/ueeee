@@ -1,12 +1,11 @@
 import React from 'react';
 import { ReflectionSparkSlide as ReflectionSlideData } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
-import { sound } from '@/lib/sound';
 
 export interface ReflectionSparkSlideProps {
   slide: ReflectionSlideData;
   themeColor: PresentationThemeKey;
-  onVictory: () => void;
+  onVictory?: () => void;
 }
 
 const BADGE_COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = {
@@ -21,14 +20,8 @@ const BADGE_COLOR_MAP: Record<string, { bg: string; text: string; border: string
 export const ReflectionSparkSlide: React.FC<ReflectionSparkSlideProps> = ({
   slide,
   themeColor,
-  onVictory,
 }) => {
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
-
-  const handleCelebrate = () => {
-    sound.playFanfare();
-    onVictory();
-  };
 
   return (
     <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-5 sm:space-y-6 animate-in fade-in duration-300">
@@ -82,19 +75,6 @@ export const ReflectionSparkSlide: React.FC<ReflectionSparkSlideProps> = ({
             </div>
           );
         })}
-      </div>
-
-      {/* Final Grand Celebration Button */}
-      <div className="flex justify-center pt-2">
-        <button
-          type="button"
-          onClick={handleCelebrate}
-          className="py-3.5 px-8 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-amber-950 font-black text-sm sm:text-base shadow-xl shadow-amber-200/80 flex items-center gap-2 cursor-pointer transition transform hover:scale-105 active:scale-95"
-        >
-          <span>
-            {slide.victoryButtonText || '🏆 Selesai & Rayakan Kemenangan Kelas!'}
-          </span>
-        </button>
       </div>
     </div>
   );
