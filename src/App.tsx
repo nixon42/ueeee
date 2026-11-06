@@ -8,7 +8,7 @@ import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
 import { getPresentationDeckByGameId } from '@/data/presentation-decks';
 import { PresentationDeckData } from '@/types/presentation';
-import { Heart, Sparkles, BookOpen } from 'lucide-react';
+import { Heart, Sparkles } from 'lucide-react';
 import { LogoIcon } from '@/components/common/Logo';
 import { isGameMatchingSearch } from '@/lib/search';
 import { useFavorites, useGameStats } from '@/business';
@@ -20,7 +20,6 @@ const PointAndClickModal = lazy(() => import('@/games/point-and-click/PointAndCl
 const PuzzleModal = lazy(() => import('@/games/puzzle/PuzzleModal').then(m => ({ default: m.PuzzleModal })));
 const ChessPuzzleModal = lazy(() => import('@/games/chess-puzzle').then(m => ({ default: m.ChessPuzzleModal })));
 const InteractiveStoryPresentationModal = lazy(() => import('@/components/canva-games').then(m => ({ default: m.InteractiveStoryPresentationModal })));
-const TeacherSheetModal = lazy(() => import('@/components/modals/TeacherSheetModal').then(m => ({ default: m.TeacherSheetModal })));
 const PrologModal = lazy(() => import('@/components/dashboard/PrologModal').then(m => ({ default: m.PrologModal })));
 
 export default function App() {
@@ -47,7 +46,6 @@ export default function App() {
   const [isPresentationOpen, setIsPresentationOpen] = useState<boolean>(false);
   const [activePresentationDeck, setActivePresentationDeck] = useState<PresentationDeckData | null>(null);
   const [presentationInitialSlide, setPresentationInitialSlide] = useState<number>(1);
-  const [isTeacherModalOpen, setIsTeacherModalOpen] = useState<boolean>(false);
   const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
 
   // Read URL query parameter for deep linking (?game=...&mode=...&slide=... or ?prolog=...)
@@ -320,10 +318,6 @@ export default function App() {
             }}
           />
         )}
-        <TeacherSheetModal
-          isOpen={isTeacherModalOpen}
-          onClose={() => setIsTeacherModalOpen(false)}
-        />
         <PrologModal
           game={activePrologGame}
           isOpen={!!activePrologGame}
@@ -343,13 +337,6 @@ export default function App() {
             <span className="font-semibold text-purple-700">ueeee.my.id</span>
             <span>—</span>
             <span>Platform Gamified Learning Terbuka</span>
-            <button
-              onClick={() => setIsTeacherModalOpen(true)}
-              className="ml-2 font-bold text-purple-700 hover:text-purple-900 underline flex items-center gap-1 cursor-pointer"
-            >
-              <BookOpen size={12} />
-              <span>Cetak Soal untuk Guru</span>
-            </button>
           </div>
 
           <div className="flex items-center gap-1 font-medium">
@@ -372,7 +359,6 @@ export default function App() {
         }}
         onSurpriseMe={handleSurpriseMe}
         favoritesCount={favorites.length}
-        onOpenTeacherModal={() => setIsTeacherModalOpen(true)}
         onFocusSearch={() => {
           const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
           if (searchInput) {

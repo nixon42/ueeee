@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Dices, Bookmark, Presentation, Search } from 'lucide-react';
+import { Home, Dices, Bookmark, Search } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 interface Props {
@@ -7,7 +7,6 @@ interface Props {
   onTabChange: (tab: string) => void;
   onSurpriseMe: () => void;
   favoritesCount: number;
-  onOpenTeacherModal: () => void;
   onFocusSearch: () => void;
 }
 
@@ -16,11 +15,10 @@ export const MobileBottomNav: React.FC<Props> = ({
   onTabChange,
   onSurpriseMe,
   favoritesCount,
-  onOpenTeacherModal,
   onFocusSearch,
 }) => {
   return (
-    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 py-1.5 shadow-lg safe-bottom">
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-1.5 shadow-lg safe-bottom">
       <div className="flex items-center justify-around">
         {/* Beranda */}
         <button
@@ -76,18 +74,6 @@ export const MobileBottomNav: React.FC<Props> = ({
           {favoritesCount > 0 && (
             <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-amber-500"></span>
           )}
-        </button>
-
-        {/* Mode Guru */}
-        <button
-          onClick={() => {
-            sound.playClick();
-            onOpenTeacherModal();
-          }}
-          className="flex flex-col items-center gap-1 p-1.5 rounded-xl text-slate-500 hover:text-purple-700 transition cursor-pointer"
-        >
-          <Presentation size={20} />
-          <span className="text-[10px]">Guru</span>
         </button>
       </div>
     </nav>
