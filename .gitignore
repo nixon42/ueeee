@@ -38,6 +38,7 @@ Thumbs.db
 .impeccable/live/
 
 # Agent scratch & IPC
+.claude/
 .agents/
 
 node_modules

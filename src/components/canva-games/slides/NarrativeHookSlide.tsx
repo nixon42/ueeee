@@ -1,5 +1,5 @@
-import React from 'react';
-import { Compass, Target, Radio } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Compass, Target } from 'lucide-react';
 import { NarrativeIntroSlide, PresentationMentor } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { KakGalihAvatar } from '../characters/KakGalihAvatar';
@@ -166,7 +166,36 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   const isKakGalih = activeMentor.name.toLowerCase().includes('galih');
 
   const speakerName = activeMentor.name;
-  const speakerRole = activeMentor.role;
+
+  // Typewriter streaming effect for RPG-like narrative immersion
+  const fullDialogue = slide.dialogue || '';
+  const [displayedChars, setDisplayedChars] = useState<number>(0);
+
+  useEffect(() => {
+    setDisplayedChars(0);
+    if (!fullDialogue) return;
+
+    const interval = setInterval(() => {
+      setDisplayedChars((prev) => {
+        if (prev >= fullDialogue.length) {
+          clearInterval(interval);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 20);
+
+    return () => clearInterval(interval);
+  }, [fullDialogue]);
+
+  const isTyping = displayedChars < fullDialogue.length;
+  const currentDialogue = fullDialogue.slice(0, displayedChars);
+
+  const handleSkipTyping = () => {
+    if (isTyping) {
+      setDisplayedChars(fullDialogue.length);
+    }
+  };
 
   /** RPG-style nameplate tab pinned to the top-left of the dialogue band. */
   const nameplate = (withEmoji: boolean) => (
@@ -174,10 +203,7 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
       <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-300 text-emerald-950 flex items-center justify-center shrink-0 border border-emerald-900/30">
         {withEmoji ? <span className="text-xs sm:text-sm">🧭</span> : <Compass size={14} className="text-emerald-900" />}
       </span>
-      <span className="font-black text-[11px] sm:text-sm text-white tracking-wide whitespace-nowrap">{speakerName}</span>
-      <span className="hidden sm:inline text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-emerald-950 bg-amber-300/90 px-2 py-0.5 rounded-md whitespace-nowrap">
-        {speakerRole}
-      </span>
+      <span className="font-black text-[12px] sm:text-sm text-white tracking-wide whitespace-nowrap">{speakerName}</span>
     </div>
   );
 
@@ -185,27 +211,8 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
     <div className="relative w-full h-full flex flex-col overflow-hidden rounded-3xl border-4 border-emerald-950/40 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)] animate-in fade-in duration-300">
       <SceneBackdrop accent={theme.textPrimary} />
 
-      {/* ── MISSION HUD BAR ─────────────────────────────── */}
-      <div className="relative z-20 flex items-center justify-between gap-2 px-2.5 sm:px-4 pt-2.5 sm:pt-3 shrink-0">
-        <div className="inline-flex items-center gap-2 rounded-xl bg-emerald-950/80 border-2 border-amber-400/70 backdrop-blur-sm pl-1.5 pr-3 py-1 shadow-lg">
-          <span className="px-1.5 py-0.5 rounded-md bg-amber-400 text-emerald-950 font-black text-[10px] sm:text-[11px] tracking-widest uppercase">
-            Misi
-          </span>
-          <span className="font-black text-[10px] sm:text-xs uppercase tracking-wider text-amber-100">
-            {slide.chapterBadge || 'BABAK 1: PANGGILAN PENJELAJAH ALAM'}
-          </span>
-        </div>
-
-        <div className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-950/80 border-2 border-emerald-400/50 backdrop-blur-sm px-2.5 py-1.5 shadow-lg">
-          <Radio size={12} className="text-emerald-300 animate-pulse" />
-          <span className="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-emerald-200">
-            Ekspedisi Aktif
-          </span>
-        </div>
-      </div>
-
       {/* ── SCENE TITLE PLAQUE ──────────────────────────── */}
-      <div className="relative z-20 px-3 sm:px-5 pt-2 sm:pt-3 shrink-0">
+      <div className="relative z-20 px-3 sm:px-5 pt-3 sm:pt-4 shrink-0">
         <div className="inline-block max-w-[94%] sm:max-w-[78%] rounded-2xl bg-gradient-to-r from-emerald-950/92 via-emerald-900/88 to-emerald-900/55 border-l-[6px] border-amber-400 backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-2 sm:py-2.5 shadow-xl">
           <h2 className="text-lg sm:text-2xl md:text-3xl font-black text-white leading-tight tracking-tight drop-shadow">
             {slide.title}
@@ -244,14 +251,31 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
           {/* pointer triangle aimed at the speaker */}
           <div className="hidden sm:block absolute -left-[13px] bottom-9 w-0 h-0 border-t-[11px] border-t-transparent border-b-[11px] border-b-transparent border-r-[14px] border-r-emerald-900/95" />
 
-          <div className="relative rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95 border-2 sm:border-[3px] border-amber-300/80 shadow-[0_12px_30px_rgba(2,44,34,0.6)] backdrop-blur-md px-3.5 sm:px-5 md:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4">
-            <p className="text-[12.5px] sm:text-sm md:text-[15px] lg:text-base font-semibold leading-snug sm:leading-relaxed text-amber-50/95 tracking-tight">
-              &ldquo;{slide.dialogue}&rdquo;
+          <div
+            onClick={handleSkipTyping}
+            title={isTyping ? 'Klik untuk tampilkan semua teks' : undefined}
+            className="relative cursor-pointer rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95 border-2 sm:border-[3px] border-amber-300/80 shadow-[0_12px_30px_rgba(2,44,34,0.6)] backdrop-blur-md px-3.5 sm:px-5 md:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 transition-all"
+          >
+            <p className="text-[12.5px] sm:text-sm md:text-[15px] lg:text-base font-semibold leading-snug sm:leading-relaxed text-amber-50/95 tracking-tight min-h-[2.5rem]">
+              &ldquo;{currentDialogue}&rdquo;
+              {isTyping && (
+                <span className="inline-block w-2 sm:w-2.5 h-4 sm:h-4.5 ml-1 bg-amber-400 animate-pulse align-middle rounded-xs" />
+              )}
             </p>
+
+            {/* Bouncing next prompt indicator when dialogue finish streaming */}
+            {!isTyping && (
+              <div className="flex justify-end -mt-1 sm:mt-0 select-none">
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-amber-300/90 animate-bounce">
+                  <span>Lanjut petualangan</span>
+                  <span className="text-xs">▼</span>
+                </span>
+              </div>
+            )}
 
             {/* Quest objective card */}
             {slide.missionObjective && (
-              <div className="mt-2.5 sm:mt-3.5 rounded-xl sm:rounded-2xl bg-amber-400/15 border-2 border-amber-300/70 border-dashed px-2.5 sm:px-3 py-2 flex items-start sm:items-center gap-2 sm:gap-2.5">
+              <div className="mt-2.5 sm:mt-3 rounded-xl sm:rounded-2xl bg-amber-400/15 border-2 border-amber-300/70 border-dashed px-2.5 sm:px-3 py-2 flex items-start sm:items-center gap-2 sm:gap-2.5">
                 <Target size={16} className="text-amber-300 shrink-0 mt-0.5 sm:mt-0" />
                 <div className="min-w-0">
                   <div className="font-black text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-amber-300/90 leading-none">
