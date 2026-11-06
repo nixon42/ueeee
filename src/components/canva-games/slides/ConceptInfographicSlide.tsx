@@ -66,11 +66,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
     setZoomLevel(1);
   };
 
-  const handleNextClick = () => {
-    sound.playClick();
-    if (onNext) onNext();
-  };
-
   return (
     <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-4 sm:space-y-5 animate-in fade-in duration-300">
       {/* Header */}
@@ -196,26 +191,13 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       )}
 
       {/* Teacher Speaker Prompt Banner (Classroom Proyektor Cue) */}
-      <div className="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 text-xs sm:text-sm text-slate-600 shrink-0">
-        <div className="flex items-center gap-3">
-          <Lightbulb className="text-amber-500 shrink-0" size={20} />
-          <span>
-            <strong>Panduan Guru di Kelas:</strong>{' '}
-            {slide.teacherNotes ||
-              'Ajak siswa mengulas kartu materi di atas dan memberikan contoh konkret dalam kehidupan sehari-hari sebelum melangkah ke tantangan mini-game!'}
-          </span>
-        </div>
-
-        {onNext && (
-          <button
-            type="button"
-            onClick={handleNextClick}
-            className={`hidden sm:flex items-center gap-1 text-xs font-black ${theme.textPrimary} hover:underline shrink-0 cursor-pointer`}
-          >
-            <span>Tantangan Berikutnya</span>
-            <ChevronRight size={15} />
-          </button>
-        )}
+      <div className="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex items-center gap-3 text-xs sm:text-sm text-slate-600 shrink-0">
+        <Lightbulb className="text-amber-500 shrink-0" size={20} />
+        <span>
+          <strong>Panduan Guru di Kelas:</strong>{' '}
+          {slide.teacherNotes ||
+            'Ajak siswa mengulas kartu materi di atas dan memberikan contoh konkret dalam kehidupan sehari-hari sebelum melangkah ke tantangan mini-game!'}
+        </span>
       </div>
 
       {/* FULLSCREEN LIGHTBOX & ZOOM MODAL */}
