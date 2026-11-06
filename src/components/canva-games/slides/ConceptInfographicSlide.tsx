@@ -6,6 +6,8 @@ import { sound } from '@/lib/sound';
 import { getDeckIllustration } from '@/components/visuals';
 import { HydrologyCycleStage } from '../stages/HydrologyCycleStage';
 import { PhotosynthesisPlantStage } from '../stages/PhotosynthesisPlantStage';
+import { SolarSystemOrbitStage } from '../stages/SolarSystemOrbitStage';
+import { EclipseMechanicsStage } from '../stages/EclipseMechanicsStage';
 
 export interface ConceptInfographicSlideProps {
   slide: ConceptSlideData;
@@ -75,6 +77,16 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
     slide.id === 'uts-slide-3' ||
     slideTitleLower.includes('fotosintesis');
 
+  const isSolarOrbitSlide =
+    slide.id === 'tatasurya-slide-2' ||
+    slideTitleLower.includes('8 planet') ||
+    slideTitleLower.includes('pembagian rumpun');
+
+  const isEclipseSlide =
+    slide.id === 'tatasurya-slide-4' ||
+    slideTitleLower.includes('gerhana') ||
+    slideTitleLower.includes('mekanika orbit');
+
   const FallbackIllustration = gameId ? getDeckIllustration(gameId) : null;
 
   // Auto-cycle timelapse playback
@@ -94,6 +106,60 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const toggleAutoPlay = () => {
     sound.playClick();
     setIsPlaying((prev) => !prev);
+  };
+
+  const getMechanismCallout = (idx: number) => {
+    if (isHydrologySlide) {
+      switch (idx) {
+        case 0:
+          return 'Molekul H2O menyerap kalor surya, berubah wujud menjadi uap tak kasat mata dan naik ke atmosfer.';
+        case 1:
+          return 'Suhu dingin di atmosfer memaksa uap air memadat kembali menjadi kristal cair pembentuk awan tebal.';
+        case 2:
+          return 'Massa titik air di awan melampaui daya apung udara, jatuh membasahi ekosistem lewat gravitasi.';
+        case 3:
+          return 'Air hujan meresap memulihkan cadangan air tanah (akuifer) serta mengalir kembali ke laut lepas.';
+        default:
+          return 'Siklus terus berlanjut tanpa henti menjaga keseimbangan abadi air di planet Bumi.';
+      }
+    }
+    if (isPhotosynthesisSlide) {
+      switch (idx) {
+        case 0:
+          return 'Klorofil di kloroplas menyerap spektrum foton merah-biru, xilem membawa H2O dari akar, dan stomata menghirup CO2.';
+        case 1:
+          return 'Reaksi Terang (Fotolisis): Foton surya memecah H2O, melepaskan gas O2 murni ke atmosfer dan mengikat energi kimia.';
+        case 2:
+          return 'Siklus Calvin (Reaksi Gelap): Fiksasi atom karbon menghasilkan molekul Glukosa (C6H12O6) sebagai cadangan makanan dan energi ekosistem.';
+        default:
+          return 'Aliran energi foton matahari tersimpan sempurna dalam senyawa organik bagi konsumen ekosistem.';
+      }
+    }
+    if (isSolarOrbitSlide) {
+      switch (idx) {
+        case 0:
+          return 'Planet Terestrial (Kebumian): Batuan silikat padat dengan inti besi, jarak orbit 0.39-1.52 AU dari Matahari.';
+        case 1:
+          return 'Sabuk Asteroid: Jutaan batuan primordial dan logam sisa tata surya pada jarak 2.2-3.2 AU, dipengaruhi gravitasi Jupiter.';
+        case 2:
+          return 'Planet Jovian (Gas & Es): Raksasa gas hidrogen, helium, dan es metana di luar sabuk asteroid hingga 30 AU dari Matahari.';
+        default:
+          return 'Matahari mengikat 8 orbit planet dalam harmoni gravitasi semesta.';
+      }
+    }
+    if (isEclipseSlide) {
+      switch (idx) {
+        case 0:
+          return 'Gravitasi Semesta: Massa Matahari (99.8% tata surya) melengkungkan ruang-waktu dan menjaga orbit elips 8 planet stabil.';
+        case 1:
+          return 'Kerucut Bayangan: Umbra membentuk proyeksi gelap total, sedangkan Penumbra menyebarkan bayangan kabur sebagian.';
+        case 2:
+          return 'Kesejajaran Syzygy: Bulan menutupi piringan surya secara presisi, memunculkan cincin berlian dan korona putih.';
+        default:
+          return 'Kesejajaran tiga benda langit menciptakan peristiwa astronomi spektakuler.';
+      }
+    }
+    return activeCard?.description || 'Amati interaksi molekuler dan aliran energi pada simulator interaktif.';
   };
 
   return (
@@ -157,8 +223,10 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             </>
           ) : (
             <>
-              <Play size={15} className="text-amber-300 fill-amber-300" />
-              <span className="hidden sm:inline">Putar Siklus</span>
+              <Play size={15} className={`${isPurple ? 'text-cyan-300 fill-cyan-300' : 'text-amber-300 fill-amber-300'}`} />
+              <span className="hidden sm:inline">
+                {isHydrologySlide ? 'Putar Siklus' : isSolarOrbitSlide ? 'Putar Orbit' : isEclipseSlide ? 'Simulasi Gerhana' : 'Putar Simulasi'}
+              </span>
               <span className="sm:hidden">Putar</span>
             </>
           )}
@@ -168,7 +236,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       {/* ── MAIN COCKPIT BODY (LANDSCAPE GAME ARENA) ──────── */}
       <div className="relative z-20 flex-1 min-h-0 flex flex-col md:flex-row gap-2.5 sm:gap-3.5 px-3 sm:px-5 py-2 sm:py-2.5 overflow-hidden">
         {/* ── LEFT: INTERACTIVE WORLD STAGE VIEWPORT ───────── */}
-        <div className="flex-1 min-h-0 relative rounded-2xl overflow-hidden border-2 border-emerald-400/40 bg-slate-950/70 shadow-inner flex items-center justify-center">
+        <div className={`flex-1 min-h-0 relative rounded-2xl overflow-hidden border-2 ${isPurple ? 'border-purple-400/40' : 'border-emerald-400/40'} bg-slate-950/70 shadow-inner flex items-center justify-center`}>
           {isHydrologySlide ? (
             <HydrologyCycleStage
               activePhase={selectedIdx}
@@ -179,6 +247,22 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             />
           ) : isPhotosynthesisSlide ? (
             <PhotosynthesisPlantStage
+              activePhase={selectedIdx}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
+          ) : isSolarOrbitSlide ? (
+            <SolarSystemOrbitStage
+              activePhase={selectedIdx}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
+          ) : isEclipseSlide ? (
+            <EclipseMechanicsStage
               activePhase={selectedIdx}
               onSelectPhase={(idx) => {
                 setIsPlaying(false);
@@ -249,11 +333,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
               <div className="mt-2 rounded-xl bg-amber-400/10 border border-amber-300/40 p-2 sm:p-2.5 flex items-start gap-2">
                 <Sparkles size={16} className="text-amber-300 shrink-0 mt-0.5" />
                 <p className="text-[10.5px] sm:text-[11.5px] text-amber-100 font-semibold leading-snug">
-                  {selectedIdx === 0 && 'Molekul H2O menyerap kalor surya, berubah wujud menjadi uap tak kasat mata dan naik ke atmosfer.'}
-                  {selectedIdx === 1 && 'Suhu dingin di atmosfer memaksa uap air memadat kembali menjadi kristal cair pembentuk awan tebal.'}
-                  {selectedIdx === 2 && 'Massa titik air di awan melampaui daya apung udara, jatuh membasahi ekosistem lewat gravitasi.'}
-                  {selectedIdx === 3 && 'Air hujan meresap memulihkan cadangan air tanah (akuifer) serta mengalir kembali ke laut lepas.'}
-                  {selectedIdx >= 4 && 'Siklus terus berlanjut tanpa henti menjaga keseimbangan abadi air di planet Bumi.'}
+                  {getMechanismCallout(selectedIdx)}
                 </p>
               </div>
             </div>
@@ -298,7 +378,9 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             <span className="truncate">
               <strong>Panduan Guru:</strong>{' '}
               {slide.teacherNotes ||
-                'Ajak siswa mengamati animasi pergerakan molekul air dari penguapan surya hingga infiltrasi akuifer tanah.'}
+                (isPhotosynthesisSlide
+                  ? 'Ajak siswa menganalisis bagaimana energi cahaya matahari diikat menjadi molekul gula glukosa di daun.'
+                  : 'Ajak siswa mengamati animasi pergerakan molekul air dari penguapan surya hingga infiltrasi akuifer tanah.')}
             </span>
           </div>
         </div>
