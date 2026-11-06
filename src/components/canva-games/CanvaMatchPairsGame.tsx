@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Sparkles, RotateCcw, CheckCircle2, AlertCircle, Link as LinkIcon } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
@@ -8,28 +8,161 @@ export interface MatchPairItem {
   rightText: string;
 }
 
-interface Props {
+export type MatchTheme = 'purple' | 'blue' | 'emerald' | 'amber' | 'rose' | 'indigo' | 'teal' | 'orange';
+
+export interface CanvaMatchPairsGameProps {
   title?: string;
-  subtitle?: string;
+  subtitle?: string; // Backward compatibility alias for instructions
+  instructions?: string;
   pairs: MatchPairItem[];
   onComplete?: (isAllCorrect: boolean) => void;
+  theme?: MatchTheme;
+  leftColumnHeader?: string;
+  rightColumnHeader?: string;
   className?: string;
 }
+
+const MATCH_THEME_STYLES: Record<MatchTheme, {
+  container: string;
+  badge: string;
+  tag: string;
+  checkBtn: string;
+  activeLine: string;
+  leftHeader: string;
+  rightHeader: string;
+  leftSelected: string;
+  rightHover: string;
+  dotLeft: string;
+  dotRight: string;
+}> = {
+  purple: {
+    container: 'bg-purple-50/40 border-purple-200/80',
+    badge: 'text-purple-700 bg-purple-100',
+    tag: 'text-purple-700/80 bg-purple-100/60 border-purple-200/50',
+    checkBtn: 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-200',
+    activeLine: '#a855f7',
+    leftHeader: 'text-purple-700',
+    rightHeader: 'text-blue-700',
+    leftSelected: 'border-purple-600 bg-purple-100 text-purple-900 shadow-md ring-2 ring-purple-300',
+    rightHover: 'border-blue-400 bg-blue-50/50 text-blue-900 hover:bg-blue-100 ring-2 ring-blue-200',
+    dotLeft: 'bg-purple-400',
+    dotRight: 'bg-blue-400',
+  },
+  blue: {
+    container: 'bg-blue-50/40 border-blue-200/80',
+    badge: 'text-blue-700 bg-blue-100',
+    tag: 'text-blue-700/80 bg-blue-100/60 border-blue-200/50',
+    checkBtn: 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200',
+    activeLine: '#0284c7',
+    leftHeader: 'text-blue-700',
+    rightHeader: 'text-indigo-700',
+    leftSelected: 'border-blue-600 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300',
+    rightHover: 'border-indigo-400 bg-indigo-50/50 text-indigo-900 hover:bg-indigo-100 ring-2 ring-indigo-200',
+    dotLeft: 'bg-blue-400',
+    dotRight: 'bg-indigo-400',
+  },
+  emerald: {
+    container: 'bg-emerald-50/40 border-emerald-200/80',
+    badge: 'text-emerald-700 bg-emerald-100',
+    tag: 'text-emerald-700/80 bg-emerald-100/60 border-emerald-200/50',
+    checkBtn: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-200',
+    activeLine: '#10b981',
+    leftHeader: 'text-emerald-700',
+    rightHeader: 'text-teal-700',
+    leftSelected: 'border-emerald-600 bg-emerald-100 text-emerald-900 shadow-md ring-2 ring-emerald-300',
+    rightHover: 'border-teal-400 bg-teal-50/50 text-teal-900 hover:bg-teal-100 ring-2 ring-teal-200',
+    dotLeft: 'bg-emerald-400',
+    dotRight: 'bg-teal-400',
+  },
+  amber: {
+    container: 'bg-amber-50/40 border-amber-200/80',
+    badge: 'text-amber-700 bg-amber-100',
+    tag: 'text-amber-700/80 bg-amber-100/60 border-amber-200/50',
+    checkBtn: 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-200',
+    activeLine: '#f59e0b',
+    leftHeader: 'text-amber-700',
+    rightHeader: 'text-orange-700',
+    leftSelected: 'border-amber-600 bg-amber-100 text-amber-900 shadow-md ring-2 ring-amber-300',
+    rightHover: 'border-orange-400 bg-orange-50/50 text-orange-900 hover:bg-orange-100 ring-2 ring-orange-200',
+    dotLeft: 'bg-amber-400',
+    dotRight: 'bg-orange-400',
+  },
+  rose: {
+    container: 'bg-rose-50/40 border-rose-200/80',
+    badge: 'text-rose-700 bg-rose-100',
+    tag: 'text-rose-700/80 bg-rose-100/60 border-rose-200/50',
+    checkBtn: 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200',
+    activeLine: '#f43f5e',
+    leftHeader: 'text-rose-700',
+    rightHeader: 'text-pink-700',
+    leftSelected: 'border-rose-600 bg-rose-100 text-rose-900 shadow-md ring-2 ring-rose-300',
+    rightHover: 'border-pink-400 bg-pink-50/50 text-pink-900 hover:bg-pink-100 ring-2 ring-pink-200',
+    dotLeft: 'bg-rose-400',
+    dotRight: 'bg-pink-400',
+  },
+  indigo: {
+    container: 'bg-indigo-50/40 border-indigo-200/80',
+    badge: 'text-indigo-700 bg-indigo-100',
+    tag: 'text-indigo-700/80 bg-indigo-100/60 border-indigo-200/50',
+    checkBtn: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200',
+    activeLine: '#6366f1',
+    leftHeader: 'text-indigo-700',
+    rightHeader: 'text-purple-700',
+    leftSelected: 'border-indigo-600 bg-indigo-100 text-indigo-900 shadow-md ring-2 ring-indigo-300',
+    rightHover: 'border-purple-400 bg-purple-50/50 text-purple-900 hover:bg-purple-100 ring-2 ring-purple-200',
+    dotLeft: 'bg-indigo-400',
+    dotRight: 'bg-purple-400',
+  },
+  teal: {
+    container: 'bg-teal-50/40 border-teal-200/80',
+    badge: 'text-teal-700 bg-teal-100',
+    tag: 'text-teal-700/80 bg-teal-100/60 border-teal-200/50',
+    checkBtn: 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200',
+    activeLine: '#0d9488',
+    leftHeader: 'text-teal-700',
+    rightHeader: 'text-emerald-700',
+    leftSelected: 'border-teal-600 bg-teal-100 text-teal-900 shadow-md ring-2 ring-teal-300',
+    rightHover: 'border-emerald-400 bg-emerald-50/50 text-emerald-900 hover:bg-emerald-100 ring-2 ring-emerald-200',
+    dotLeft: 'bg-teal-400',
+    dotRight: 'bg-emerald-400',
+  },
+  orange: {
+    container: 'bg-orange-50/40 border-orange-200/80',
+    badge: 'text-orange-700 bg-orange-100',
+    tag: 'text-orange-700/80 bg-orange-100/60 border-orange-200/50',
+    checkBtn: 'bg-orange-600 hover:bg-orange-700 text-white shadow-orange-200',
+    activeLine: '#ea580c',
+    leftHeader: 'text-orange-700',
+    rightHeader: 'text-amber-700',
+    leftSelected: 'border-orange-600 bg-orange-100 text-orange-900 shadow-md ring-2 ring-orange-300',
+    rightHover: 'border-amber-400 bg-amber-50/50 text-amber-900 hover:bg-amber-100 ring-2 ring-amber-200',
+    dotLeft: 'bg-orange-400',
+    dotRight: 'bg-amber-400',
+  },
+};
 
 /**
  * Komponen Game Interaktif Canva Education: "Match the Pairs / Match A to B"
  * Menjodohkan konsep di kolom kiri dengan pasangan di kolom kanan.
+ * Dilengkapi garis rubber-band SVG dinamis berakurasi tinggi dengan ResizeObserver.
  */
-export const CanvaMatchPairsGame: React.FC<Props> = ({
+export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   title = 'Jodohkan Pasangan yang Sesuai',
-  subtitle = 'Klik istilah di kolom kiri, lalu klik pasangannya di kolom kanan untuk menghubungkan.',
+  subtitle,
+  instructions,
   pairs,
   onComplete,
+  theme = 'purple',
+  leftColumnHeader = 'Kolom A: Konsep',
+  rightColumnHeader = 'Kolom B: Pasangan',
   className = '',
 }) => {
+  const displayInstructions = instructions || subtitle || 'Klik istilah di kolom kiri, lalu klik pasangannya di kolom kanan untuk menghubungkan.';
+  const themeStyle = MATCH_THEME_STYLES[theme] || MATCH_THEME_STYLES.purple;
+
   // Kolom kiri urutan tetap, kolom kanan diacak
-  const [leftItems] = useState<MatchPairItem[]>(pairs);
-  const [rightItems] = useState<MatchPairItem[]>(() => {
+  const [leftItems, setLeftItems] = useState<MatchPairItem[]>(pairs);
+  const [rightItems, setRightItems] = useState<MatchPairItem[]>(() => {
     return [...pairs].sort(() => Math.random() - 0.5);
   });
 
@@ -45,8 +178,18 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
   const rightRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [lines, setLines] = useState<Array<{ leftId: string; rightId: string; x1: number; y1: number; x2: number; y2: number }>>([]);
 
-  // Hitung ulang garis SVG setiap kali koneksi berubah atau window di-resize
-  const updateLinePositions = () => {
+  // Sinkronisasi bila pairs berubah dari deck
+  useEffect(() => {
+    setLeftItems(pairs);
+    setRightItems([...pairs].sort(() => Math.random() - 0.5));
+    setConnections({});
+    setSelectedLeftId(null);
+    setCheckedState(false);
+    setIsSuccess(false);
+  }, [pairs]);
+
+  // Hitung ulang garis SVG setiap kali koneksi berubah atau container di-resize
+  const updateLinePositions = useCallback(() => {
     if (!containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
     const newLines: Array<{ leftId: string; rightId: string; x1: number; y1: number; x2: number; y2: number }> = [];
@@ -70,14 +213,26 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
     });
 
     setLines(newLines);
-  };
+  }, [connections]);
 
   useEffect(() => {
     updateLinePositions();
     const handleResize = () => updateLinePositions();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [connections]);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (containerRef.current && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        requestAnimationFrame(updateLinePositions);
+      });
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeObserver) resizeObserver.disconnect();
+    };
+  }, [updateLinePositions]);
 
   const handleSelectLeft = (id: string) => {
     sound.playClick();
@@ -143,32 +298,32 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-full flex flex-col items-center justify-between p-4 sm:p-6 bg-purple-50/40 rounded-3xl border border-purple-200/80 shadow-sm relative overflow-hidden ${className}`}
+      className={`w-full flex flex-col items-center justify-between p-4 sm:p-6 rounded-3xl border shadow-sm relative overflow-hidden ${themeStyle.container} ${className}`}
     >
-      {/* SVG Garis Penghubung (Rubber-Band Lines Khas Canva) */}
+      {/* SVG Garis Penghubung (Rubber-Band Bezier Lines Khas Canva) */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
         {lines.map((line, idx) => {
           const isCorrect = checkedState && line.leftId === line.rightId;
           const isWrong = checkedState && line.leftId !== line.rightId;
 
-          const strokeColor = isCorrect ? '#10b981' : isWrong ? '#f43f5e' : '#a855f7';
+          const strokeColor = isCorrect ? '#10b981' : isWrong ? '#f43f5e' : themeStyle.activeLine;
+
+          const midX = (line.x1 + line.x2) / 2;
 
           return (
             <g key={`line-${idx}`}>
-              <line
-                x1={line.x1}
-                y1={line.y1}
-                x2={line.x2}
-                y2={line.y2}
+              <path
+                d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
+                fill="none"
                 stroke={strokeColor}
-                strokeWidth={isCorrect || isWrong ? '3' : '2.5'}
-                strokeDasharray="6 4"
+                strokeWidth={isCorrect || isWrong ? '3.5' : '2.5'}
+                strokeDasharray={isCorrect ? undefined : '6 4'}
                 strokeLinecap="round"
                 className="transition-colors duration-200"
               />
               {/* Lingkaran Titik Temu di Ujung Garis */}
-              <circle cx={line.x1} cy={line.y1} r="4" fill={strokeColor} />
-              <circle cx={line.x2} cy={line.y2} r="4" fill={strokeColor} />
+              <circle cx={line.x1} cy={line.y1} r="4.5" fill={strokeColor} />
+              <circle cx={line.x2} cy={line.y2} r="4.5" fill={strokeColor} />
             </g>
           );
         })}
@@ -176,19 +331,19 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
 
       {/* Header Tantangan Canva */}
       <div className="text-center max-w-xl mb-4 sm:mb-6 z-20">
-        <span className="text-[11px] font-black uppercase tracking-widest text-purple-600 block mb-1">
+        <span className={`text-[11px] font-black uppercase tracking-widest block mb-1 ${themeStyle.badge} px-2.5 py-0.5 rounded-full inline-block`}>
           Tantangan Pasangan Konsep
         </span>
-        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
-        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{subtitle}</p>
+        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight mt-1">{title}</h3>
+        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
       </div>
 
       {/* Grid Dua Kolom Sejajar */}
       <div className="w-full grid grid-cols-2 gap-4 sm:gap-8 my-auto z-20">
         {/* Kolom Kiri: Istilah / Konsep */}
         <div className="flex flex-col space-y-3">
-          <span className="text-xs font-black uppercase tracking-wider text-purple-700 px-1">
-            Kolom A: Konsep
+          <span className={`text-xs font-black uppercase tracking-wider px-1 ${themeStyle.leftHeader}`}>
+            {leftColumnHeader}
           </span>
           {leftItems.map(item => {
             const isSelected = selectedLeftId === item.id;
@@ -208,20 +363,20 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
                     : isWrong
                     ? 'border-rose-400 bg-rose-50 text-rose-900 shadow-sm'
                     : isSelected
-                    ? 'border-purple-600 bg-purple-100 text-purple-900 shadow-md ring-2 ring-purple-300'
+                    ? themeStyle.leftSelected
                     : connectedRightId
-                    ? 'border-purple-300 bg-white text-slate-800 shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-purple-300 hover:bg-purple-50/50 shadow-sm'
+                    ? 'border-slate-300 bg-white text-slate-800 shadow-sm'
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/70 shadow-sm'
                 }`}
               >
-                <span className="pr-2">{item.leftText}</span>
+                <span className="pr-2 leading-snug">{item.leftText}</span>
                 <span className="shrink-0">
                   {isCorrect ? (
                     <CheckCircle2 size={16} className="text-emerald-600" />
                   ) : isWrong ? (
                     <AlertCircle size={16} className="text-rose-500" />
                   ) : (
-                    <span className="w-2.5 h-2.5 rounded-full bg-purple-400 inline-block"></span>
+                    <span className={`w-2.5 h-2.5 rounded-full ${themeStyle.dotLeft} inline-block`}></span>
                   )}
                 </span>
               </button>
@@ -231,12 +386,11 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
 
         {/* Kolom Kanan: Definisi / Pasangan */}
         <div className="flex flex-col space-y-3">
-          <span className="text-xs font-black uppercase tracking-wider text-blue-700 px-1">
-            Kolom B: Pasangan
+          <span className={`text-xs font-black uppercase tracking-wider px-1 ${themeStyle.rightHeader}`}>
+            {rightColumnHeader}
           </span>
           {rightItems.map(item => {
             const isConnected = Object.values(connections).includes(item.id);
-            // Cari leftId yang tersambung ke right item ini
             const connectedLeftId = Object.keys(connections).find(k => connections[k] === item.id);
             const isCorrect = checkedState && connectedLeftId === item.id;
             const isWrong = checkedState && connectedLeftId && connectedLeftId !== item.id;
@@ -253,14 +407,14 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
                     : isWrong
                     ? 'border-rose-400 bg-rose-50 text-rose-900 shadow-sm'
                     : isConnected
-                    ? 'border-purple-300 bg-white text-slate-800 shadow-sm'
+                    ? 'border-slate-300 bg-white text-slate-800 shadow-sm'
                     : selectedLeftId
-                    ? 'border-blue-400 bg-blue-50/50 text-blue-900 hover:bg-blue-100 ring-2 ring-blue-200'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50/50 shadow-sm'
+                    ? themeStyle.rightHover
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/70 shadow-sm'
                 }`}
               >
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block mr-2 shrink-0"></span>
-                <span className="flex-1 pr-2">{item.rightText}</span>
+                <span className={`w-2.5 h-2.5 rounded-full ${themeStyle.dotRight} inline-block mr-2 shrink-0`}></span>
+                <span className="flex-1 pr-2 leading-snug">{item.rightText}</span>
                 {checkedState && (
                   <span className="shrink-0">
                     {isCorrect ? (
@@ -293,7 +447,7 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
           ) : (
             <>
               <AlertCircle size={18} className="text-rose-700 shrink-0" />
-              <span>Beberapa pasangan belum tepat atau belum tersambung. Coba cek garis merah!</span>
+              <span>Beberapa pasangan belum tepat atau belum tersambung. Coba periksa garis merah!</span>
             </>
           )}
         </div>
@@ -313,15 +467,15 @@ export const CanvaMatchPairsGame: React.FC<Props> = ({
         <button
           type="button"
           onClick={handleCheckMatches}
-          className="flex-1 py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition"
+          className={`flex-1 py-2.5 px-4 rounded-xl ${themeStyle.checkBtn} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition`}
         >
           <LinkIcon size={16} />
           <span>Periksa Pasangan</span>
         </button>
       </div>
 
-      {/* AI Activity Tag di Sudut Kanan Bawah */}
-      <div className="absolute bottom-2.5 right-3 flex items-center gap-1 text-[10px] font-bold text-purple-700/80 bg-purple-100/60 px-2 py-0.5 rounded-full border border-purple-200/50 z-20">
+      {/* Canva Activity Tag di Sudut Kanan Bawah */}
+      <div className={`absolute bottom-2.5 right-3 flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border z-20 ${themeStyle.tag}`}>
         <Sparkles size={11} />
         <span>Canva Match Pairs</span>
       </div>

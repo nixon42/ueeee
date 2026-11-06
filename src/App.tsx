@@ -13,6 +13,8 @@ import { PrologModal } from '@/components/dashboard/PrologModal';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
+import { getPresentationDeckByGameId } from '@/data/presentation-decks';
+import { PresentationDeckData } from '@/types/presentation';
 import { Heart, Sparkles, BookOpen } from 'lucide-react';
 import { LogoIcon } from '@/components/common/Logo';
 import { isGameMatchingSearch } from '@/lib/search';
@@ -48,17 +50,22 @@ export default function App() {
   const [isPuzzleOpen, setIsPuzzleOpen] = useState<boolean>(false);
   const [isChessOpen, setIsChessOpen] = useState<boolean>(false);
   const [isPresentationOpen, setIsPresentationOpen] = useState<boolean>(false);
+  const [activePresentationDeck, setActivePresentationDeck] = useState<PresentationDeckData | null>(null);
+  const [presentationInitialSlide, setPresentationInitialSlide] = useState<number>(1);
   const [isTeacherModalOpen, setIsTeacherModalOpen] = useState<boolean>(false);
   const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
 
-  // Read URL query parameter for deep linking (?game=... or ?prolog=...)
+  // Read URL query parameter for deep linking (?game=...&mode=...&slide=... or ?prolog=...)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const gameParam = params.get('game');
+    const modeParam = params.get('mode') === 'arcade' ? 'arcade' : 'presentation';
+    const slideParam = parseInt(params.get('slide') || '1', 10);
+
     if (gameParam) {
       const match = GAMES_CATALOG.find(g => g.id === gameParam);
       if (match) {
-        launchGame(match);
+        launchGame(match, modeParam, isNaN(slideParam) ? 1 : slideParam);
       }
     }
     const prologParam = params.get('prolog');
@@ -91,17 +98,41 @@ export default function App() {
     });
   };
 
-  const launchGame = (game: GameItem) => {
+  const launchGame = (
+    game: GameItem,
+    mode: 'presentation' | 'arcade' = 'presentation',
+    initialSlide: number = 1
+  ) => {
     recordRecentPlay(game.id);
 
     // Update query string cleanly without reloading
     const url = new URL(window.location.href);
     url.searchParams.set('game', game.id);
+    if (mode === 'arcade') {
+      url.searchParams.set('mode', 'arcade');
+    } else {
+      url.searchParams.delete('mode');
+    }
+    if (initialSlide > 1) {
+      url.searchParams.set('slide', initialSlide.toString());
+    } else {
+      url.searchParams.delete('slide');
+    }
     window.history.replaceState({}, '', url.toString());
 
-    if (game.id === 'presentasi-ekosistem-hutan' || game.id.includes('presentasi')) {
-      setIsPresentationOpen(true);
-    } else if (game.id === 'catur-taktik-logika' || game.id.includes('catur') || game.id.includes('chess')) {
+    // Primary: Launch Refined Story Presentation Deck
+    if (mode === 'presentation') {
+      const deck = getPresentationDeckByGameId(game.id);
+      if (deck) {
+        setActivePresentationDeck(deck);
+        setPresentationInitialSlide(initialSlide);
+        setIsPresentationOpen(true);
+        return;
+      }
+    }
+
+    // Secondary: Legacy Arcade Mode Fallback
+    if (game.id === 'catur-taktik-logika' || game.id.includes('catur') || game.id.includes('chess')) {
       setIsChessOpen(true);
     } else if (game.type === 'ular-tangga') {
       if (game.id.includes('matematika')) setActiveUlarTanggaSubject('matematika');
@@ -125,11 +156,17 @@ export default function App() {
     if (which === 'point') setIsPointAndClickOpen(false);
     if (which === 'puzzle') setIsPuzzleOpen(false);
     if (which === 'chess') setIsChessOpen(false);
-    if (which === 'presentation') setIsPresentationOpen(false);
+    if (which === 'presentation') {
+      setIsPresentationOpen(false);
+      setActivePresentationDeck(null);
+      setPresentationInitialSlide(1);
+    }
 
     // Clean up query param
     const url = new URL(window.location.href);
     url.searchParams.delete('game');
+    url.searchParams.delete('mode');
+    url.searchParams.delete('slide');
     window.history.replaceState({}, '', url.toString());
   };
 
@@ -208,14 +245,17 @@ export default function App() {
         {!searchQuery && selectedCategory === 'all' && selectedGrade === 'Semua Kelas' && activeTab === 'all' && (
           <FeaturedBanner
             onPlayUlarTangga={() => {
-              setActiveUlarTanggaSubject('sains');
-              setIsUlarTanggaOpen(true);
+              const game = GAMES_CATALOG.find(g => g.id === 'ular-tangga-sains');
+              if (game) launchGame(game, 'presentation');
             }}
             onPlayPointAndClick={() => {
-              setActivePointAndClickScene('lab-sains');
-              setIsPointAndClickOpen(true);
+              const game = GAMES_CATALOG.find(g => g.id === 'point-click-lab');
+              if (game) launchGame(game, 'presentation');
             }}
-            onPlayPuzzle={() => setIsPuzzleOpen(true)}
+            onPlayPuzzle={() => {
+              const game = GAMES_CATALOG.find(g => g.id === 'teka-teki-kata');
+              if (game) launchGame(game, 'presentation');
+            }}
           />
         )}
 
@@ -285,6 +325,8 @@ export default function App() {
         <InteractiveStoryPresentationModal
           isOpen={isPresentationOpen}
           onClose={() => closeGameModal('presentation')}
+          deck={activePresentationDeck || undefined}
+          initialSlide={presentationInitialSlide}
         />
       )}
       <TeacherSheetModal
@@ -295,7 +337,8 @@ export default function App() {
         game={activePrologGame}
         isOpen={!!activePrologGame}
         onClose={() => setActivePrologGame(null)}
-        onPlay={launchGame}
+        onPlay={(game) => launchGame(game, 'presentation')}
+        onPlayClassic={(game) => launchGame(game, 'arcade')}
       />
 
       {/* Clean Canva-style Footer */}

@@ -2,12 +2,23 @@ import { describe, expect, test } from 'bun:test';
 import { GAMES_CATALOG } from '../src/data/games-catalog';
 import { CanvaSequenceGame } from '../src/components/canva-games/CanvaSequenceGame';
 import { CanvaMatchPairsGame } from '../src/components/canva-games/CanvaMatchPairsGame';
-import { InteractiveStoryPresentationModal } from '../src/components/canva-games/InteractiveStoryPresentationModal';
+import { InteractiveFlashcards } from '../src/components/canva-games/InteractiveFlashcards';
+import { StoryPresentationDeckEngine } from '../src/components/canva-games/StoryPresentationDeckEngine';
+import { 
+  InteractiveStoryPresentationModal, 
+  DEFAULT_FOREST_DECK, 
+  PHOTOSYNTHESIS_SEQUENCE, 
+  ECOSYSTEM_PAIRS 
+} from '../src/components/canva-games/InteractiveStoryPresentationModal';
+import { PRESENTATION_THEMES } from '../src/lib/presentation-themes';
+import { PresentationDeckData } from '../src/types/presentation';
 
 describe('Canva Education Interactive Games & Story Presentation Engine', () => {
   test('Components export properly with valid signatures', () => {
     expect(typeof CanvaSequenceGame).toBe('function');
     expect(typeof CanvaMatchPairsGame).toBe('function');
+    expect(typeof InteractiveFlashcards).toBe('function');
+    expect(typeof StoryPresentationDeckEngine).toBe('function');
     expect(typeof InteractiveStoryPresentationModal).toBe('function');
   });
 
@@ -66,4 +77,65 @@ describe('Canva Education Interactive Games & Story Presentation Engine', () => 
     );
     expect(isMatchWrong).toBe(false);
   });
+
+  test('PRESENTATION_THEMES dictionary provides design tokens for all 8 subjects', () => {
+    const requiredThemes = ['emerald', 'teal', 'indigo', 'amber', 'orange', 'rose', 'blue', 'purple'] as const;
+    for (const themeKey of requiredThemes) {
+      const theme = PRESENTATION_THEMES[themeKey];
+      expect(theme).toBeDefined();
+      expect(typeof theme.gradient).toBe('string');
+      expect(typeof theme.btnPrimary).toBe('string');
+      expect(typeof theme.activeDot).toBe('string');
+      expect(typeof theme.bgLight).toBe('string');
+      expect(typeof theme.borderLight).toBe('string');
+      expect(typeof theme.textPrimary).toBe('string');
+      expect(typeof theme.textBadge).toBe('string');
+      expect(typeof theme.bgBadge).toBe('string');
+      expect(typeof theme.borderBadge).toBe('string');
+      expect(typeof theme.shadowColor).toBe('string');
+      expect(typeof theme.avatarRing).toBe('string');
+    }
+  });
+
+  test('DEFAULT_FOREST_DECK conforms to PresentationDeckData contract and backward compatibility', () => {
+    expect(DEFAULT_FOREST_DECK).toBeDefined();
+    expect(DEFAULT_FOREST_DECK.gameId).toBe('presentasi-ekosistem-hutan');
+    expect(DEFAULT_FOREST_DECK.themeColor).toBe('emerald');
+    expect(DEFAULT_FOREST_DECK.mentor.name).toBe('Prof. Maya');
+    expect(DEFAULT_FOREST_DECK.slides.length).toBe(6);
+
+    const slideTypes = DEFAULT_FOREST_DECK.slides.map(s => s.type);
+    expect(slideTypes).toEqual([
+      'narrative-intro',
+      'concept-infographic',
+      'mini-game-sequence',
+      'mini-game-match',
+      'story-resolution',
+      'reflection-spark',
+    ]);
+
+    expect(PHOTOSYNTHESIS_SEQUENCE.length).toBe(4);
+    expect(ECOSYSTEM_PAIRS.length).toBe(4);
+  });
+
+  test('PresentationDeckData supports dynamic slide counts (5, 7, 8 slides)', () => {
+    const dynamicDeck5: PresentationDeckData = {
+      gameId: 'test-deck-5',
+      title: '5-Slide Deck',
+      subtitle: 'Dynamic test',
+      themeColor: 'blue',
+      mentor: { name: 'Guru Penguji', role: 'Tester', avatarEmoji: '🔬' },
+      slides: [
+        { id: 's1', type: 'narrative-intro', title: 'Intro', dialogue: 'Halo' },
+        { id: 's2', type: 'concept-infographic', title: 'Konsep', cards: [] },
+        { id: 's3', type: 'mini-game-flashcard', title: 'Kartu', cards: [] },
+        { id: 's4', type: 'story-resolution', title: 'Hasil', resolutionStory: 'Sukses' },
+        { id: 's5', type: 'reflection-spark', title: 'Refleksi', sparkCards: [] },
+      ],
+    };
+
+    expect(dynamicDeck5.slides.length).toBe(5);
+    expect(dynamicDeck5.slides.length).not.toBe(6);
+  });
 });
+

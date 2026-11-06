@@ -88,7 +88,15 @@ export const GameCard: React.FC<Props> = ({
         {/* Bottom Format Pill & Play Button Hover Animation */}
         <div className="z-10 flex items-end justify-between">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/40 backdrop-blur-md text-white text-xs font-bold border border-white/15 shadow-sm">
-            <span>{game.type === 'ular-tangga' ? '🎲 Ular Tangga' : game.type === 'point-and-click' ? '🔍 Point & Click' : '🧩 Susun Kata'}</span>
+            <span>
+              {game.hasStoryPresentation
+                ? `📊 ${game.slideCount || 7} Slide Interaktif`
+                : game.type === 'ular-tangga'
+                ? '🎲 Ular Tangga'
+                : game.type === 'point-and-click'
+                ? '🔍 Point & Click'
+                : '🧩 Susun Kata'}
+            </span>
           </div>
 
           <div className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200">

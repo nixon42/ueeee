@@ -26,7 +26,7 @@ class SoundEffects {
       this.ctx = new AudioCtx();
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
   }
 
@@ -325,6 +325,90 @@ class SoundEffects {
         osc.start(now + idx * 0.08);
         osc.stop(now + idx * 0.08 + 0.27);
       });
+    } catch {
+      // Audio fallback
+    }
+  }
+
+  /**
+   * Efek Fanfare kemenangan megah (C Major arpeggio + puncak harmoni gemilang)
+   */
+  public playFanfare() {
+    if (!this.soundEnabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const notes = [
+        { freq: 261.63, delay: 0.00, dur: 0.15 }, // C4
+        { freq: 329.63, delay: 0.10, dur: 0.15 }, // E4
+        { freq: 392.00, delay: 0.20, dur: 0.18 }, // G4
+        { freq: 523.25, delay: 0.32, dur: 0.45 }, // C5
+        { freq: 659.25, delay: 0.44, dur: 0.45 }, // E5
+        { freq: 783.99, delay: 0.56, dur: 0.70 }, // G5 (triumphant)
+      ];
+      notes.forEach(note => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(note.freq, now + note.delay);
+        gain.gain.setValueAtTime(0.22 * this.volume, now + note.delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + note.delay + note.dur);
+        osc.connect(gain);
+        gain.connect(this.ctx!.destination);
+        osc.start(now + note.delay);
+        osc.stop(now + note.delay + note.dur);
+      });
+    } catch {
+      // Audio fallback
+    }
+  }
+
+  /**
+   * Efek membalik flashcard 3D halus (whoosh pitch-drop)
+   */
+  public playCardFlip() {
+    if (!this.soundEnabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(250, now + 0.04);
+      gain.gain.setValueAtTime(0.12 * this.volume, now);
+      gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.045);
+    } catch {
+      // Audio fallback
+    }
+  }
+
+  /**
+   * Efek transisi pergantian slide presentasi (swoosh sweep)
+   */
+  public playSlideTransition() {
+    if (!this.soundEnabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400, now);
+      osc.frequency.exponentialRampToValueAtTime(650, now + 0.05);
+      gain.gain.setValueAtTime(0.08 * this.volume, now);
+      gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.055);
     } catch {
       // Audio fallback
     }

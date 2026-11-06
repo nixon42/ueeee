@@ -163,4 +163,3 @@ Untuk menjaga estetika Canva yang bersih, bersahabat, dan flat:
   - Aksen Sequence: Oranye hangat (`bg-amber-500`, `bg-amber-50`, border `border-amber-200`).
   - Aksen Match Pairs: Lavender ungu (`bg-purple-600`, `bg-purple-50`, border `border-purple-200`).
   - Aksen Quiz: Rose pink (`bg-pink-600`, `bg-pink-50`, border `border-pink-200`).
-- **Badge AI Canva Style:** Tag kecil di sudut kanan bawah setiap game: `✨ AI Generated Activity` sebagai tanda kurikulum cerdas.

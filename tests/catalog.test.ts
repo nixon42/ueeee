@@ -87,4 +87,17 @@ describe('Games & Scenes Catalog Integrity', () => {
       expect(game.prolog!.rules.length).toBeGreaterThanOrEqual(3);
     }
   });
+
+  test('All 10 games in GAMES_CATALOG link directly to registered story presentation decks', () => {
+    expect(GAMES_CATALOG.length).toBeGreaterThanOrEqual(10);
+
+    for (const game of GAMES_CATALOG) {
+      expect(game.hasStoryPresentation).toBe(true);
+      expect(game.presentationDeckId).toBe(game.id);
+      expect(game.slideCount).toBeGreaterThanOrEqual(7);
+      expect(game.mentorName).toBeDefined();
+      expect(game.mentorName!.length).toBeGreaterThan(3);
+    }
+  });
 });
+

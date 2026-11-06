@@ -37,6 +37,12 @@ export interface GameItem {
   playsCount: number;
   tags?: string[];
   prolog?: GameProlog;
+
+  // Milestone 4: Story Presentation Integration
+  hasStoryPresentation?: boolean;
+  presentationDeckId?: string;
+  slideCount?: number;
+  mentorName?: string;
 }
 
 export interface QuizQuestion {

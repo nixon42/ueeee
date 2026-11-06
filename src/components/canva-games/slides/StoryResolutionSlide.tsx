@@ -1,0 +1,99 @@
+import React from 'react';
+import { ChevronRight, CheckCircle2 } from 'lucide-react';
+import { StoryResolutionSlide as StoryResolutionSlideData } from '@/types/presentation';
+import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
+import { sound } from '@/lib/sound';
+
+export interface StoryResolutionSlideProps {
+  slide: StoryResolutionSlideData;
+  themeColor: PresentationThemeKey;
+  challengesState?: Record<string, boolean>;
+  onNext: () => void;
+}
+
+export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
+  slide,
+  themeColor,
+  challengesState = {},
+  onNext,
+}) => {
+  const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
+
+  const handleAction = () => {
+    sound.playClick();
+    onNext();
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center space-y-5 sm:space-y-6 my-auto animate-in fade-in duration-300">
+      {/* Hero Trophy Icon */}
+      <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-900 flex items-center justify-center text-4xl sm:text-5xl shadow-xl shadow-amber-200 border-4 border-white ring-4 ring-amber-100">
+        {slide.celebrationEmoji || '🏆'}
+      </div>
+
+      {/* Chapter Tag & Success Title */}
+      <div className="space-y-2">
+        <span
+          className={`text-xs font-black uppercase tracking-widest ${theme.textBadge} ${theme.bgBadge} px-3.5 py-1 rounded-full border ${theme.borderBadge} inline-block`}
+        >
+          {slide.chapterBadge || 'BABAK 5: KELANJUTAN CERITA'}
+        </span>
+        <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+          {slide.title}
+        </h2>
+        {slide.subtitle && (
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            {slide.subtitle}
+          </p>
+        )}
+      </div>
+
+      {/* Narrative Debrief Card */}
+      <div
+        className={`max-w-2xl bg-gradient-to-br ${theme.bgLight} to-slate-50 p-5 sm:p-6 rounded-3xl border ${theme.borderLight} text-left shadow-sm`}
+      >
+        <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-200/60">
+          <CheckCircle2 className="text-emerald-700" size={18} />
+          <span className="font-extrabold text-xs sm:text-sm text-slate-900">
+            {slide.reportTitle || 'Laporan Keberhasilan Misi:'}
+          </span>
+        </div>
+        <p className="text-xs sm:text-base leading-relaxed text-slate-700 font-medium">
+          &ldquo;{slide.resolutionStory}&rdquo;
+        </p>
+
+        {/* Dynamic Challenge Badges */}
+        {slide.achievementBadges && slide.achievementBadges.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-200/60 mt-3">
+            {slide.achievementBadges.map((badge, idx) => {
+              const isDone = challengesState[`challenge${idx + 1}`] ?? true;
+              return (
+                <span
+                  key={`badge-${idx}`}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
+                    isDone
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                      : 'bg-slate-100 text-slate-600 border-slate-200'
+                  }`}
+                >
+                  <CheckCircle2 size={13} className={isDone ? 'text-emerald-600' : 'text-slate-400'} />
+                  <span>{badge.label}</span>
+                </span>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Next Button */}
+      <button
+        type="button"
+        onClick={handleAction}
+        className={`py-3.5 px-8 rounded-2xl ${theme.btnPrimary} font-black text-sm sm:text-base shadow-md flex items-center gap-2 cursor-pointer transition transform hover:scale-105 active:scale-95`}
+      >
+        <span>{slide.actionButtonText || 'Buka Lembar Diskusi Guru & Refleksi'}</span>
+        <ChevronRight size={18} />
+      </button>
+    </div>
+  );
+};

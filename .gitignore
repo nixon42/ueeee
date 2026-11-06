@@ -37,3 +37,6 @@ Thumbs.db
 # Impeccable local config
 .impeccable/config.local.json
 .impeccable/live/
+
+# Agent scratch & IPC
+.agents/

@@ -19,6 +19,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'IPA / Sains & Fenomena Alam',
     rating: 4.9,
     playsCount: 2480,
+    hasStoryPresentation: true,
+    presentationDeckId: 'ular-tangga-sains',
+    slideCount: 7,
+    mentorName: 'Kak Galih',
     tags: [
       'sains', 'ipa', 'fotosintesis', 'tata surya', 'biologi', 
       'fisika', 'energi', 'ekosistem', 'ular tangga', 'kuis sains'
@@ -52,7 +56,7 @@ export const GAMES_CATALOG: GameItem[] = [
     description: 'Petualangan interaktif di dalam laboratorium sains virtual. Klik berbagai tabung reaksi kimia, mikroskop elektron, klorofil fotosintesis daun, dan jurnal riset untuk meracik formula netral.',
     type: 'point-and-click',
     category: 'sains',
-    gradeLevel: 'SD Kelas 4-6',
+    gradeLevel: 'SMP',
     badge: 'Eksplorasi Interaktif',
     badgeColor: 'bg-teal-100 text-teal-800 border-teal-300',
     accentColor: '#0d9488',
@@ -63,6 +67,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Kimia & Biologi Eksperimental',
     rating: 4.9,
     playsCount: 1940,
+    hasStoryPresentation: true,
+    presentationDeckId: 'point-click-lab',
+    slideCount: 8,
+    mentorName: 'Dr. Maya Arisandi, M.Sc.',
     tags: [
       'lab sains', 'sains', 'kimia', 'biologi', 'fotosintesis', 
       'eksperimen', 'mikroskop', 'larutan', 'point and click'
@@ -96,7 +104,7 @@ export const GAMES_CATALOG: GameItem[] = [
     description: 'Setiap dadu dilempar, pemain yang berhenti di petak kuis harus menghitung cepat operasi matematika, pecahan desimal, perkalian, dan geometri untuk mengamankan langkah bonus.',
     type: 'ular-tangga',
     category: 'matematika',
-    gradeLevel: 'SD Kelas 1-3',
+    gradeLevel: 'SD Kelas 4-6',
     badge: 'Matematika Seru',
     badgeColor: 'bg-blue-100 text-blue-800 border-blue-300',
     accentColor: '#2563eb',
@@ -106,6 +114,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Aritmatika, Geometri, Pecahan',
     rating: 4.8,
     playsCount: 1620,
+    hasStoryPresentation: true,
+    presentationDeckId: 'ular-tangga-matematika',
+    slideCount: 7,
+    mentorName: 'Kak Arya',
     tags: [
       'matematika', 'pecahan', 'hitung cepat', 'perkalian', 'pembagian', 
       'aritmatika', 'geometri', 'angka', 'ular tangga'
@@ -149,6 +161,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Sejarah Nasional & Arkeologi',
     rating: 4.9,
     playsCount: 1350,
+    hasStoryPresentation: true,
+    presentationDeckId: 'point-click-candi',
+    slideCount: 8,
+    mentorName: 'Paman Dewa',
     tags: [
       'candi borobudur', 'borobudur', 'candi', 'candiborobudur', 'relief', 
       'sejarah', 'nusantara', 'kerajaan majapahit', 'majapahit', 'sriwijaya', 
@@ -183,7 +199,7 @@ export const GAMES_CATALOG: GameItem[] = [
     description: 'Amati Orangutan Sumatera, tarian Burung Cendrawasih Papua, dan naga purba Komodo di habitat aslinya dengan teropong lapangan. Pelajari ekosistem dan fotosintesis hutan.',
     type: 'point-and-click',
     category: 'sains',
-    gradeLevel: 'Semua Kelas',
+    gradeLevel: 'SD Kelas 4-6',
     badge: 'Konservasi Alam',
     badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
     accentColor: '#059669',
@@ -193,6 +209,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Biologi Lingkungan & Biodiversitas',
     rating: 4.9,
     playsCount: 1470,
+    hasStoryPresentation: true,
+    presentationDeckId: 'point-click-hutan',
+    slideCount: 8,
+    mentorName: 'Ranger Banyu',
     tags: [
       'satwa endemik', 'hutan', 'hewan', 'fauna', 'orangutan', 
       'cendrawasih', 'komodo', 'biodiversitas', 'fotosintesis', 
@@ -237,6 +257,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Tata Surya, Planet & Bintang',
     rating: 4.8,
     playsCount: 1810,
+    hasStoryPresentation: true,
+    presentationDeckId: 'ular-tangga-tatasurya',
+    slideCount: 8,
+    mentorName: 'Kapten Dirgantara',
     tags: [
       'tata surya', 'tatasurya', 'planet', 'astronomi', 'antariksa', 
       'roket', 'mars', 'jupiter', 'bumi', 'matahari', 'gravitasi', 'ular tangga'
@@ -280,6 +304,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Kosakata, Bahasa & Istilah Ilmiah',
     rating: 4.7,
     playsCount: 980,
+    hasStoryPresentation: true,
+    presentationDeckId: 'teka-teki-kata',
+    slideCount: 7,
+    mentorName: 'Ibu Kartika',
     tags: [
       'teka teki', 'teka-teki', 'puzzle', 'susun kata', 'kata', 
       'bahasa', 'bahasa indonesia', 'istilah sains', 'asah otak', 'logika'
@@ -313,7 +341,7 @@ export const GAMES_CATALOG: GameItem[] = [
     description: 'Setiap tangga melambangkan peristiwa persatuan dan perjuangan bangsa, Kerajaan Majapahit, Sriwijaya, sedangkan ular melambangkan tantangan sejarah yang harus diatasi dengan persatuan.',
     type: 'ular-tangga',
     category: 'sejarah',
-    gradeLevel: 'SMA',
+    gradeLevel: 'SD Kelas 4-6',
     badge: 'Nasionalisme',
     badgeColor: 'bg-red-100 text-red-800 border-red-300',
     accentColor: '#dc2626',
@@ -323,6 +351,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Perjalanan Sejarah Bangsa',
     rating: 4.8,
     playsCount: 1120,
+    hasStoryPresentation: true,
+    presentationDeckId: 'ular-tangga-sejarah',
+    slideCount: 8,
+    mentorName: 'Kak Satria',
     tags: [
       'sejarah', 'sejarah indonesia', 'kerajaan majapahit', 'majapahit', 
       'kemerdekaan', 'pahlawan', 'prasasti', 'proklamasi', 'ular tangga'
@@ -356,7 +388,7 @@ export const GAMES_CATALOG: GameItem[] = [
     description: 'Engine catur super mulus berstandar 60 FPS dengan grafis vektor SVG tajam. Pecahkan taktik garpu kuda, skakmat koridor, kuncian gajah, dan tusukan sate dengan umpan balik instan.',
     type: 'puzzle',
     category: 'logika',
-    gradeLevel: 'Semua Kelas',
+    gradeLevel: 'SD Kelas 4-6',
     badge: 'Engine 60 FPS',
     badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
     accentColor: '#059669',
@@ -367,6 +399,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Catur, Strategi & Logika Komputasional',
     rating: 5.0,
     playsCount: 3120,
+    hasStoryPresentation: true,
+    presentationDeckId: 'catur-taktik-logika',
+    slideCount: 7,
+    mentorName: 'Master Utut',
     tags: [
       'catur', 'chess', 'taktik catur', 'logika', 'skakmat', 
       'garpu kuda', 'puzzle', 'asah otak', 'strategi', 'problem solving'
@@ -411,6 +447,10 @@ export const GAMES_CATALOG: GameItem[] = [
     subjectDetail: 'Biologi, Fotosintesis & Rantai Makanan Tropis',
     rating: 5.0,
     playsCount: 3820,
+    hasStoryPresentation: true,
+    presentationDeckId: 'presentasi-ekosistem-hutan',
+    slideCount: 7,
+    mentorName: 'Prof. Maya Arisandi',
     tags: [
       'presentasi', 'slide interaktif', 'canva', 'sequence', 'match pairs', 
       'fotosintesis', 'ekosistem', 'rantai makanan', 'hutan', 'sains'

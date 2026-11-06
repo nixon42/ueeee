@@ -3,6 +3,12 @@ import { HelpCircle, Check, AlertCircle, X } from 'lucide-react';
 
 export type QuizBadgeVariant = 'emerald' | 'rose' | 'amber' | 'purple' | 'teal';
 
+/**
+ * @deprecated Deprecated per Requirement R2 (Milestone 4).
+ * Standalone multiple-choice quiz popups have been deprecated in favor of embedded interactive mini-games
+ * within story-driven presentation decks (CanvaSequenceGame, CanvaMatchPairsGame, InteractiveFlashcards, etc.).
+ * Retained strictly for backward compatibility with legacy arcade modes and component signature tests.
+ */
 export interface GameQuizModalProps {
   isOpen: boolean;
   title?: string;

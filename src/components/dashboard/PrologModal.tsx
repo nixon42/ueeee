@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  X, BookOpen, Target, Gamepad2, Scale, Play, Star, Clock, 
+  X, BookOpen, Target, Gamepad2, Scale, Star, Clock, 
   CheckCircle2, Sparkles
 } from 'lucide-react';
 import { GameItem } from '@/types/game';
@@ -11,6 +11,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onPlay: (game: GameItem) => void;
+  onPlayClassic?: (game: GameItem) => void;
 }
 
 type TabType = 'overview' | 'curriculum' | 'how-to-play' | 'rules';
@@ -20,6 +21,7 @@ export const PrologModal: React.FC<Props> = ({
   isOpen,
   onClose,
   onPlay,
+  onPlayClassic,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
@@ -94,6 +96,16 @@ export const PrologModal: React.FC<Props> = ({
 
           {/* Quick Info Badges */}
           <div className="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center gap-3 text-xs text-white/95 font-medium relative z-10">
+            {game.slideCount && (
+              <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
+                <BookOpen size={13} /> {game.slideCount} Slide Interaktif
+              </span>
+            )}
+            {game.mentorName && (
+              <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
+                🧑‍🏫 Mentor: {game.mentorName}
+              </span>
+            )}
             <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
               <Clock size={13} /> Durasi: {game.playTimeMinutes} Menit
             </span>
@@ -276,23 +288,38 @@ export const PrologModal: React.FC<Props> = ({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
-          <button
-            onClick={() => {
-              sound.playClick();
-              onClose();
-            }}
-            className="px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer"
-          >
-            Tutup
-          </button>
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                sound.playClick();
+                onClose();
+              }}
+              className="px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer"
+            >
+              Tutup
+            </button>
+            {onPlayClassic && (
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  onPlayClassic(game);
+                  onClose();
+                }}
+                className="px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-purple-700 hover:bg-slate-200 transition cursor-pointer flex items-center gap-1.5"
+                title="Mainkan mode klasik (board / arcade)"
+              >
+                <span>🕹️ Mode Klasik (Arcade)</span>
+              </button>
+            )}
+          </div>
 
           <button
             onClick={handleStartGame}
             className={`px-5 py-2.5 rounded-2xl bg-gradient-to-r ${game.gradient} text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95 transition flex items-center gap-2 cursor-pointer`}
           >
-            <Play size={16} className="fill-white" />
-            <span>Mulai Main Sekarang →</span>
+            <Sparkles size={16} className="text-amber-300" />
+            <span>Buka Presentasi Cerita ({game.slideCount || 7} Slide) →</span>
           </button>
         </div>
       </div>

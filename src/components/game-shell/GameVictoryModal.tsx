@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { sound } from '@/lib/sound';
 
 export interface GameVictoryModalProps {
   isOpen: boolean;
@@ -35,12 +36,15 @@ export const GameVictoryModal: React.FC<GameVictoryModalProps> = ({
   triggerConfetti = true,
 }) => {
   useEffect(() => {
-    if (isOpen && triggerConfetti) {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+    if (isOpen) {
+      sound.playFanfare();
+      if (triggerConfetti) {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      }
     }
   }, [isOpen, triggerConfetti]);
 
