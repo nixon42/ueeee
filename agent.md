@@ -2,6 +2,14 @@
 
 Selamat datang di proyek **ueeee** (`ueeee.my.id`). Panduan ini berisi aturan, arsitektur, konvensi kode, dan standar visual untuk agen dan developer yang berkontribusi pada repositori ini.
 
+> 🎮 **DOKTRIN UTAMA: POLA PIKIR GAME ANDROID & TABLET (BUKAN SITUS WEB!)**
+> Saat mengembangkan materi dan fitur di **ueeee**, **UBAH POLA PIKIR DARI "DEVELOP WEBSITE" MENJADI "DEVELOP GAME NATIVE ANDROID/TABLET"**:
+> - **Canvas adalah Game Viewport (Bukan Halaman Web):** 100% bebas scroll (`overflow: hidden`), fit sempurna dalam 1 layar TV kelas/tablet layaknya game iPad/Nintendo Switch (Toca Boca, Duolingo, Genshin TCG, Chess.com). DILARANG membiarkan ada scrollbar atau elemen meluap (*overflow*).
+> - **Chunky Tactile Touch Controls:** Tombol tebal minimal 48px–56px, border 2px solid, sudut membulat lebar `rounded-2xl`, shadow 3D nyata, dan animasi pegas sentuh `active:scale-95`. Jangan pernah membuat pill kerdil < 40px atau switcher desktop kerdil.
+> - **Physics & Gesture Asli:** Drag-and-drop menggunakan Pointer Events 60 FPS terkunci di dalam batas layar (*strictly clamped*), bukan HTML5 ghost transparan. Kartu lain wajib bergeser otomatis membuka celah (*merapat*).
+> - **Kartu TCG Mewah:** Desain kartu bergaya Trading Card Game dengan visual art ilustrasi penuh, bukan kotak teks putih bernomor kaku.
+> - **Karakter Hidup:** Mentor bersuara lewat balon kata visual komik dengan ekspresi natural, tanpa badge status bot AI kaku ("Berbicara...").
+>
 > 📖 **PENTING UNTUK AGENT PENERUS (JANGAN REINVENT THE WHEEL):**
 > 1. **Katalog Komponen Siap Pakai:** Wajib gunakan komponen yang sudah ada di [`COMPONENTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/COMPONENTS.md) (`GameStageShell`, `GameQuizModal`, `GameVictoryModal`, `CanvaSequenceGame`, `CanvaMatchPairsGame`, dsb). Jangan buat wrapper modal atau dialog kuis dari nol!
 > 2. **Spesifikasi Game & Batasan Kelas:** Standar rasio proyektor, target sentuh 48px, dan aturan game ada di [`GAME_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/GAME_SPEC.md).
@@ -15,9 +23,10 @@ Selamat datang di proyek **ueeee** (`ueeee.my.id`). Panduan ini berisi aturan, a
 
 - **Nama Aplikasi:** ueeee
 - **Domain Resmi:** `ueeee.my.id`
-- **Konsep:** Platform SaaS terbuka kumpulan materi pembelajaran interaktif berbasis game (Gamified Learning Hub).
+- **Konsep:** Platform Game Edukasi Interaktif Kelas Berstandar Game Android & Tablet (Gamified Learning Hub).
+- **Filosofi Inti:** Setiap slide materi diperlakukan layaknya **stage/scene game mobile native**, bukan artikel web atau dokumen HTML.
 - **Zero-Barrier Access:** Tidak memerlukan pendaftaran akun atau login sama sekali. Siswa dan guru langsung dapat mengakses, memilih, dan memainkan materi edukasi dalam 1 klik.
-- **Canva-Style Direct Dashboard:** Tanpa landing page pemasaran konvensional. Begitu website dibuka, pengguna langsung masuk ke dashboard visual yang interaktif, bersih, modern, flat, dan colorful layaknya dashboard Canva.
+- **Canva-Style Direct Dashboard:** Tanpa landing page pemasaran konvensional. Begitu website dibuka, pengguna langsung masuk ke dashboard visual yang interaktif, bersih, modern, flat, dan colorful layaknya dashboard Canva / game launcher.
 - **Target Pengguna:** Siswa & Guru K-12 di Indonesia (SD, SMP, SMA) serta umum.
 
 ---

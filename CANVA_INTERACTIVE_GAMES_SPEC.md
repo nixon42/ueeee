@@ -12,7 +12,15 @@ Di ruang kelas konvensional, terdapat kesenjangan besar antara dua format:
 2. **Kuis Pilihan Ganda Lepas (Kahoot / Quizizz):** Soal disajikan terputus-putus tanpa konteks narasi, memicu kompetisi kecepatan yang seringkali mengabaikan pemahaman mendalam.
 
 ### Solusi Platform `ueeee`: *Story-Driven Interactive Slide Presentation*
-Format baru yang menggabungkan **alur slide presentasi bercerita (*narrative story deck*)** dengan **mini-game interaktif Canva Education** di tengah alur:
+Format baru yang menggabungkan **alur slide presentasi bercerita (*narrative story deck*)** dengan **mini-game interaktif Canva Education** di tengah alur.
+
+> [!IMPORTANT]
+> **POLA PIKIR PENGEMBANGAN: GAME ANDROID & TABLET (BUKAN WEB):**
+> Setiap slide presentasi bukan halaman HTML/web document biasa, melainkan **scene game mobile native berstandar tablet/iPad/Android**:
+> - 100% bebas scroll (`overflow: hidden`), terkunci rapi dalam rasio lanskap layar kelas.
+> - Target sentuh chunky (minimal 48px–56px, border 2px solid, shadow 3D).
+> - Gesture pointer dragging fisik terkunci di arena (Chess.com style) dengan animasi merapat.
+> - Desain kartu berwujud Trading Card Game (TCG) koleksi, bukan kotak kaku bernomor.
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌───────────────────────┐     ┌─────────────────┐     ┌─────────────────┐

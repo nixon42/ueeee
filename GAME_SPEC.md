@@ -5,6 +5,24 @@
 
 ---
 
+## 0. Paradigma Wajib: "Develop Materi Kayak Game di Android & Tablet, BUKAN Web!"
+
+> [!IMPORTANT]
+> **DOKTRIN FUNDAMENTAL UNTUK SELURUH PENGEMBANGAN MATERI & FITUR:**  
+> Jangan pernah berpikir sedang membuat halaman web dokumen atau dashboard SaaS! Setiap materi di **ueeee** harus dirancang dan dirasakan seperti **game edukasi native di tablet Android / iPad / Nintendo Switch** (sekelas Toca Boca, Monument Valley, Duolingo, Genshin TCG, Chess.com).
+
+### 8 Pilar Pola Pikir Game Android & Tablet:
+1. **Canvas adalah Game Viewport (Bukan Halaman Web):** Seluruh panggung 100% bebas scroll (`overflow: hidden`). Tidak boleh ada scrollbar vertikal/horizontal. Semua elemen fit sempurna dalam 1 layar lanskap kelas/tablet.
+2. **Chunky Tactile Touch Controls:** Tombol tebal minimal 48px–56px, sudut membulat lebar (`rounded-2xl`/`rounded-3xl`), border tebal 2px solid, shadow 3D nyata, dan efek pegas sentuh (`active:scale-95`). DILARANG membuat pill kerdil < 40px atau chip mini.
+3. **Fisika & Gesture Asli (Pointer Events):** Interaksi drag-and-drop harus melekat di ujung jari secara real-time 60 FPS menggunakan Pointer Events (`setPointerCapture`, `translate3d`), **terkunci ketat di dalam batas arena canvas (mustahil melayang keluar canvas)**, dan elemen lain bergeser otomatis membuka celah (*merapat*). DILARANG menggunakan native HTML5 ghost drag.
+4. **Desain Kartu TCG Mewah:** Kartu interaktif berpenampilan kartu koleksi Trading Card Game (TCG): ilustrasi penuh berbingkai indah, title ribbon elegan, dan lore plate tebal, tanpa nomor posisi kaku (`1`, `2`) atau tombol panah geser.
+5. **Karakter Hidup & Naratif:** Mentor berbicara melalui balon dialog komik ekspresif dengan animasi napas/mulut natural, tanpa badge status bot AI kaku ("Berbicara...").
+6. **Direct Immersion (Tanpa Meta-Menu Kerdil):** Materi langsung beraksi di depan mata secara deterministik. DILARANG membuat widget switcher segmented kerdil (`[ Mode A | Mode B ]`) atau tombol perbesar kecil yang memaksa pengguna bolak-balik mode.
+7. **Tipografi Kontras Tinggi:** Teks materi dan judul berukuran besar (14px–28px, `font-black`) agar terbaca tajam dari jarak jauh di proyektor kelas atau di tablet tanpa perlu menyipitkan mata.
+8. **Juicy Feedback:** Setiap ketukan, geseran, jawaban tepat, atau keliru menghasilkan respon audio sintetis instan dan animasi partikel/glow visual yang memuaskan.
+
+---
+
 ## 1. Visi Produk & Target Pengguna
 
 - **Nama Platform:** ueeee (`ueeee.my.id`)
