@@ -53,16 +53,8 @@ const GameCardComponent: React.FC<Props> = ({
         {/* Top & Bottom Vignette Overlays for Maximum Text Contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55 pointer-events-none"></div>
 
-        {/* Top Badges & Controls */}
-        <div className="flex items-center justify-between z-10">
-          {game.badge ? (
-            <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border shadow-sm backdrop-blur-md ${game.badgeColor || 'bg-white/20 text-white border-white/30'}`}>
-              {game.badge}
-            </span>
-          ) : (
-            <span></span>
-          )}
-
+        {/* Top Controls */}
+        <div className="flex items-center justify-end z-10">
           <div className="flex items-center gap-2">
             {/* Bookmark button */}
             <button

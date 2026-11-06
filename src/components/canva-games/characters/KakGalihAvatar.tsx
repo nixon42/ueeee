@@ -1,11 +1,13 @@
 import React from 'react';
 
 export interface KakGalihAvatarProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'hero';
   mood?: 'speaking' | 'explaining' | 'happy' | 'thinking';
   showSpeechBubble?: boolean;
   speechText?: string;
   dialogueTitle?: string;
+  speakerName?: string;
+  speakerRole?: string;
   missionObjective?: string;
   className?: string;
 }
@@ -15,6 +17,8 @@ const SIZE_MAP = {
   md: { width: 110, height: 135, avatarBox: 'w-24 h-32' },
   lg: { width: 160, height: 195, avatarBox: 'w-36 h-44 sm:w-44 sm:h-52' },
   xl: { width: 200, height: 245, avatarBox: 'w-48 h-60 sm:w-56 sm:h-68' },
+  '2xl': { width: 260, height: 320, avatarBox: 'w-40 h-48 sm:w-52 sm:h-64 md:w-64 md:h-80 lg:w-72 lg:h-88' },
+  hero: { width: 300, height: 365, avatarBox: 'w-40 h-48 sm:w-52 sm:h-64 md:w-64 md:h-80 lg:w-76 lg:h-92' },
 };
 
 export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
@@ -23,6 +27,8 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
   showSpeechBubble = false,
   speechText,
   dialogueTitle = 'Kak Galih • Penjelajah Rimba Lembah Cendrawasih',
+  speakerName,
+  speakerRole,
   missionObjective,
   className = '',
 }) => {
@@ -213,40 +219,42 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
           </g>
         </svg>
 
-        {/* ACTIVE SPEAKER PULSE PILL */}
-        {isSpeaking && (
-          <div className="absolute -bottom-1 -right-1 bg-emerald-600 text-white rounded-full p-1 shadow-md border-2 border-white flex items-center justify-center animate-bounce">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-200 animate-ping absolute" />
-            <span className="text-[10px] leading-none">🧭</span>
-          </div>
-        )}
       </div>
 
-      {/* SPEECH BUBBLE (DIALOGUE BALLOON) */}
+      {/* SPEECH BUBBLE (RPG DIALOGUE BALLOON) */}
       {showSpeechBubble && speechText && (
-        <div className="relative flex-1 bg-white/95 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-emerald-200/90 shadow-xl text-left max-w-2xl ring-1 ring-slate-100">
-          {/* Comic Bubble Pointer Arrow pointing towards Kak Galih */}
-          <div className="hidden md:block absolute -left-3 top-8 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-12 border-r-white/95 drop-shadow-sm" />
-          <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-12 border-b-white/95 drop-shadow-sm" />
+        <div className="relative flex-1 bg-white/95 backdrop-blur-md p-5 sm:p-7 md:p-8 rounded-3xl border-3 sm:border-4 border-emerald-400/90 shadow-2xl shadow-emerald-950/15 ring-4 ring-emerald-500/10 text-left max-w-3xl">
+          {/* Comic / Speech Pointer Arrow pointing towards Kak Galih */}
+          <div className="hidden md:block absolute -left-3.5 bottom-12 sm:bottom-16 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[14px] border-r-white drop-shadow-sm" />
+          <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[14px] border-b-white drop-shadow-sm" />
 
-          {/* Dialogue Header */}
-          <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-emerald-100">
-            <span className="text-base">🧭</span>
-            <span className="font-extrabold text-xs sm:text-sm text-emerald-900 tracking-tight">
-              {dialogueTitle}
+          {/* RPG Speaker Nameplate Badge */}
+          <div className="absolute -top-4 sm:-top-5 left-6 sm:left-8 inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg border-2 border-white select-none">
+            <span className="text-sm sm:text-base">🧭</span>
+            <span className="font-black text-xs sm:text-sm tracking-wide">
+              {speakerName || dialogueTitle.split('•')[0]?.trim() || 'Kak Galih'}
+            </span>
+            <span className="text-[10px] sm:text-xs font-bold text-emerald-100 bg-black/20 px-2 py-0.5 rounded-lg border border-white/20">
+              {speakerRole || dialogueTitle.split('•')[1]?.trim() || 'Penjelajah Rimba'}
             </span>
           </div>
 
-          {/* Spoken Dialogue Text */}
-          <p className="text-xs sm:text-base leading-relaxed text-slate-800 font-medium">
-            &ldquo;{speechText}&rdquo;
-          </p>
+          {/* Spoken Dialogue Text - Enlarged & Tactile */}
+          <div className="pt-2 sm:pt-3">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl font-bold leading-relaxed sm:leading-relaxed md:leading-loose text-slate-800 tracking-tight">
+              &ldquo;{speechText}&rdquo;
+            </p>
+          </div>
 
-          {/* Mission Target Pill */}
+          {/* Mission Target Quest Pill */}
           {missionObjective && (
-            <div className="mt-4 pt-3 border-t border-emerald-100/80 flex items-start sm:items-center gap-2 text-xs font-semibold text-slate-700 bg-emerald-50/50 p-2.5 rounded-xl">
-              <span className="text-emerald-700 font-black shrink-0">🎯 Target Ekspedisi:</span>
-              <span className="text-emerald-950">{missionObjective}</span>
+            <div className="mt-4 sm:mt-5 p-2.5 sm:p-3 rounded-2xl bg-emerald-500/10 border-2 border-emerald-400/50 flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-extrabold text-emerald-950 shadow-2xs">
+              <span className="px-2.5 py-1 rounded-xl bg-emerald-600 text-white font-black text-[10px] sm:text-xs tracking-wider uppercase shrink-0 shadow-xs">
+                🎯 Target Ekspedisi
+              </span>
+              <span className="font-bold text-slate-800 leading-snug">
+                {missionObjective}
+              </span>
             </div>
           )}
         </div>

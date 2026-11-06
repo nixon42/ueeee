@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Lightbulb, Sparkles } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
-import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
+import { PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
 import { getDeckIllustration } from '@/components/visuals';
 
@@ -63,10 +63,8 @@ const WATER_CYCLE_HOTSPOTS = [
 
 export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = ({
   slide,
-  themeColor,
   gameId,
 }) => {
-  const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const isFourCards = slide.cards.length === 4;
   const IllustrationComponent = gameId ? getDeckIllustration(gameId) : null;
 
@@ -79,17 +77,11 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
     <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-2 sm:space-y-3 animate-in fade-in duration-300 relative z-10 overflow-hidden">
       {/* Header: Title & Subtitle without tiny switchers */}
       <div className="text-center space-y-1 shrink-0">
-        <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/80 border border-slate-200 shadow-2xs">
-          <Sparkles size={12} className={theme.textPrimary} />
-          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}>
-            {slide.chapterBadge || 'BABAK 2: KONSEP DASAR PEMBELAJARAN'}
-          </span>
-        </div>
         <h2 className="text-lg sm:text-2xl font-black text-slate-900 leading-tight">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-xs text-slate-500 font-semibold max-w-2xl mx-auto truncate sm:whitespace-normal">
+          <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto truncate sm:whitespace-normal">
             {slide.subtitle}
           </p>
         )}

@@ -406,9 +406,6 @@ const BoardSlideEngine: React.FC<{
     <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-4 animate-in fade-in duration-300">
       {/* Header */}
       <div className="text-center space-y-1">
-        <span className={`text-xs font-black uppercase tracking-widest ${themeTokens.textPrimary}`}>
-          {slide.chapterBadge || 'TANTANGAN JEJAK LANGKAH NARRATIF'}
-        </span>
         <h2 className="text-2xl sm:text-3xl font-black text-slate-900">{slide.title}</h2>
         {slide.subtitle && <p className="text-xs sm:text-sm text-slate-500 font-medium">{slide.subtitle}</p>}
       </div>
@@ -539,14 +536,12 @@ function renderChessSlide(
 
 const ChessSlideEngine: React.FC<{
   slide: MiniGameChessSlide;
-  themeColor: GameStageTheme;
+  themeColor?: GameStageTheme;
   onComplete: (isDone: boolean) => void;
-}> = ({ slide, themeColor, onComplete }) => {
+}> = ({ slide, onComplete }) => {
   const [selectedPiece, setSelectedPiece] = useState<{ col: number; row: number } | null>(null);
   const [solved, setSolved] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<string | null>(null);
-
-  const themeTokens = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.purple;
 
   const handleSquareClick = (col: number, row: number) => {
     if (solved) return;
@@ -592,9 +587,6 @@ const ChessSlideEngine: React.FC<{
     <div className="w-full h-full flex flex-col md:flex-row items-center justify-center max-w-4xl mx-auto my-auto gap-6 sm:gap-8 animate-in fade-in duration-300">
       {/* Kolom Informasi Taktik */}
       <div className="flex-1 space-y-4 text-left max-w-md">
-        <span className={`text-xs font-black uppercase tracking-widest ${themeTokens.textPrimary}`}>
-          {slide.chapterBadge || 'TANTANGAN PENALARAN LOGIKA CATUR'}
-        </span>
         <h2 className="text-xl sm:text-2xl font-black text-slate-900">{slide.title}</h2>
         <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
           <span className="text-xs font-bold text-slate-500 uppercase">🎯 Sasaran Taktik:</span>
@@ -672,13 +664,12 @@ function renderWordSlide(
 
 const WordSlideEngine: React.FC<{
   slide: MiniGameWordSlide;
-  themeColor: GameStageTheme;
+  themeColor?: GameStageTheme;
   onComplete: (isDone: boolean) => void;
-}> = ({ slide, themeColor, onComplete }) => {
+}> = ({ slide, onComplete }) => {
   const [solved, setSolved] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const themeTokens = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.blue;
   const options = slide.options || [slide.word, 'Pilihan B', 'Pilihan C', 'Pilihan D'];
 
   const handleSelect = (opt: string) => {
@@ -695,9 +686,6 @@ const WordSlideEngine: React.FC<{
   return (
     <div className="w-full h-full flex flex-col justify-between max-w-2xl mx-auto my-auto space-y-5 animate-in fade-in duration-300">
       <div className="text-center space-y-1">
-        <span className={`text-xs font-black uppercase tracking-widest ${themeTokens.textPrimary}`}>
-          {slide.chapterBadge || 'TANTANGAN KOSAKATA & BAHASA'}
-        </span>
         <h2 className="text-2xl sm:text-3xl font-black text-slate-900">{slide.title}</h2>
         {slide.subtitle && <p className="text-xs sm:text-sm text-slate-500 font-medium">{slide.subtitle}</p>}
       </div>

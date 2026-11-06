@@ -1,10 +1,10 @@
 import React from 'react';
 import { ReflectionSparkSlide as ReflectionSlideData } from '@/types/presentation';
-import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
+import { PresentationThemeKey } from '@/lib/presentation-themes';
 
 export interface ReflectionSparkSlideProps {
   slide: ReflectionSlideData;
-  themeColor: PresentationThemeKey;
+  themeColor?: PresentationThemeKey;
   onVictory?: () => void;
 }
 
@@ -19,19 +19,12 @@ const BADGE_COLOR_MAP: Record<string, { bg: string; text: string; border: string
 
 export const ReflectionSparkSlide: React.FC<ReflectionSparkSlideProps> = ({
   slide,
-  themeColor,
 }) => {
-  const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
 
   return (
     <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-3 sm:space-y-4 animate-in fade-in duration-300 overflow-hidden">
       {/* Header */}
       <div className="text-center space-y-1">
-        <span
-          className={`text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}
-        >
-          {slide.chapterBadge || 'BABAK 6: REFLEKSI & DISKUSI KELAS'}
-        </span>
         <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
           {slide.title}
         </h2>

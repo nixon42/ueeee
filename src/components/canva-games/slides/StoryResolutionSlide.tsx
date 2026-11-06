@@ -23,13 +23,8 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
         {slide.celebrationEmoji || '🏆'}
       </div>
 
-      {/* Chapter Tag & Success Title */}
-      <div className="space-y-2">
-        <span
-          className={`text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}
-        >
-          {slide.chapterBadge || 'BABAK 5: KELANJUTAN CERITA'}
-        </span>
+      {/* Success Title */}
+      <div className="space-y-1 sm:space-y-2">
         <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
           {slide.title}
         </h2>

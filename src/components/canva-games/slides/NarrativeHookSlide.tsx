@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Sparkles } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import { NarrativeIntroSlide, PresentationMentor } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { KakGalihAvatar } from '../characters/KakGalihAvatar';
@@ -21,78 +21,128 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   const isKakGalih = activeMentor.name.toLowerCase().includes('galih');
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-between max-w-4xl mx-auto my-auto py-1 sm:py-3 space-y-2 sm:space-y-4 animate-in fade-in duration-300 relative z-10 overflow-hidden">
-      {/* Chapter Tag & Mission Title */}
-      <div className="text-center space-y-1 sm:space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-emerald-200/80 shadow-2xs">
-          <Sparkles size={12} className={theme.textPrimary} />
-          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}>
-            {slide.chapterBadge || 'BABAK 1: PANGGILAN PENJELAJAH ALAM'}
-          </span>
-        </div>
-        <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+    <div className="w-full h-full flex flex-col justify-between max-w-5xl mx-auto py-1 sm:py-2 md:py-3 space-y-2 sm:space-y-3 animate-in fade-in duration-300 relative z-10 overflow-hidden">
+      {/* Stage Mission Header without curriculum babak pills */}
+      <div className="text-center space-y-1 shrink-0">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-xs sm:text-sm text-slate-600 font-semibold max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-emerald-800/80 font-bold max-w-xl mx-auto truncate sm:whitespace-normal">
             {slide.subtitle}
           </p>
         )}
       </div>
 
-      {/* Main Mentor Interaction Area */}
-      {isKakGalih ? (
-        <div className="w-full my-auto flex justify-center">
-          <KakGalihAvatar
-            size="lg"
-            mood="speaking"
-            showSpeechBubble={true}
-            speechText={slide.dialogue}
-            dialogueTitle={`${activeMentor.name} • ${activeMentor.role}`}
-            missionObjective={slide.missionObjective}
-            className="w-full max-w-3xl"
-          />
-        </div>
-      ) : (
-        <div className="w-full my-auto flex flex-col md:flex-row items-center gap-4 sm:gap-6 max-w-3xl justify-center">
-          {/* Fallback Animated Generic Mentor Avatar */}
-          <div className="relative shrink-0 flex items-center justify-center">
-            <div
-              className={`w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr ${theme.gradient} text-white flex items-center justify-center text-5xl shadow-xl ${theme.shadowColor} border-4 border-white ring-4 ring-slate-100 animate-bounce-subtle`}
-            >
-              {activeMentor.avatarEmoji || '🧑‍🏫'}
-            </div>
-            <div className="absolute -bottom-1 -right-1 bg-emerald-600 text-white rounded-full p-1 shadow-md border-2 border-white flex items-center justify-center">
-              <span className="w-2 h-2 rounded-full bg-emerald-200 animate-ping absolute" />
-              <Compass size={12} />
-            </div>
-          </div>
-
-          {/* Dialogue Speech Balloon */}
-          <div className="relative flex-1 bg-white/95 backdrop-blur-md p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-xl text-left ring-1 ring-slate-100">
-            <div className="hidden md:block absolute -left-3 top-8 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-12 border-r-white drop-shadow-xs" />
-            <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-12 border-b-white drop-shadow-xs" />
-
-            <div className="flex items-center gap-2 pb-2 mb-2 border-b border-slate-100">
-              <Compass className={theme.textPrimary} size={16} />
-              <span className={`font-extrabold text-xs sm:text-sm ${theme.textPrimary}`}>
-                {activeMentor.name} ({activeMentor.role}):
-              </span>
+      {/* Game Stage Narrative Scene (Character Bust + RPG Dialogue Box) */}
+      <div className="w-full flex-1 min-h-0 flex flex-col md:flex-row items-center md:items-end justify-center gap-4 sm:gap-6 md:gap-8 my-auto relative">
+        {isKakGalih ? (
+          <>
+            {/* Large Prominent Character Avatar */}
+            <div className="shrink-0 flex items-end justify-center select-none relative z-10">
+              <KakGalihAvatar
+                size="hero"
+                mood="speaking"
+                showSpeechBubble={false}
+                className="drop-shadow-2xl"
+              />
             </div>
 
-            <p className="text-xs sm:text-base leading-relaxed text-slate-700 font-medium">
-              &ldquo;{slide.dialogue}&rdquo;
-            </p>
+            {/* RPG Adventure Dialogue Box */}
+            <div className="relative flex-1 w-full bg-white/95 backdrop-blur-md p-5 sm:p-7 md:p-8 rounded-3xl border-3 sm:border-4 border-emerald-400/90 shadow-2xl shadow-emerald-950/15 ring-4 ring-emerald-500/10 text-left flex flex-col justify-between max-w-3xl">
+              {/* Comic Speech Pointer pointing to Kak Galih */}
+              <div className="hidden md:block absolute -left-3.5 bottom-12 sm:bottom-16 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[14px] border-r-white drop-shadow-sm" />
+              <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[14px] border-b-white drop-shadow-sm" />
 
-            {slide.missionObjective && (
-              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-slate-600">
-                <span className="text-amber-600">🎯 Target:</span>
-                <span>{slide.missionObjective}</span>
+              {/* RPG Character Nameplate Tag */}
+              <div className="absolute -top-4 sm:-top-5 left-6 sm:left-8 inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg border-2 border-white select-none">
+                <span className="text-sm sm:text-base">🧭</span>
+                <span className="font-black text-xs sm:text-sm tracking-wide">
+                  {activeMentor.name}
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold text-emerald-100 bg-black/20 px-2 py-0.5 rounded-lg border border-white/20">
+                  {activeMentor.role}
+                </span>
               </div>
-            )}
-          </div>
-        </div>
-      )}
+
+              {/* Spoken Dialogue Text - Enlarged & Tactile */}
+              <div className="pt-2 sm:pt-3">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-bold leading-relaxed sm:leading-relaxed md:leading-loose text-slate-800 tracking-tight">
+                  &ldquo;{slide.dialogue}&rdquo;
+                </p>
+              </div>
+
+              {/* Mission Target Quest Pill */}
+              {slide.missionObjective && (
+                <div className="mt-4 sm:mt-5 p-2.5 sm:p-3 rounded-2xl bg-emerald-500/10 border-2 border-emerald-400/50 flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-extrabold text-emerald-950 shadow-2xs">
+                  <span className="px-2.5 py-1 rounded-xl bg-emerald-600 text-white font-black text-[10px] sm:text-xs tracking-wider uppercase shrink-0 shadow-xs">
+                    🎯 Target Misi
+                  </span>
+                  <span className="font-bold text-slate-800 leading-snug">
+                    {slide.missionObjective}
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Fallback Animated Generic Mentor Avatar (Enlarged) */}
+            <div className="relative shrink-0 flex items-center justify-center select-none z-10">
+              <div
+                className={`w-32 h-32 sm:w-40 sm:h-40 md:w-52 md:h-52 rounded-3xl bg-gradient-to-tr ${theme.gradient} text-white flex items-center justify-center text-5xl sm:text-6xl md:text-7xl shadow-2xl ${theme.shadowColor} border-4 border-white ring-4 ring-slate-100 animate-bounce-subtle`}
+              >
+                {activeMentor.avatarEmoji || '🧑‍🏫'}
+              </div>
+            </div>
+
+            {/* RPG Adventure Dialogue Box for Fallback Mentor */}
+            <div
+              className={`relative flex-1 w-full bg-white/95 backdrop-blur-md p-5 sm:p-7 md:p-8 rounded-3xl border-3 sm:border-4 ${theme.borderLight} shadow-2xl shadow-slate-950/10 ring-4 ring-slate-500/10 text-left flex flex-col justify-between max-w-3xl`}
+            >
+              {/* Comic Speech Pointer */}
+              <div className="hidden md:block absolute -left-3.5 bottom-12 sm:bottom-16 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[14px] border-r-white drop-shadow-sm" />
+              <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[14px] border-b-white drop-shadow-sm" />
+
+              {/* RPG Character Nameplate Tag */}
+              <div
+                className={`absolute -top-4 sm:-top-5 left-6 sm:left-8 inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-2xl bg-gradient-to-r ${theme.gradient} text-white shadow-lg border-2 border-white select-none`}
+              >
+                <Compass size={16} />
+                <span className="font-black text-xs sm:text-sm tracking-wide">
+                  {activeMentor.name}
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold text-white/90 bg-black/20 px-2 py-0.5 rounded-lg border border-white/20">
+                  {activeMentor.role}
+                </span>
+              </div>
+
+              {/* Spoken Dialogue Text - Enlarged & Tactile */}
+              <div className="pt-2 sm:pt-3">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-bold leading-relaxed sm:leading-relaxed md:leading-loose text-slate-800 tracking-tight">
+                  &ldquo;{slide.dialogue}&rdquo;
+                </p>
+              </div>
+
+              {/* Mission Target Quest Pill */}
+              {slide.missionObjective && (
+                <div
+                  className={`mt-4 sm:mt-5 p-2.5 sm:p-3 rounded-2xl ${theme.bgLight} border-2 ${theme.borderLight} flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-extrabold ${theme.textPrimary} shadow-2xs`}
+                >
+                  <span
+                    className={`px-2.5 py-1 rounded-xl ${theme.btnPrimary} font-black text-[10px] sm:text-xs tracking-wider uppercase shrink-0 shadow-xs`}
+                  >
+                    🎯 Target Misi
+                  </span>
+                  <span className="font-bold text-slate-800 leading-snug">
+                    {slide.missionObjective}
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
