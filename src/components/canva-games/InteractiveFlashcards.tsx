@@ -263,7 +263,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
                   {currentCard.frontPrompt}
                 </h3>
                 {currentCard.frontHint && (
-                  <p className="text-xs text-slate-500 italic bg-white/60 px-3 py-1 rounded-full border border-slate-200">
+                  <p className="text-xs text-slate-500 italic">
                     💡 Petunjuk: {currentCard.frontHint}
                   </p>
                 )}

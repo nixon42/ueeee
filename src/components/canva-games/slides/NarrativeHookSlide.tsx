@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, Compass, Sparkles } from 'lucide-react';
+import { ChevronRight, Compass } from 'lucide-react';
 import { NarrativeIntroSlide, PresentationMentor } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
@@ -28,22 +28,16 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   return (
     <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center space-y-5 sm:space-y-6 my-auto animate-in fade-in duration-300">
       {/* Visual Avatar Mentor */}
-      <div className="relative">
-        <div
-          className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr ${theme.gradient} text-white flex items-center justify-center text-4xl sm:text-5xl shadow-xl ${theme.shadowColor} border-4 border-white ring-4 ring-slate-100`}
-        >
-          {activeMentor.avatarEmoji || '🧑‍🏫'}
-        </div>
-        <span className="absolute -bottom-2 -right-2 bg-amber-400 text-amber-950 font-black text-[10px] px-2.5 py-0.5 rounded-full border border-amber-200 shadow-sm flex items-center gap-1">
-          <Sparkles size={11} className="text-amber-800" />
-          <span>Misi Kelas</span>
-        </span>
+      <div
+        className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr ${theme.gradient} text-white flex items-center justify-center text-4xl sm:text-5xl shadow-xl ${theme.shadowColor} border-4 border-white ring-4 ring-slate-100`}
+      >
+        {activeMentor.avatarEmoji || '🧑‍🏫'}
       </div>
 
       {/* Chapter Tag & Mission Title */}
       <div className="space-y-2">
         <span
-          className={`text-xs font-black uppercase tracking-widest ${theme.textBadge} ${theme.bgBadge} px-3.5 py-1 rounded-full border ${theme.borderBadge} inline-block`}
+          className={`text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}
         >
           {slide.chapterBadge || 'BABAK 1: PANGGILAN PETUALANGAN'}
         </span>

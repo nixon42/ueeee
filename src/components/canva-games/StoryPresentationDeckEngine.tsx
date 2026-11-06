@@ -706,7 +706,7 @@ const WordSlideEngine: React.FC<{
       </div>
 
       <div className="p-6 rounded-3xl bg-slate-50 border-2 border-slate-200 space-y-3 text-center">
-        <span className="text-xs font-black uppercase text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+        <span className="text-xs font-black uppercase tracking-wider text-indigo-600 block">
           💡 Petunjuk Istilah
         </span>
         <p className="text-base sm:text-lg font-bold text-slate-800">{slide.clue}</p>

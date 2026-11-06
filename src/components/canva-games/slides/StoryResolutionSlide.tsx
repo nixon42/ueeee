@@ -14,7 +14,6 @@ export interface StoryResolutionSlideProps {
 export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
   slide,
   themeColor,
-  challengesState = {},
   onNext,
 }) => {
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
@@ -34,7 +33,7 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
       {/* Chapter Tag & Success Title */}
       <div className="space-y-2">
         <span
-          className={`text-xs font-black uppercase tracking-widest ${theme.textBadge} ${theme.bgBadge} px-3.5 py-1 rounded-full border ${theme.borderBadge} inline-block`}
+          className={`text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}
         >
           {slide.chapterBadge || 'BABAK 5: KELANJUTAN CERITA'}
         </span>
@@ -61,28 +60,6 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
         <p className="text-xs sm:text-base leading-relaxed text-slate-700 font-medium">
           &ldquo;{slide.resolutionStory}&rdquo;
         </p>
-
-        {/* Dynamic Challenge Badges */}
-        {slide.achievementBadges && slide.achievementBadges.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-200/60 mt-3">
-            {slide.achievementBadges.map((badge, idx) => {
-              const isDone = challengesState[`challenge${idx + 1}`] ?? true;
-              return (
-                <span
-                  key={`badge-${idx}`}
-                  className={`px-3 py-1 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
-                    isDone
-                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                      : 'bg-slate-100 text-slate-600 border-slate-200'
-                  }`}
-                >
-                  <CheckCircle2 size={13} className={isDone ? 'text-emerald-600' : 'text-slate-400'} />
-                  <span>{badge.label}</span>
-                </span>
-              );
-            })}
-          </div>
-        )}
       </div>
 
       {/* Next Button */}
