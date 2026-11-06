@@ -2,26 +2,68 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ueeee.my.id/</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ueeee.my.id/?game=ular-tangga-sains</loc>
-    <lastmod>2026-11-05</lastmod>
+    <loc>https://ueeee.my.id/game/ular-tangga-sains</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://ueeee.my.id/?game=point-click-lab</loc>
-    <lastmod>2026-11-05</lastmod>
+    <loc>https://ueeee.my.id/game/point-click-lab</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://ueeee.my.id/?game=teka-teki-kata</loc>
-    <lastmod>2026-11-05</lastmod>
+    <loc>https://ueeee.my.id/game/ular-tangga-matematika</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/point-click-candi</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/ular-tangga-sejarah</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/teka-teki-kata</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/catur-taktik-logika</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/point-click-hutan</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/ular-tangga-tatasurya</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ueeee.my.id/game/teka-teki-ekosistem</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>

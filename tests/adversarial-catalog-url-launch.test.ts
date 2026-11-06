@@ -553,11 +553,31 @@ describe('Empirical Adversarial Suite: Milestone 4 Catalog & URL Launch Contract
         for (const query of hostileQueries) {
           globalThis.window.location.search = query;
           globalThis.window.location.href = `http://localhost/${query}`;
+          globalThis.window.location.pathname = '/';
 
           const html = renderToString(React.createElement(App));
           expect(html).toBeDefined();
           expect(html.length).toBeGreaterThan(1000);
           expect(html).toContain('ueeee');
+        }
+
+        // Test path slugs (/game/:id and /:id)
+        const slugPaths = [
+          '/game/ular-tangga-sains',
+          '/game/point-click-lab',
+          '/point-click-candi',
+          '/game/catur-taktik-logika',
+          '/admin',
+        ];
+
+        for (const pathname of slugPaths) {
+          globalThis.window.location.search = '';
+          globalThis.window.location.pathname = pathname;
+          globalThis.window.location.href = `http://localhost${pathname}`;
+
+          const html = renderToString(React.createElement(App));
+          expect(html).toBeDefined();
+          expect(html.length).toBeGreaterThan(1000);
         }
       } finally {
         globalThis.window = previousWindow;

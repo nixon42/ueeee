@@ -104,64 +104,85 @@ export default function App() {
   const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
   const [isSuperadminModalOpen, setIsSuperadminModalOpen] = useState<boolean>(false);
 
-  // Read URL query parameter for deep linking (?game=...&mode=...&slide=... or ?prolog=... or ?admin=...)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const gameParam = params.get('game');
-    const modeParam = params.get('mode') === 'arcade' ? 'arcade' : 'presentation';
-    const slideParam = parseInt(params.get('slide') || '1', 10);
+  // Parse deep-link route from path slug (/game/:id, /:id, /admin) or legacy query param (?game=...)
+  const parseCurrentRoute = () => {
+    if (typeof window === 'undefined' || !window.location) {
+      return { gameId: null, mode: 'presentation' as const, slide: 1, prologGameId: null, isAdmin: false };
+    }
 
-    if (gameParam) {
-      const match = GAMES_CATALOG.find(g => g.id === gameParam);
-      if (match) {
-        launchGame(match, modeParam, isNaN(slideParam) ? 1 : slideParam);
-      }
-    }
-    const prologParam = params.get('prolog');
-    if (prologParam) {
-      const match = GAMES_CATALOG.find(g => g.id === prologParam);
-      if (match) {
-        setActivePrologGame(match);
-      }
-    }
+    const pathname = window.location.pathname || '/';
+    const search = window.location.search || '';
+    const params = new URLSearchParams(search);
+
+    let gameId = params.get('game');
+    let mode: 'presentation' | 'arcade' = params.get('mode') === 'arcade' ? 'arcade' : 'presentation';
+    let slide = parseInt(params.get('slide') || '1', 10);
+    if (isNaN(slide) || slide < 1) slide = 1;
+
+    const prologGameId = params.get('prolog');
     const adminParam = params.get('admin');
-    if (adminParam === 'true' || adminParam === 'login') {
-      setIsSuperadminModalOpen(true);
-    }
-  }, []);
+    let isAdmin = adminParam === 'true' || adminParam === 'login';
 
-  // Record recent play
-  const recordRecentPlay = (gameId: string) => {
-    setRecentGameIds(prev => {
-      const filtered = prev.filter(id => id !== gameId);
-      const updated = [gameId, ...filtered].slice(0, 3);
-      safeStorage.setJson('ueeee_recent', updated);
-      return updated;
-    });
+    const segments = pathname.split('/').filter(Boolean);
+    if (segments.length > 0) {
+      if (segments[0] === 'admin') {
+        isAdmin = true;
+      } else if ((segments[0] === 'game' || segments[0] === 'play') && segments[1]) {
+        gameId = segments[1];
+        if (segments[2]) {
+          const pathSlide = parseInt(segments[2], 10);
+          if (!isNaN(pathSlide) && pathSlide >= 1) slide = pathSlide;
+        }
+      } else {
+        const match = GAMES_CATALOG.find(g => g.id === segments[0]);
+        if (match) {
+          gameId = match.id;
+          if (segments[1]) {
+            const pathSlide = parseInt(segments[1], 10);
+            if (!isNaN(pathSlide) && pathSlide >= 1) slide = pathSlide;
+          }
+        }
+      }
+    }
+
+    return { gameId, mode, slide, prologGameId, isAdmin };
   };
 
-  const launchGame = (
+  const updateSeoMetadata = (game?: GameItem | null) => {
+    if (typeof document === 'undefined') return;
+    if (game) {
+      document.title = `${game.title} - ${game.subjectDetail} | UEEEE Game Edukasi Interaktif`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', game.description);
+      const metaTitle = document.querySelector('meta[name="title"]');
+      if (metaTitle) metaTitle.setAttribute('content', `${game.title} - ${game.subjectDetail} | UEEEE`);
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute('href', `https://ueeee.my.id/game/${game.id}`);
+    } else {
+      document.title = 'ueeee - Main & Belajar Seru Lewat Game Interaktif (Tanpa Login)';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'Platform edukasi terbuka berbasis kumpulan game interaktif: Papan Ular Tangga kuis, Point & Click eksplorasi sains, dan teka-teki asah otak. Bebas dimainkan langsung tanpa perlu daftar atau login!'
+        );
+      }
+      const metaTitle = document.querySelector('meta[name="title"]');
+      if (metaTitle) metaTitle.setAttribute('content', 'ueeee - Main & Belajar Seru Lewat Game Interaktif (Tanpa Login)');
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute('href', 'https://ueeee.my.id/');
+    }
+  };
+
+  // Open game modal directly into state without pushing history
+  const openGameDirectly = (
     game: GameItem,
     mode: 'presentation' | 'arcade' = 'presentation',
     initialSlide: number = 1
   ) => {
     recordRecentPlay(game.id);
     recordPlay(game.id).catch(() => {});
-
-    // Update query string cleanly without reloading
-    const url = new URL(window.location.href);
-    url.searchParams.set('game', game.id);
-    if (mode === 'arcade') {
-      url.searchParams.set('mode', 'arcade');
-    } else {
-      url.searchParams.delete('mode');
-    }
-    if (initialSlide > 1) {
-      url.searchParams.set('slide', initialSlide.toString());
-    } else {
-      url.searchParams.delete('slide');
-    }
-    window.history.replaceState({}, '', url.toString());
+    updateSeoMetadata(game);
 
     // Primary: Launch Refined Story Presentation Deck
     if (mode === 'presentation') {
@@ -194,6 +215,94 @@ export default function App() {
     }
   };
 
+  // Read URL slug or query parameters on mount
+  useEffect(() => {
+    const route = parseCurrentRoute();
+
+    if (route.gameId) {
+      const match = GAMES_CATALOG.find(g => g.id === route.gameId);
+      if (match) {
+        openGameDirectly(match, route.mode, route.slide);
+      }
+    }
+    if (route.prologGameId) {
+      const match = GAMES_CATALOG.find(g => g.id === route.prologGameId);
+      if (match) {
+        setActivePrologGame(match);
+      }
+    }
+    if (route.isAdmin) {
+      setIsSuperadminModalOpen(true);
+    }
+  }, []);
+
+  // Listen to browser Back / Forward buttons (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = parseCurrentRoute();
+      if (route.gameId) {
+        const match = GAMES_CATALOG.find(g => g.id === route.gameId);
+        if (match) {
+          openGameDirectly(match, route.mode, route.slide);
+          return;
+        }
+      }
+
+      // Close all modals when returning to root
+      setIsPresentationOpen(false);
+      setActivePresentationDeck(null);
+      setIsUlarTanggaOpen(false);
+      setIsPointAndClickOpen(false);
+      setIsPuzzleOpen(false);
+      setIsChessOpen(false);
+      setActivePrologGame(null);
+      updateSeoMetadata(null);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Record recent play
+  const recordRecentPlay = (gameId: string) => {
+    setRecentGameIds(prev => {
+      const filtered = prev.filter(id => id !== gameId);
+      const updated = [gameId, ...filtered].slice(0, 3);
+      safeStorage.setJson('ueeee_recent', updated);
+      return updated;
+    });
+  };
+
+  const launchGame = (
+    game: GameItem,
+    mode: 'presentation' | 'arcade' = 'presentation',
+    initialSlide: number = 1
+  ) => {
+    // Update URL to clean semantic slug /game/:id
+    if (typeof window !== 'undefined' && window.location && window.history) {
+      try {
+        const url = new URL(window.location.href);
+        url.pathname = `/game/${game.id}`;
+        url.searchParams.delete('game');
+        if (mode === 'arcade') {
+          url.searchParams.set('mode', 'arcade');
+        } else {
+          url.searchParams.delete('mode');
+        }
+        if (initialSlide > 1) {
+          url.searchParams.set('slide', initialSlide.toString());
+        } else {
+          url.searchParams.delete('slide');
+        }
+        window.history.pushState({ gameId: game.id }, '', url.toString());
+      } catch {
+        // Safe fallback in non-standard test runners
+      }
+    }
+
+    openGameDirectly(game, mode, initialSlide);
+  };
+
   const closeGameModal = (which: 'ular' | 'point' | 'puzzle' | 'chess' | 'presentation') => {
     if (which === 'ular') setIsUlarTanggaOpen(false);
     if (which === 'point') setIsPointAndClickOpen(false);
@@ -205,12 +314,20 @@ export default function App() {
       setPresentationInitialSlide(1);
     }
 
-    // Clean up query param
-    const url = new URL(window.location.href);
-    url.searchParams.delete('game');
-    url.searchParams.delete('mode');
-    url.searchParams.delete('slide');
-    window.history.replaceState({}, '', url.toString());
+    // Clean up URL cleanly back to /
+    if (typeof window !== 'undefined' && window.location && window.history) {
+      try {
+        const url = new URL(window.location.href);
+        url.pathname = '/';
+        url.searchParams.delete('game');
+        url.searchParams.delete('mode');
+        url.searchParams.delete('slide');
+        window.history.pushState({}, '', url.toString());
+      } catch {
+        // Fallback
+      }
+    }
+    updateSeoMetadata(null);
   };
 
   // Filter games based on search, category, tab, and grade
