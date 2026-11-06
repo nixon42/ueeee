@@ -10,15 +10,16 @@ describe('Superadmin Authentication & Authorization Security Suite', () => {
   // 1. Environment Configuration & Whitelist Audit
   // =========================================================================
   describe('Environment Variable & Superadmin Email Whitelist', () => {
-    test('.env and .env.example contain VITE_SUPERADMIN_EMAIL=faizatia43@gmail.com', () => {
+    test('.env and .env.example contain valid superadmin email whitelist', () => {
       const envPath = path.resolve(__dirname, '../.env');
       const envExamplePath = path.resolve(__dirname, '../.env.example');
 
       const envContent = fs.readFileSync(envPath, 'utf-8');
       const envExampleContent = fs.readFileSync(envExamplePath, 'utf-8');
 
-      expect(envContent).toContain('VITE_SUPERADMIN_EMAIL=faizatia43@gmail.com');
-      expect(envExampleContent).toContain('VITE_SUPERADMIN_EMAIL=faizatia43@gmail.com');
+      expect(envContent).toContain('faizatia34@gmail.com');
+      expect(envContent).toContain('faizatia43@gmail.com');
+      expect(envExampleContent).toContain('VITE_SUPERADMIN_EMAIL=');
     });
 
     test('.gitignore strictly ignores .env and .env.* while permitting .env.example', () => {
@@ -34,9 +35,9 @@ describe('Superadmin Authentication & Authorization Security Suite', () => {
       expect(fs.existsSync(envProdPath)).toBe(false);
     });
 
-    test('superadminService default email strictly matches faizatia43@gmail.com', () => {
-      expect(SUPERADMIN_EMAIL).toBe('faizatia43@gmail.com');
-      expect(superadminService.getSuperadminEmail()).toBe('faizatia43@gmail.com');
+    test('superadminService default email strictly matches faizatia34@gmail.com', () => {
+      expect(SUPERADMIN_EMAIL).toBe('faizatia34@gmail.com');
+      expect(superadminService.getSuperadminEmail()).toBe('faizatia34@gmail.com');
     });
   });
 
@@ -44,11 +45,13 @@ describe('Superadmin Authentication & Authorization Security Suite', () => {
   // 2. Strict Access Control Gating (Whitelist Only)
   // =========================================================================
   describe('Strict Email Whitelist Authorization', () => {
-    test('strictly accepts faizatia43@gmail.com and handles case/whitespace insensitivity', () => {
+    test('strictly accepts whitelisted emails and handles case/whitespace insensitivity', () => {
+      expect(superadminService.isAuthorizedSuperadmin('faizatia34@gmail.com')).toBe(true);
+      expect(superadminService.isAuthorizedSuperadmin('FAIZATIA34@GMAIL.COM')).toBe(true);
+      expect(superadminService.isAuthorizedSuperadmin('  faizatia34@gmail.com  ')).toBe(true);
+      expect(superadminService.isAuthorizedSuperadmin('FaizAtia34@Gmail.Com')).toBe(true);
       expect(superadminService.isAuthorizedSuperadmin('faizatia43@gmail.com')).toBe(true);
-      expect(superadminService.isAuthorizedSuperadmin('FAIZATIA43@GMAIL.COM')).toBe(true);
-      expect(superadminService.isAuthorizedSuperadmin('  faizatia43@gmail.com  ')).toBe(true);
-      expect(superadminService.isAuthorizedSuperadmin('FaizAtia43@Gmail.Com')).toBe(true);
+      expect(superadminService.isAuthorizedSuperadmin('aliepcahyo@gmail.com')).toBe(true);
     });
 
     test('strictly rejects ANY other email address without exception', () => {

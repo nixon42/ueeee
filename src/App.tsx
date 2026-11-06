@@ -33,19 +33,21 @@ export default function App() {
   // Clean Architecture: Domain Hooks for Favorites, Catalog Stats, and Superadmin Auth
   const { favorites, toggleFavorite } = useFavorites();
   const { recordPlay } = useGameStats();
-  const { user, isSuperadmin, superadminEmail } = useSuperadmin();
+  const { user, isSuperadmin, isLoading } = useSuperadmin();
 
   // Route State: 'learning' (default student/guest dashboard) or 'superadmin' (/admin route)
   const [currentView, setCurrentView] = useState<'learning' | 'superadmin'>(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      const params = new URLSearchParams(window.location.search);
+    if (typeof window !== 'undefined' && window.location) {
+      const path = window.location.pathname || '';
+      const params = new URLSearchParams(window.location.search || '');
+      const hash = window.location.hash || '';
       if (
         path === '/admin' ||
         path === '/superadmin' ||
+        path.startsWith('/admin') ||
         params.get('view') === 'admin' ||
         params.get('page') === 'superadmin' ||
-        window.location.hash === '#admin'
+        hash.includes('admin')
       ) {
         return 'superadmin';
       }
@@ -69,14 +71,17 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname;
-      const params = new URLSearchParams(window.location.search);
+      if (typeof window === 'undefined' || !window.location) return;
+      const path = window.location.pathname || '';
+      const params = new URLSearchParams(window.location.search || '');
+      const hash = window.location.hash || '';
       if (
         path === '/admin' ||
         path === '/superadmin' ||
+        path.startsWith('/admin') ||
         params.get('view') === 'admin' ||
         params.get('page') === 'superadmin' ||
-        window.location.hash === '#admin'
+        hash.includes('admin')
       ) {
         setCurrentView('superadmin');
       } else {
@@ -86,6 +91,18 @@ export default function App() {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  // Auto-switch to superadmin view if authenticated as superadmin and accessing /admin or #admin
+  useEffect(() => {
+    if (isSuperadmin && user) {
+      if (typeof window === 'undefined' || !window.location) return;
+      const path = window.location.pathname || '';
+      const hash = window.location.hash || '';
+      if (path === '/admin' || path === '/superadmin' || path.startsWith('/admin') || hash.includes('admin')) {
+        setCurrentView('superadmin');
+      }
+    }
+  }, [isSuperadmin, user]);
 
   const [recentGameIds, setRecentGameIds] = useState<string[]>(() => {
     return safeStorage.getJson<string[]>('ueeee_recent', []);
@@ -384,6 +401,15 @@ export default function App() {
 
   // Dedicated Superadmin Dashboard Route View (/admin)
   if (currentView === 'superadmin') {
+    if (isLoading) {
+      return (
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center text-slate-300 font-bold space-y-4">
+          <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-slate-400 font-medium">Memverifikasi hak akses Superadmin...</p>
+        </div>
+      );
+    }
+
     if (isSuperadmin && user) {
       return (
         <Suspense
@@ -407,8 +433,7 @@ export default function App() {
           <div>
             <h1 className="text-2xl font-black">Akses Superadmin Terbatas</h1>
             <p className="text-xs text-slate-400 mt-2">
-              Halaman ini hanya dapat diakses oleh akun resmi{' '}
-              <span className="font-mono text-purple-400">{superadminEmail}</span>.
+              Halaman ini hanya dapat diakses oleh akun Google pengelola resmi terdaftar.
             </p>
           </div>
           <div className="space-y-3 pt-2">
@@ -430,6 +455,7 @@ export default function App() {
           <SuperadminModal
             isOpen={isSuperadminModalOpen}
             onClose={() => setIsSuperadminModalOpen(false)}
+            onNavigateToDashboard={navigateToSuperadmin}
           />
         </Suspense>
       </div>
@@ -561,6 +587,7 @@ export default function App() {
         <SuperadminModal
           isOpen={isSuperadminModalOpen}
           onClose={() => setIsSuperadminModalOpen(false)}
+          onNavigateToDashboard={navigateToSuperadmin}
         />
       </Suspense>
 

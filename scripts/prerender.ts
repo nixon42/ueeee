@@ -116,7 +116,17 @@ function runPrerender() {
     console.log(`✓ Generated static route: /game/${game.id} & /${game.id}`);
   }
 
-  // 3. Ensure sitemap and robots are synced in dist
+  // 3. Generate static route for /admin and /superadmin
+  const adminDir = path.join(DIST_DIR, 'admin');
+  fs.mkdirSync(adminDir, { recursive: true });
+  fs.writeFileSync(path.join(adminDir, 'index.html'), baseHtml, 'utf-8');
+
+  const superadminDir = path.join(DIST_DIR, 'superadmin');
+  fs.mkdirSync(superadminDir, { recursive: true });
+  fs.writeFileSync(path.join(superadminDir, 'index.html'), baseHtml, 'utf-8');
+  console.log('✓ Generated static routes: /admin & /superadmin');
+
+  // 4. Ensure sitemap and robots are synced in dist
   const publicSitemap = path.resolve(import.meta.dirname, '../public/sitemap.xml');
   if (fs.existsSync(publicSitemap)) {
     fs.copyFileSync(publicSitemap, path.join(DIST_DIR, 'sitemap.xml'));

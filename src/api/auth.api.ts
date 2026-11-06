@@ -22,8 +22,8 @@ export async function apiSignInWithGoogle(
     const targetRedirect =
       redirectTo ||
       (typeof window !== 'undefined'
-        ? window.location.origin
-        : 'https://ueeee.my.id');
+        ? `${window.location.origin}/admin`
+        : 'https://ueeee.my.id/admin');
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

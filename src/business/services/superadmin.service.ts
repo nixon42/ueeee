@@ -17,14 +17,32 @@ import {
 } from '@/api';
 import { SuperadminAuthState, SuperadminUser } from '../models';
 
-export const SUPERADMIN_EMAIL = (
-  (typeof import.meta !== 'undefined' &&
-    import.meta.env &&
-    import.meta.env.VITE_SUPERADMIN_EMAIL) ||
-  'faizatia43@gmail.com'
-)
-  .toLowerCase()
-  .trim();
+const DEFAULT_SUPERADMIN_WHITELIST = [
+  'faizatia34@gmail.com',
+  'faizatia43@gmail.com',
+  'aliepcahyo@gmail.com',
+];
+
+/**
+ * Returns list of all authorized superadmin emails, combining defaults with any environment configuration.
+ */
+export function getAuthorizedSuperadminEmails(): string[] {
+  const envVal =
+    (typeof import.meta !== 'undefined' &&
+      import.meta.env &&
+      import.meta.env.VITE_SUPERADMIN_EMAIL) ||
+    '';
+
+  const list = envVal
+    .split(/[,;\s]+/)
+    .map((e: string) => e.toLowerCase().trim())
+    .filter(Boolean);
+
+  const set = new Set([...DEFAULT_SUPERADMIN_WHITELIST, ...list]);
+  return Array.from(set);
+}
+
+export const SUPERADMIN_EMAIL = 'faizatia34@gmail.com';
 
 type AuthListener = (state: SuperadminAuthState) => void;
 
@@ -48,11 +66,13 @@ class SuperadminService {
    */
   public isAuthorizedSuperadmin(email?: string | null): boolean {
     if (!email || typeof email !== 'string') return false;
-    return email.toLowerCase().trim() === SUPERADMIN_EMAIL;
+    const normalized = email.toLowerCase().trim();
+    const whitelist = getAuthorizedSuperadminEmails();
+    return whitelist.includes(normalized);
   }
 
   /**
-   * Get the configured superadmin email.
+   * Get the primary configured superadmin email.
    */
   public getSuperadminEmail(): string {
     return SUPERADMIN_EMAIL;
@@ -101,7 +121,7 @@ class SuperadminService {
         };
         this.notify();
       }
-    } catch (err) {
+    } catch {
       this.state = {
         user: null,
         isSuperadmin: false,
@@ -120,7 +140,7 @@ class SuperadminService {
           user: null,
           isSuperadmin: false,
           isLoading: false,
-          error: null,
+          error: this.state.error,
         };
         this.notify();
       }
@@ -134,8 +154,14 @@ class SuperadminService {
     id: string;
     email?: string;
     user_metadata?: Record<string, unknown>;
+    identities?: Array<{ identity_data?: Record<string, unknown> }>;
   }): void {
-    const email = supabaseUser.email?.toLowerCase().trim();
+    const rawEmail =
+      supabaseUser.email ||
+      (supabaseUser.user_metadata?.email as string | undefined) ||
+      (supabaseUser.identities?.[0]?.identity_data?.email as string | undefined);
+
+    const email = rawEmail?.toLowerCase().trim();
 
     if (email && this.isAuthorizedSuperadmin(email)) {
       // Superadmin authorized!
@@ -146,10 +172,14 @@ class SuperadminService {
         name:
           typeof supabaseUser.user_metadata?.full_name === 'string'
             ? supabaseUser.user_metadata.full_name
+            : typeof supabaseUser.user_metadata?.name === 'string'
+            ? supabaseUser.user_metadata.name
             : email.split('@')[0],
         avatarUrl:
           typeof supabaseUser.user_metadata?.avatar_url === 'string'
             ? supabaseUser.user_metadata.avatar_url
+            : typeof supabaseUser.user_metadata?.picture === 'string'
+            ? supabaseUser.user_metadata.picture
             : undefined,
       };
 
@@ -167,7 +197,7 @@ class SuperadminService {
         user: null,
         isSuperadmin: false,
         isLoading: false,
-        error: `Akses ditolak: Akun "${rejectedEmail}" tidak memiliki izin Superadmin. Hanya ${SUPERADMIN_EMAIL} yang berhak mengakses.`,
+        error: `Akses ditolak: Akun Google "${rejectedEmail}" belum terdaftar sebagai Superadmin.`,
       };
       this.notify();
 
@@ -187,7 +217,13 @@ class SuperadminService {
     };
     this.notify();
 
-    const { url, error } = await apiSignInWithGoogle(redirectTo);
+    const targetRedirect =
+      redirectTo ||
+      (typeof window !== 'undefined'
+        ? `${window.location.origin}/admin`
+        : 'https://ueeee.my.id/admin');
+
+    const { url, error } = await apiSignInWithGoogle(targetRedirect);
 
     if (error) {
       this.state = {

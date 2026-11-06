@@ -6,9 +6,14 @@ import { sound } from '@/lib/sound';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onNavigateToDashboard?: () => void;
 }
 
-export const SuperadminModal: React.FC<Props> = ({ isOpen, onClose }) => {
+export const SuperadminModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  onNavigateToDashboard,
+}) => {
   const {
     user,
     isSuperadmin,
@@ -34,7 +39,11 @@ export const SuperadminModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const handleSignIn = async () => {
     sound.playClick();
     clearError();
-    await signInWithGoogle();
+    const adminUrl =
+      typeof window !== 'undefined'
+        ? `${window.location.origin}/admin`
+        : undefined;
+    await signInWithGoogle(adminUrl);
   };
 
   const handleSignOut = async () => {
@@ -143,6 +152,9 @@ export const SuperadminModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   onClick={() => {
                     sound.playClick();
                     onClose();
+                    if (onNavigateToDashboard) {
+                      onNavigateToDashboard();
+                    }
                   }}
                   className="flex-1 px-4 py-2.5 rounded-2xl text-xs font-extrabold bg-purple-700 hover:bg-purple-800 text-white shadow-sm transition flex items-center justify-center cursor-pointer"
                 >
