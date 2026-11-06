@@ -242,8 +242,8 @@ export const GAMES_CATALOG: GameItem[] = [
   },
   {
     id: 'ular-tangga-tatasurya',
-    title: 'Petualangan Sains: Ekspedisi Orbit Tata Surya',
-    subtitle: 'Jelajahi orbit 8 planet, sabuk asteroid, dan rahasia gerhana bersama Kapten Dirgantara!',
+    title: 'Petualangan Sains: Tata Surya & Gravitasi',
+    subtitle: 'Jelajahi orbit 8 planet, sabuk asteroid, dan rahasia gravitasi gerhana bersama Kapten Dirgantara!',
     description: 'Misi antariksa interaktif bersama Kapten Dirgantara! Amati infografis tata surya beranimasi, susun urutan 8 planet, cocokkan karakteristik benda langit, dan pecahkan geometri gerhana matahari.',
     type: 'ular-tangga',
     category: 'sains',
@@ -252,7 +252,7 @@ export const GAMES_CATALOG: GameItem[] = [
     gradient: 'from-purple-600 via-indigo-600 to-violet-800',
     iconName: 'Rocket',
     playTimeMinutes: 12,
-    subjectDetail: 'IPA / Tata Surya, Orbit Planet & Gerhana (SD Kelas 6)',
+    subjectDetail: 'IPA / Tata Surya & Gravitasi (SD Kelas 6)',
     rating: 4.8,
     playsCount: 1810,
     hasStoryPresentation: true,
@@ -260,8 +260,8 @@ export const GAMES_CATALOG: GameItem[] = [
     slideCount: 8,
     mentorName: 'Kapten Dirgantara',
     tags: [
-      'tata surya', 'tatasurya', 'planet', 'astronomi', 'antariksa', 
-      'roket', 'mars', 'jupiter', 'saturnus', 'bumi', 'matahari', 'gravitasi', 
+      'tata surya', 'tatasurya', 'gravitasi', 'planet', 'astronomi', 'antariksa', 
+      'roket', 'mars', 'jupiter', 'saturnus', 'bumi', 'matahari', 
       'gerhana', 'kapten dirgantara', 'ekspedisi orbit'
     ],
     prolog: {

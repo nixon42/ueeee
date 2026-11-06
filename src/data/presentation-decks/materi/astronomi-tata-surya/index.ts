@@ -21,7 +21,7 @@ export { slide8PertanyaanPemantikHotsAstro } from './slides/slide-8-pertanyaan-p
 
 export const ULAR_TANGGA_TATASURYA_DECK: PresentationDeckData = {
   "gameId": "ular-tangga-tatasurya",
-  "title": "Petualangan Sains: Ekspedisi Orbit Tata Surya",
+  "title": "Petualangan Sains: Tata Surya & Gravitasi",
   "subtitle": "Ekspedisi Orbit 8 Planet, Sabuk Asteroid, & Mekanika Gerhana",
   "themeColor": "purple",
   "icon": "🚀",

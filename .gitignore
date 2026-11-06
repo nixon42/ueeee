@@ -39,3 +39,4 @@ Thumbs.db
 
 # Agent scratch & IPC
 .agents/
+.claude/
