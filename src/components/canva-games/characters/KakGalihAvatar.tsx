@@ -17,8 +17,8 @@ const SIZE_MAP = {
   md: { width: 110, height: 135, avatarBox: 'w-24 h-32' },
   lg: { width: 160, height: 195, avatarBox: 'w-36 h-44 sm:w-44 sm:h-52' },
   xl: { width: 200, height: 245, avatarBox: 'w-48 h-60 sm:w-56 sm:h-68' },
-  '2xl': { width: 260, height: 320, avatarBox: 'w-40 h-48 sm:w-52 sm:h-64 md:w-64 md:h-80 lg:w-72 lg:h-88' },
-  hero: { width: 300, height: 365, avatarBox: 'w-40 h-48 sm:w-52 sm:h-64 md:w-64 md:h-80 lg:w-76 lg:h-92' },
+  '2xl': { width: 260, height: 320, avatarBox: 'w-[136px] h-[166px] sm:w-[200px] sm:h-[244px] md:w-[248px] md:h-[302px]' },
+  hero: { width: 300, height: 365, avatarBox: 'w-[150px] h-[183px] sm:w-[220px] sm:h-[268px] md:w-[268px] md:h-[327px] lg:w-[310px] lg:h-[378px]' },
 };
 
 export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({

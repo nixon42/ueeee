@@ -64,6 +64,9 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
 
   const themeTokens = PRESENTATION_THEMES[deck.themeColor] || PRESENTATION_THEMES.emerald;
 
+  // Narasi dibiarkan mengisi seluruh kanvas sebagai scene game, bukan kartu di dalam gradient.
+  const isNarrativeScene = activeSlide?.type === 'narrative-intro';
+
   const goToSlide = (slideNum: number) => {
     sound.playSlideTransition();
     const clamped = Math.max(1, Math.min(totalSlides, slideNum));
@@ -259,8 +262,12 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
       contentClassName="flex-1 min-h-0 p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative"
     >
       {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS WITH ECOSYSTEM ART (STRICT NO-SCROLL NO-OVERFLOW) */}
-      <div className="flex-1 min-h-0 bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-hidden relative p-3 sm:p-4 md:p-6">
-        <EcosystemCanvasBackground theme={deck.themeColor} />
+      <div
+        className={`flex-1 min-h-0 bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-hidden relative ${
+          isNarrativeScene ? 'p-1.5 sm:p-2' : 'p-3 sm:p-4 md:p-6'
+        }`}
+      >
+        {!isNarrativeScene && <EcosystemCanvasBackground theme={deck.themeColor} />}
         <div className="relative z-10 w-full flex-1 min-h-0 flex flex-col overflow-hidden">
           {renderSlideContent()}
         </div>
