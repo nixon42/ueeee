@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Search, Volume2, VolumeX, Dices, X, Shield, ShieldCheck 
+  Search, Volume2, VolumeX, Dices, X, User 
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
@@ -61,36 +61,6 @@ export const Header: React.FC<Props> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Tombol Baru Khusus Superadmin Terverifikasi */}
-          {isSuperadmin && user ? (
-            <button
-              onClick={() => {
-                sound.playClick();
-                if (onOpenSuperadminDashboard) {
-                  onOpenSuperadminDashboard();
-                } else if (onOpenSuperadmin) {
-                  onOpenSuperadmin();
-                }
-              }}
-              className="px-3.5 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 hover:from-purple-800 hover:to-indigo-700 text-white shadow-md flex items-center gap-1.5 transition cursor-pointer border border-purple-400/60 ring-2 ring-purple-300/40"
-              title="Buka Dashboard Superadmin"
-            >
-              <ShieldCheck size={15} className="text-amber-300 shrink-0" />
-              <span>Dashboard Superadmin</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                sound.playClick();
-                if (onOpenSuperadmin) onOpenSuperadmin();
-              }}
-              className="p-2 rounded-full bg-white hover:bg-purple-50 border border-slate-200 text-slate-500 hover:text-purple-700 transition shadow-sm cursor-pointer"
-              title="Superadmin Login"
-            >
-              <Shield size={16} />
-            </button>
-          )}
-
           {/* Tombol Main Acak (Surprise Me) */}
           <button
             onClick={() => {
@@ -112,6 +82,47 @@ export const Header: React.FC<Props> = ({
           >
             {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
           </button>
+
+          {/* Avatar Profil / Superadmin di Pojok Kanan Atas */}
+          {isSuperadmin && user ? (
+            <button
+              onClick={() => {
+                sound.playClick();
+                if (onOpenSuperadminDashboard) {
+                  onOpenSuperadminDashboard();
+                } else if (onOpenSuperadmin) {
+                  onOpenSuperadmin();
+                }
+              }}
+              className="relative p-0.5 rounded-full ring-2 ring-purple-500 hover:ring-purple-600 hover:scale-105 active:scale-95 transition shadow-sm cursor-pointer group"
+              title={`Dashboard Superadmin (${user.name || 'Pengelola'})`}
+            >
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.name || 'Superadmin'}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-xs flex items-center justify-center">
+                  {(user.name || 'A').charAt(0).toUpperCase()}
+                </div>
+              )}
+              {/* Online / Verified Admin Dot */}
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                sound.playClick();
+                if (onOpenSuperadmin) onOpenSuperadmin();
+              }}
+              className="w-8 h-8 rounded-full bg-white hover:bg-purple-50 border border-slate-200 hover:border-purple-300 text-slate-500 hover:text-purple-700 hover:scale-105 active:scale-95 transition flex items-center justify-center shadow-xs cursor-pointer group"
+              title="Superadmin Login"
+            >
+              <User size={16} className="group-hover:scale-110 transition-transform" />
+            </button>
+          )}
         </div>
       </div>
 
