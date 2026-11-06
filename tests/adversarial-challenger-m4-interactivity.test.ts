@@ -96,7 +96,8 @@ describe('Suite 1: Zero GameQuizModal in ALL_PRESENTATION_DECKS Presentation Flo
         expect(html).not.toContain('id="quiz-modal"');
 
         // Assert valid presentation shell structure
-        expect(html).toContain('Mode Presentasi Guru');
+        expect(html).not.toContain('Mode Presentasi Guru');
+        expect(html).toContain('Kembali ke Beranda');
         const encodedTitle = deck.title.replace(/&/g, '&amp;');
         expect(html.includes(deck.title) || html.includes(encodedTitle)).toBe(true);
       }

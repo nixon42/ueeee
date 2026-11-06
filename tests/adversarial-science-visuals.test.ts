@@ -492,7 +492,7 @@ describe('Tier 5 Adversarial Hardening: Science Visual SVGs & Presentation Resil
 
       expect(html).toContain('fixed inset-0 z-50 w-screen h-screen');
       expect(html).toContain('Kembali ke Beranda');
-      expect(html).toContain('Mode Presentasi Guru');
+      expect(html).not.toContain('Mode Presentasi Guru');
     });
 
     test('4.3 GameStageShell provides projector fullscreen toggle button and titles', () => {

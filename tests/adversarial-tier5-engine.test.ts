@@ -479,7 +479,7 @@ describe('Suite 2: Fullscreen API Lifecycle, Fallbacks, and Window Resize Resili
       expect(html).toBeDefined();
       expect(html).toContain('fixed inset-0');
       expect(html).toContain('flex flex-col');
-      expect(html).toContain('Mode Presentasi Guru');
+      expect(html).not.toContain('Mode Presentasi Guru');
     }
   });
 });

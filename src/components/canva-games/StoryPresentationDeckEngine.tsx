@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { 
   ChevronLeft, 
   ChevronRight, 
-  BookOpen, 
   CheckCircle2, 
   RotateCcw
 } from 'lucide-react';
@@ -256,12 +255,6 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
       onToggleSound={() => setSoundOn(sound.toggleSound())}
       onReset={handleResetDeck}
       resetTooltip="Mulai Ulang dari Slide 1"
-      extraControls={
-        <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700">
-          <BookOpen size={14} className={themeTokens.textPrimary} />
-          <span>Mode Presentasi Guru</span>
-        </div>
-      }
       contentClassName="flex-1 min-h-0 p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative"
     >
       {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS */}

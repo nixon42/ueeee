@@ -570,7 +570,7 @@ describe('StoryPresentationDeckEngine & Presentation Types Stress Harness', () =
 
         const theme = PRESENTATION_THEMES[themeKey];
         expect(html).toContain(theme.activeDot);
-        expect(html).toContain('Mode Presentasi Guru');
+        expect(html).not.toContain('Mode Presentasi Guru');
       }
     });
 
