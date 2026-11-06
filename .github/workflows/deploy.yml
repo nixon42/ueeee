@@ -33,7 +33,13 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build
-        run: bun run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || vars.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPERADMIN_EMAIL: ${{ secrets.VITE_SUPERADMIN_EMAIL || vars.VITE_SUPERADMIN_EMAIL || 'faizatia43@gmail.com' }}
+        run: |
+          bun run build
+          cp dist/index.html dist/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

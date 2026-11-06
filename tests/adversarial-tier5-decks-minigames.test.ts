@@ -884,9 +884,9 @@ describe('Tier 5 Adversarial Code Audit: Mini-Games Robustness', () => {
         );
 
         expect(html).toContain(`Flashcards Test ${theme}`);
-        expect(html).toContain('Tantangan Ingatan Aktif');
+        expect(html).not.toContain('Tantangan Ingatan Aktif');
         expect(html).toContain('perspective:1200px');
-        expect(html).toContain('3D Flashcards');
+        expect(html).toContain('Balik Kartu');
       }
     });
   });

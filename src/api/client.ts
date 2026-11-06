@@ -7,10 +7,9 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from './types';
 
-// Fallback constants pointing to the live ueeee project on Supabase
-const DEFAULT_SUPABASE_URL = 'https://takzivdrwlkpvniambhs.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRha3ppdmRyd2xrcHZuaWFtYmhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM5MTYxMjgsImV4cCI6MjEwOTQ5MjEyOH0.V-X4GVFjkFmhp0sTukLpB9W_5MiiRevV9DvFTBnsTMU';
+// Fallback constants when environment variables are not injected
+const DEFAULT_SUPABASE_URL = 'https://placeholder.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'placeholder-anon-key';
 
 export const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;

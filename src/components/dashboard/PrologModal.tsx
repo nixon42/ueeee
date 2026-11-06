@@ -64,14 +64,9 @@ export const PrologModal: React.FC<Props> = ({
           <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
 
           <div className="flex items-start justify-between gap-3 relative z-10">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-lg bg-black/25 backdrop-blur-md text-white border border-white/20">
-                Prolog & Panduan Edukasi
-              </span>
-              <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-white/20 backdrop-blur-md text-white">
-                {game.gradeLevel}
-              </span>
-            </div>
+            <span className="text-xs font-semibold text-white/80">
+              {game.gradeLevel}
+            </span>
 
             <button
               onClick={() => {
@@ -85,7 +80,7 @@ export const PrologModal: React.FC<Props> = ({
             </button>
           </div>
 
-          <div className="mt-3 relative z-10">
+          <div className="mt-2.5 relative z-10">
             <h2 className="text-xl sm:text-2xl font-black tracking-tight leading-snug drop-shadow-sm">
               {game.title}
             </h2>
@@ -94,27 +89,31 @@ export const PrologModal: React.FC<Props> = ({
             </p>
           </div>
 
-          {/* Quick Info Badges */}
-          <div className="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center gap-3 text-xs text-white/95 font-medium relative z-10">
-            {game.slideCount && (
-              <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
-                <BookOpen size={13} /> {game.slideCount} Slide Interaktif
-              </span>
-            )}
+          {/* Clean Editorial Metadata Line (No Pill Slop) */}
+          <div className="mt-3.5 pt-3 border-t border-white/15 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-white/85 relative z-10">
             {game.mentorName && (
-              <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
-                🧑‍🏫 Mentor: {game.mentorName}
-              </span>
+              <>
+                <span className="font-semibold text-white">🧑‍🏫 {game.mentorName}</span>
+                <span className="text-white/40">•</span>
+              </>
             )}
-            <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
-              <Clock size={13} /> Durasi: {game.playTimeMinutes} Menit
+            {game.slideCount && (
+              <>
+                <span className="flex items-center gap-1">
+                  <BookOpen size={12} className="opacity-80" /> {game.slideCount} Slide
+                </span>
+                <span className="text-white/40">•</span>
+              </>
+            )}
+            <span className="flex items-center gap-1">
+              <Clock size={12} className="opacity-80" /> {game.playTimeMinutes} mnt
             </span>
-            <span className="flex items-center gap-1 bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
-              <Star size={13} className="fill-amber-300 text-amber-300" /> Rating: {game.rating.toFixed(1)} / 5.0
+            <span className="text-white/40">•</span>
+            <span className="flex items-center gap-1 text-white">
+              <Star size={12} className="fill-amber-300 text-amber-300" /> {game.rating.toFixed(1)}
             </span>
-            <span className="bg-black/20 px-2.5 py-1 rounded-lg backdrop-blur-md">
-              Materi: {game.subjectDetail}
-            </span>
+            <span className="text-white/40">•</span>
+            <span className="text-white/75">{game.subjectDetail}</span>
           </div>
         </div>
 

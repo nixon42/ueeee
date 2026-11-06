@@ -21,6 +21,19 @@ describe('Superadmin Authentication & Authorization Security Suite', () => {
       expect(envExampleContent).toContain('VITE_SUPERADMIN_EMAIL=faizatia43@gmail.com');
     });
 
+    test('.gitignore strictly ignores .env and .env.* while permitting .env.example', () => {
+      const gitignorePath = path.resolve(__dirname, '../.gitignore');
+      const gitignoreContent = fs.readFileSync(gitignorePath, 'utf-8');
+
+      expect(gitignoreContent).toContain('.env');
+      expect(gitignoreContent).toContain('.env.*');
+      expect(gitignoreContent).toContain('!.env.example');
+
+      // Verify .env.production does not exist on disk in the repo
+      const envProdPath = path.resolve(__dirname, '../.env.production');
+      expect(fs.existsSync(envProdPath)).toBe(false);
+    });
+
     test('superadminService default email strictly matches faizatia43@gmail.com', () => {
       expect(SUPERADMIN_EMAIL).toBe('faizatia43@gmail.com');
       expect(superadminService.getSuperadminEmail()).toBe('faizatia43@gmail.com');
@@ -151,6 +164,36 @@ describe('Superadmin Authentication & Authorization Security Suite', () => {
       expect(allIds).toContain('ular-tangga-sejarah');
       expect(allIds).toContain('teka-teki-kata');
       expect(allIds).toContain('catur-taktik-logika');
+    });
+  });
+
+  // =========================================================================
+  // 5. GitHub Pages Deployment & Clean UI Verification
+  // =========================================================================
+  describe('GitHub Pages Deployment & Clean UI Verification', () => {
+    test('.github/workflows/deploy.yml copies 404.html for SPA fallback on GitHub Pages', () => {
+      const deployWorkflowPath = path.resolve(__dirname, '../.github/workflows/deploy.yml');
+      const deployContent = fs.readFileSync(deployWorkflowPath, 'utf-8');
+      expect(deployContent).toContain('cp dist/index.html dist/404.html');
+    });
+
+    test('Mini-game source files no longer contain the removed activity tag pills', () => {
+      const seqPath = path.resolve(__dirname, '../src/components/canva-games/CanvaSequenceGame.tsx');
+      const matchPath = path.resolve(__dirname, '../src/components/canva-games/CanvaMatchPairsGame.tsx');
+      const flashPath = path.resolve(__dirname, '../src/components/canva-games/InteractiveFlashcards.tsx');
+
+      const seqContent = fs.readFileSync(seqPath, 'utf-8');
+      const matchContent = fs.readFileSync(matchPath, 'utf-8');
+      const flashContent = fs.readFileSync(flashPath, 'utf-8');
+
+      expect(seqContent).not.toContain('<span>Canva Sequence</span>');
+      expect(matchContent).not.toContain('<span>Canva Match Pairs</span>');
+      expect(flashContent).not.toContain('<span>3D Flashcards</span>');
+
+      // Top challenge pill badges removed
+      expect(seqContent).not.toContain('Tantangan Urutan Langkah');
+      expect(matchContent).not.toContain('Tantangan Pasangan Konsep');
+      expect(flashContent).not.toContain('Tantangan Ingatan Aktif');
     });
   });
 });

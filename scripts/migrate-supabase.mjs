@@ -1,6 +1,6 @@
 // Script to execute Supabase database schema migrations via Management API
 const SUPABASE_PAT = process.env.SUPABASE_ACCESS_TOKEN || process.env.SUPABASE_PAT || '';
-const PROJECT_REF = process.env.SUPABASE_PROJECT_REF || 'takzivdrwlkpvniambhs';
+const PROJECT_REF = process.env.SUPABASE_PROJECT_REF || '';
 
 const migrationSql = `
 -- Enable pgcrypto if needed

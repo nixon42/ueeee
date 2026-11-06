@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Sparkles, RotateCcw, CheckCircle2, AlertCircle, Link as LinkIcon } from 'lucide-react';
+import { RotateCcw, CheckCircle2, AlertCircle, Link as LinkIcon } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 export interface MatchPairItem {
@@ -331,10 +331,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
 
       {/* Header Tantangan Canva */}
       <div className="text-center max-w-xl mb-4 sm:mb-6 z-20">
-        <span className={`text-[11px] font-black uppercase tracking-widest block mb-1 ${themeStyle.badge} px-2.5 py-0.5 rounded-full inline-block`}>
-          Tantangan Pasangan Konsep
-        </span>
-        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight mt-1">{title}</h3>
+        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
         <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
       </div>
 
@@ -472,12 +469,6 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
           <LinkIcon size={16} />
           <span>Periksa Pasangan</span>
         </button>
-      </div>
-
-      {/* Canva Activity Tag di Sudut Kanan Bawah */}
-      <div className={`absolute bottom-2.5 right-3 flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border z-20 ${themeStyle.tag}`}>
-        <Sparkles size={11} />
-        <span>Canva Match Pairs</span>
       </div>
     </div>
   );

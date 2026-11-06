@@ -8,10 +8,10 @@ import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
 import { getPresentationDeckByGameId } from '@/data/presentation-decks';
 import { PresentationDeckData } from '@/types/presentation';
-import { Heart, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, Lock } from 'lucide-react';
 import { LogoIcon } from '@/components/common/Logo';
 import { isGameMatchingSearch } from '@/lib/search';
-import { useFavorites, useGameStats } from '@/business';
+import { useFavorites, useGameStats, useSuperadmin } from '@/business';
 import { safeStorage } from '@/lib/safeStorage';
 
 // Performance: Code splitting heavy game modals with dynamic lazy loading
@@ -22,6 +22,7 @@ const ChessPuzzleModal = lazy(() => import('@/games/chess-puzzle').then(m => ({ 
 const InteractiveStoryPresentationModal = lazy(() => import('@/components/canva-games').then(m => ({ default: m.InteractiveStoryPresentationModal })));
 const PrologModal = lazy(() => import('@/components/dashboard/PrologModal').then(m => ({ default: m.PrologModal })));
 const SuperadminModal = lazy(() => import('@/components/dashboard/SuperadminModal').then(m => ({ default: m.SuperadminModal })));
+const SuperadminDashboard = lazy(() => import('@/components/admin/SuperadminDashboard').then(m => ({ default: m.SuperadminDashboard })));
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -29,9 +30,62 @@ export default function App() {
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel>('Semua Kelas');
   const [activeTab, setActiveTab] = useState<string>('all');
 
-  // Clean Architecture: Domain Hooks for Favorites and Catalog Stats
+  // Clean Architecture: Domain Hooks for Favorites, Catalog Stats, and Superadmin Auth
   const { favorites, toggleFavorite } = useFavorites();
   const { recordPlay } = useGameStats();
+  const { user, isSuperadmin, superadminEmail } = useSuperadmin();
+
+  // Route State: 'learning' (default student/guest dashboard) or 'superadmin' (/admin route)
+  const [currentView, setCurrentView] = useState<'learning' | 'superadmin'>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+      if (
+        path === '/admin' ||
+        path === '/superadmin' ||
+        params.get('view') === 'admin' ||
+        params.get('page') === 'superadmin' ||
+        window.location.hash === '#admin'
+      ) {
+        return 'superadmin';
+      }
+    }
+    return 'learning';
+  });
+
+  const navigateToSuperadmin = () => {
+    setCurrentView('superadmin');
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/admin');
+    }
+  };
+
+  const navigateToLearning = () => {
+    setCurrentView('learning');
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/');
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const params = new URLSearchParams(window.location.search);
+      if (
+        path === '/admin' ||
+        path === '/superadmin' ||
+        params.get('view') === 'admin' ||
+        params.get('page') === 'superadmin' ||
+        window.location.hash === '#admin'
+      ) {
+        setCurrentView('superadmin');
+      } else {
+        setCurrentView('learning');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const [recentGameIds, setRecentGameIds] = useState<string[]>(() => {
     return safeStorage.getJson<string[]>('ueeee_recent', []);
@@ -211,6 +265,60 @@ export default function App() {
     launchGame(randomGame);
   };
 
+  // Dedicated Superadmin Dashboard Route View (/admin)
+  if (currentView === 'superadmin') {
+    if (isSuperadmin && user) {
+      return (
+        <Suspense
+          fallback={
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center text-slate-300 font-bold">
+              Memuat Dashboard Superadmin...
+            </div>
+          }
+        >
+          <SuperadminDashboard onBackToDashboard={navigateToLearning} />
+        </Suspense>
+      );
+    }
+
+    return (
+      <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-4">
+        <div className="max-w-md w-full bg-slate-950 p-8 rounded-3xl border border-slate-800 text-center space-y-6 shadow-2xl">
+          <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 mx-auto flex items-center justify-center">
+            <Lock size={32} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-black">Akses Superadmin Terbatas</h1>
+            <p className="text-xs text-slate-400 mt-2">
+              Halaman ini hanya dapat diakses oleh akun resmi{' '}
+              <span className="font-mono text-purple-400">{superadminEmail}</span>.
+            </p>
+          </div>
+          <div className="space-y-3 pt-2">
+            <button
+              onClick={() => setIsSuperadminModalOpen(true)}
+              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-purple-600 hover:bg-purple-700 text-white transition cursor-pointer shadow-md"
+            >
+              Masuk dengan Akun Google
+            </button>
+            <button
+              onClick={navigateToLearning}
+              className="w-full py-2.5 px-4 rounded-xl font-semibold text-xs text-slate-400 hover:text-white transition cursor-pointer"
+            >
+              ← Kembali ke Dashboard Pembelajaran
+            </button>
+          </div>
+        </div>
+        <Suspense fallback={null}>
+          <SuperadminModal
+            isOpen={isSuperadminModalOpen}
+            onClose={() => setIsSuperadminModalOpen(false)}
+          />
+        </Suspense>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#fafbff] flex flex-col justify-between selection:bg-purple-100 selection:text-purple-900 text-base">
       <main className="flex-1 pb-16">
@@ -223,6 +331,7 @@ export default function App() {
           onGradeChange={setSelectedGrade}
           onSurpriseMe={handleSurpriseMe}
           onOpenSuperadmin={() => setIsSuperadminModalOpen(true)}
+          onOpenSuperadminDashboard={navigateToSuperadmin}
         />
 
         {/* Canva Horizontal Category Pills */}
@@ -370,6 +479,8 @@ export default function App() {
         }}
         onSurpriseMe={handleSurpriseMe}
         favoritesCount={favorites.length}
+        isSuperadmin={isSuperadmin}
+        onOpenSuperadmin={navigateToSuperadmin}
         onFocusSearch={() => {
           const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
           if (searchInput) {

@@ -15,6 +15,7 @@ interface Props {
   onGradeChange: (grade: GradeLevel) => void;
   onSurpriseMe: () => void;
   onOpenSuperadmin?: () => void;
+  onOpenSuperadminDashboard?: () => void;
 }
 
 const GRADE_LEVELS: GradeLevel[] = [
@@ -33,6 +34,7 @@ export const Header: React.FC<Props> = ({
   onGradeChange,
   onSurpriseMe,
   onOpenSuperadmin,
+  onOpenSuperadminDashboard,
 }) => {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const { user, isSuperadmin } = useSuperadmin();
@@ -59,18 +61,22 @@ export const Header: React.FC<Props> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Superadmin Indicator / Trigger Button */}
+          {/* Tombol Baru Khusus Superadmin Terverifikasi */}
           {isSuperadmin && user ? (
             <button
               onClick={() => {
                 sound.playClick();
-                if (onOpenSuperadmin) onOpenSuperadmin();
+                if (onOpenSuperadminDashboard) {
+                  onOpenSuperadminDashboard();
+                } else if (onOpenSuperadmin) {
+                  onOpenSuperadmin();
+                }
               }}
-              className="px-3 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-purple-700 to-indigo-700 text-white shadow-sm flex items-center gap-1.5 hover:opacity-95 transition cursor-pointer border border-purple-400"
-              title={`Superadmin: ${user.email} (Klik untuk info status)`}
+              className="px-3.5 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 hover:from-purple-800 hover:to-indigo-700 text-white shadow-md flex items-center gap-1.5 transition cursor-pointer border border-purple-400/60 ring-2 ring-purple-300/40"
+              title={`Buka Dashboard Superadmin (${user.email})`}
             >
-              <ShieldCheck size={14} className="text-amber-300" />
-              <span className="hidden sm:inline">Superadmin</span>
+              <ShieldCheck size={15} className="text-amber-300 shrink-0" />
+              <span>Dashboard Superadmin</span>
             </button>
           ) : (
             <button
@@ -79,7 +85,7 @@ export const Header: React.FC<Props> = ({
                 if (onOpenSuperadmin) onOpenSuperadmin();
               }}
               className="p-2 rounded-full bg-white hover:bg-purple-50 border border-slate-200 text-slate-500 hover:text-purple-700 transition shadow-sm cursor-pointer"
-              title="Superadmin Panel"
+              title="Superadmin Login"
             >
               <Shield size={16} />
             </button>

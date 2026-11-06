@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Dices, Bookmark, Search } from 'lucide-react';
+import { Home, Dices, Bookmark, Search, ShieldCheck } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
   onSurpriseMe: () => void;
   favoritesCount: number;
   onFocusSearch: () => void;
+  isSuperadmin?: boolean;
+  onOpenSuperadmin?: () => void;
 }
 
 export const MobileBottomNav: React.FC<Props> = ({
@@ -16,9 +18,11 @@ export const MobileBottomNav: React.FC<Props> = ({
   onSurpriseMe,
   favoritesCount,
   onFocusSearch,
+  isSuperadmin = false,
+  onOpenSuperadmin,
 }) => {
   return (
-    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-1.5 shadow-lg safe-bottom">
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-3 py-1.5 shadow-lg safe-bottom">
       <div className="flex items-center justify-around">
         {/* Beranda */}
         <button
@@ -75,6 +79,21 @@ export const MobileBottomNav: React.FC<Props> = ({
             <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-amber-500"></span>
           )}
         </button>
+
+        {/* Superadmin Tab (Hanya tampil jika user superadmin terverifikasi) */}
+        {isSuperadmin && (
+          <button
+            onClick={() => {
+              sound.playClick();
+              if (onOpenSuperadmin) onOpenSuperadmin();
+            }}
+            className="flex flex-col items-center gap-1 p-1.5 rounded-xl text-purple-700 hover:text-purple-900 transition cursor-pointer"
+            title="Dashboard Superadmin"
+          >
+            <ShieldCheck size={20} className="text-amber-500" />
+            <span className="text-[10px] font-black">Admin</span>
+          </button>
+        )}
       </div>
     </nav>
   );

@@ -420,9 +420,9 @@ describe('Adversarial Verification: CanvaSequenceGame Engine', () => {
 
       const html = renderToString(element);
       expect(html.length).toBeGreaterThan(1000);
-      expect(html).toContain('Tantangan Urutan Langkah');
+      expect(html).not.toContain('Tantangan Urutan Langkah');
       expect(html).toContain(`Test Sequence ${theme}`);
-      expect(html).toContain('Canva Sequence');
+      expect(html).toContain('Periksa Urutan');
       expect(html).toContain('Evaporasi');
       expect(html).toContain('Infiltrasi');
     }
@@ -560,9 +560,9 @@ describe('Adversarial Verification: CanvaMatchPairsGame Engine', () => {
 
       const html = renderToString(element);
       expect(html.length).toBeGreaterThan(1000);
-      expect(html).toContain('Tantangan Pasangan Konsep');
+      expect(html).not.toContain('Tantangan Pasangan Konsep');
       expect(html).toContain(`Test Match ${theme}`);
-      expect(html).toContain('Canva Match Pairs');
+      expect(html).toContain('Periksa Pasangan');
       expect(html).toContain('Produsen');
       expect(html).toContain('Tumbuhan Hijau');
     }
@@ -685,9 +685,9 @@ describe('Adversarial Verification: InteractiveFlashcards Engine', () => {
 
       const html = renderToString(element);
       expect(html.length).toBeGreaterThan(1000);
-      expect(html).toContain('Tantangan Ingatan Aktif');
+      expect(html).not.toContain('Tantangan Ingatan Aktif');
       expect(html).toContain(`Test Flashcard ${theme}`);
-      expect(html).toContain('3D Flashcards');
+      expect(html).toContain('Balik Kartu');
       expect(html).toContain('Apa fungsi klorofil pada daun?');
       expect(html).toContain('Menyerap energi foton cahaya matahari');
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, RotateCw, CheckCircle2, HelpCircle, Award, RotateCcw } from 'lucide-react';
+import { RotateCw, CheckCircle2, HelpCircle, Award, RotateCcw } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { FlashcardItem } from '@/types/presentation';
 
@@ -121,7 +121,7 @@ const FLASHCARD_THEME_STYLES: Record<FlashcardTheme, {
  * Pure CSS 3D transform dengan perspective 1200px dan preserve-3d.
  */
 export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
-  title = 'Tantangan Ingatan Aktif (3D Flashcards)',
+  title = 'Kartu Pemahaman Konsep',
   instructions,
   subtitle,
   cards,
@@ -193,10 +193,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
     >
       {/* Header Tantangan Flashcard */}
       <div className="text-center max-w-xl mb-4 sm:mb-6">
-        <span className={`text-[11px] font-black uppercase tracking-widest block mb-1 ${themeStyle.badge} px-2.5 py-0.5 rounded-full inline-block`}>
-          Tantangan Ingatan Aktif
-        </span>
-        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight mt-1">{title}</h3>
+        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
         <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
       </div>
 
@@ -396,12 +393,6 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
           </button>
         </div>
       )}
-
-      {/* Canva Activity Tag */}
-      <div className={`absolute bottom-2.5 right-3 flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${themeStyle.tag}`}>
-        <Sparkles size={11} />
-        <span>3D Flashcards</span>
-      </div>
     </div>
   );
 };
