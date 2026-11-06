@@ -17,7 +17,6 @@ export const SuperadminModal: React.FC<Props> = ({ isOpen, onClose }) => {
     signInWithGoogle,
     signOut,
     clearError,
-    superadminEmail,
   } = useSuperadmin();
 
   useEffect(() => {
@@ -157,11 +156,7 @@ export const SuperadminModal: React.FC<Props> = ({ isOpen, onClose }) => {
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 space-y-2">
                 <p className="font-bold text-slate-800">Kebijakan Hak Akses:</p>
                 <p>
-                  Hanya akun Google dengan email resmi{' '}
-                  <span className="font-mono font-bold text-purple-700">
-                    {superadminEmail}
-                  </span>{' '}
-                  yang berhak mengaktifkan hak akses Superadmin.
+                  Hanya akun Google pengelola resmi terdaftar yang berhak mengaktifkan hak akses Superadmin.
                 </p>
                 <p className="text-slate-500 text-[11px]">
                   Akun lain yang mencoba login akan otomatis ditolak dan dikembalikan ke mode tamu (*guest*).

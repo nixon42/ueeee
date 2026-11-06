@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const SuperadminDashboard: React.FC<Props> = ({ onBackToDashboard }) => {
-  const { user, signOut, superadminEmail } = useSuperadmin();
+  const { user, signOut } = useSuperadmin();
   const [dbStatus, setDbStatus] = useState<{ connected: boolean; latencyMs: number; checking: boolean }>({
     connected: true,
     latencyMs: 45,
@@ -68,7 +68,7 @@ export const SuperadminDashboard: React.FC<Props> = ({ onBackToDashboard }) => {
               </span>
             </div>
             <p className="text-[11px] text-slate-400 hidden sm:block">
-              Route: <span className="font-mono text-purple-400">/admin</span> (Khusus {superadminEmail})
+              Route: <span className="font-mono text-purple-400">/admin</span> (Khusus Pengelola Resmi)
             </p>
           </div>
         </div>
@@ -123,10 +123,10 @@ export const SuperadminDashboard: React.FC<Props> = ({ onBackToDashboard }) => {
                 <span>AKUN RESMI SUPERADMIN</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                {user?.name || 'Faiz Atia'}
+                {user?.name || 'Pengelola Platform'}
               </h1>
               <p className="text-xs font-mono text-purple-300">
-                {user?.email || superadminEmail}
+                {user?.email || 'Akun Resmi Terverifikasi'}
               </p>
             </div>
           </div>
