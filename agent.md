@@ -15,6 +15,8 @@ Selamat datang di proyek **ueeee** (`ueeee.my.id`). Panduan ini berisi aturan, a
 > 2. **Spesifikasi Game & Batasan Kelas:** Standar rasio proyektor, target sentuh 48px, dan aturan game ada di [`GAME_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/GAME_SPEC.md).
 > 3. **Standar Animasi 60 FPS & Arsitektur Chess.com:** Wajib pelajari arsitektur 4-layer rendering, GPU-accelerated `translate3d`, dan audio synthesis di [`CHESS_ENGINE_INSIGHTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CHESS_ENGINE_INSIGHTS.md) saat membangun game papan atau interaktif baru!
 > 4. **Game Interaktif Canva Education & Presentasi Cerita:** Wajib pelajari format slide presentasi bercerita dan mini-game urutan/pasangan di [`CANVA_INTERACTIVE_GAMES_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/CANVA_INTERACTIVE_GAMES_SPEC.md)!
+> 5. **Arsitektur Modular Materi & 1 File Per Slide:** Wajib ikuti aturan isolasi folder materi di [`MODULAR_MATERI_ARCHITECTURE_SPEC.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/MODULAR_MATERI_ARCHITECTURE_SPEC.md). Dilarang menumpuk materi ke dalam satu berkas monolitik!
+> 6. **Master Blueprint & Insights Sistem:** Pelajari cetak biru komprehensif sistem, taksonomi game, dan integrasi backend di [`MASTER_BLUEPRINT_AND_INSIGHTS.md`](file:///run/media/nixon/6fde869e-c24a-48e3-80a4-6e3a943a14db/Project/ueeee/MASTER_BLUEPRINT_AND_INSIGHTS.md)!
 > Wajib baca dokumen-dokumen tersebut sebelum memodifikasi atau membuat materi game baru!
 
 ---
