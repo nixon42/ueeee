@@ -31,9 +31,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const isFourCards = slide.cards.length === 4;
   const IllustrationComponent = gameId ? getDeckIllustration(gameId) : null;
-  const [viewMode, setViewMode] = useState<'cards' | 'infographic'>(
-    IllustrationComponent ? 'infographic' : 'cards'
-  );
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
@@ -83,80 +80,29 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           </p>
         )}
 
-        {/* View Mode Switcher for Classroom Projector Display */}
+        {/* Optional High-Res Infographic Fullscreen Trigger */}
         {IllustrationComponent && (
-          <div className="pt-2 flex items-center justify-center gap-2">
+          <div className="pt-1.5 flex items-center justify-center">
             <button
               type="button"
-              onClick={() => {
-                sound.playClick();
-                setViewMode('infographic');
-              }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                viewMode === 'infographic'
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+              onClick={handleOpenZoom}
+              className="text-xs font-bold text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100/80 px-3 py-1.5 rounded-xl border border-purple-200 transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              title="Buka bagan infografis visual resolusi tinggi di layar penuh"
             >
-              <span>📊 Bagan Infografis Visual</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setViewMode('cards');
-              }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                viewMode === 'cards'
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              <span>📋 Kartu Konsep & Ringkasan</span>
+              <Maximize2 size={13} className="text-purple-600" />
+              <span>Buka Bagan Infografis Visual (Layar Penuh)</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Main Content Area: Infographic SVG or Dynamic Cards Grid */}
-      {viewMode === 'infographic' && IllustrationComponent ? (
-        <div className="relative group w-full max-w-4xl mx-auto rounded-3xl overflow-hidden border-2 border-slate-800 shadow-xl bg-slate-950 aspect-[16/10] max-h-[460px] my-auto flex items-center justify-center transition-all">
-          <div
-            onClick={handleOpenZoom}
-            className="w-full h-full flex items-center justify-center cursor-zoom-in relative"
-            title="Klik untuk memperbesar infografis ke layar penuh"
-          >
-            <IllustrationComponent className="w-full h-full object-contain" />
-
-            {/* Subtle Hover Overlay with Enlarge Prompt */}
-            <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-              <span className="px-4 py-2 rounded-2xl bg-black/80 text-white font-extrabold text-xs sm:text-sm backdrop-blur-md border border-white/20 shadow-2xl flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                <Maximize2 size={16} className="text-amber-300" />
-                <span>Klik untuk Memperbesar Detail Infografis</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Quick Enlarge Button (Always Visible in top right corner) */}
-          <div className="absolute top-3 right-3 z-10">
-            <button
-              type="button"
-              onClick={handleOpenZoom}
-              className="px-3 py-1.5 rounded-xl bg-slate-900/85 hover:bg-slate-900 text-white text-xs font-bold backdrop-blur-md border border-white/20 shadow-lg flex items-center gap-1.5 transition cursor-pointer hover:scale-105 active:scale-95"
-              title="Perbesar ke Layar Penuh (Zoom & Detail)"
-            >
-              <Maximize2 size={13} className="text-amber-300" />
-              <span>Perbesar</span>
-            </button>
-          </div>
-        </div>
-      ) : (
+      {/* Main Content Area: Direct Concept Cards Grid */}
       <div
         className={`grid ${
           isFourCards
             ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4'
             : 'grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6'
-        } my-auto`}
+        } my-auto w-full`}
       >
         {slide.cards.map((card, idx) => {
           const cardColor =
@@ -187,7 +133,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           );
         })}
       </div>
-      )}
 
       {/* Teacher Speaker Prompt Banner (Classroom Proyektor Cue) */}
       <div className="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex items-center gap-3 text-xs sm:text-sm text-slate-600 shrink-0">
