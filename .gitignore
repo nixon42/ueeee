@@ -39,3 +39,5 @@ Thumbs.db
 
 # Agent scratch & IPC
 .agents/
+
+node_modules
