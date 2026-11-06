@@ -13,6 +13,7 @@ Setiap materi baru **WAJIB** dibuatkan folder tersendiri di bawah:
 
 ```
 src/data/presentation-decks/materi/[materi-slug]/
+├── illustration.tsx         # Komponen vektor SVG edukasi akademis spesifik materi (800x500 viewBox)
 ├── minigames-data.ts        # Data array mini-game (Sequence items, Match pairs, Flashcards)
 ├── slides/                  # FOLDER BERISI 1 FILE PER SLIDE
 │   ├── slide-1-narrative.ts
@@ -22,14 +23,39 @@ src/data/presentation-decks/materi/[materi-slug]/
 │   ├── slide-5-jodohkan.ts
 │   ├── slide-6-resolusi.ts
 │   └── slide-7-refleksi.ts
-└── index.ts                 # Export deck data, re-export all slides & minigames
+└── index.ts                 # Export deck data, re-export all slides, minigames, & illustration
 ```
 
 ---
 
 ## 2. Rincian Komponen Tiap Berkas
 
-### A. `minigames-data.ts`
+### A. `illustration.tsx`
+Komponen visual infografis vektor SVG interaktif khusus untuk materi tersebut (rasio `viewBox="0 0 800 500"`, `preserveAspectRatio="xMidYMid meet"`).
+> [!IMPORTANT]
+> **DILARANG KERAS menumpuk SVG ilustrasi multi-materi dalam satu berkas raksasa (seperti `ScienceSvgIllustrations.tsx` lama)!**
+> Setiap materi wajib memiliki berkas `illustration.tsx` sendiri di dalam foldernya. Berkas `src/components/visuals/ScienceSvgIllustrations.tsx` dan `HumanitiesSvgIllustrations.tsx` hanya berfungsi sebagai facade re-export untuk kompatibilitas.
+
+```typescript
+import React from 'react';
+import { DeckIllustrationProps } from '@/types/presentation';
+
+export const MateriSpesifikIllustration: React.FC<DeckIllustrationProps> = ({
+  className = '',
+  width = '100%',
+  height = '100%',
+}) => {
+  return (
+    <div className={`relative overflow-hidden pointer-events-none select-none ${className}`}>
+      <svg viewBox="0 0 800 500" width={width} height={height} className="w-full h-full">
+        {/* Vektor SVG akademis materi di sini */}
+      </svg>
+    </div>
+  );
+};
+```
+
+### B. `minigames-data.ts`
 Menyimpan semua data statis tantangan interaktif:
 - Urutan tahapan (*Put the steps in order*): `SequenceGameItem[]`
 - Jodohkan pasangan (*Match the pairs*): `MatchGamePair[]`

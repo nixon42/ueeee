@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1AnomaliReaktorKimiaForensik } from './slides/slide-1-anomali-reaktor-kimia-forensik';
 export { slide1AnomaliReaktorKimiaForensik } from './slides/slide-1-anomali-reaktor-kimia-forensik';

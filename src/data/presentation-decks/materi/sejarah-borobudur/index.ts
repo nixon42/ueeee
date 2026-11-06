@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1MenguakRahasiaReliefAbadKe } from './slides/slide-1-menguak-rahasia-relief-abad-ke';
 export { slide1MenguakRahasiaReliefAbadKe } from './slides/slide-1-menguak-rahasia-relief-abad-ke';

@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1PeluncuranWahanaGarudaOrbit } from './slides/slide-1-peluncuran-wahana-garuda-orbit';
 export { slide1PeluncuranWahanaGarudaOrbit } from './slides/slide-1-peluncuran-wahana-garuda-orbit';

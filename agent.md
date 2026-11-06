@@ -96,10 +96,11 @@ Struktur modular di bawah folder `src/games/`:
 > Rencana platform akan menampung puluhan hingga ratusan game/materi baru. DILARANG KERAS menumpuk definisi slide dan materi ke dalam satu file besar!
 > Setiap materi **WAJIB** mengikuti hierarki berikut di bawah `src/data/presentation-decks/materi/`:
 > 1. **1 Materi = 1 Folder Dedikasi:** Misal `materi/daur-air-cendrawasih/`, `materi/lab-kimia-maya/`.
-> 2. **1 Slide = 1 File Dedikasi:** Disimpan di subfolder `slides/` (misal: `slide-1-narrative.ts`, `slide-2-infografis.ts`, dst).
-> 3. **Data Mini-Game Terpisah:** Disimpan di `minigames-data.ts` (Sequence, Match Pairs, Flashcards). Slide yang memuat tantangan harus mengimpor referensi konstan dari berkas ini, BUKAN mendefinisikan array inline.
-> 4. **Entry Point Deck Bersih:** Disimpan di `index.ts` folder materi yang mengekspor data deck dan re-ekspor slides serta minigames.
-> 5. **Registry Barrel:** `science-decks.ts` dan `humanities-decks.ts` hanya bertindak sebagai barrel re-export registry ke `index.ts`.
+> 2. **Ilustrasi SVG Terlokalisasi di Folder Materi (`illustration.tsx`):** DILARANG KERAS menumpuk ilustrasi SVG multi-materi ke dalam satu berkas raksasa (seperti `ScienceSvgIllustrations.tsx` lama)! Setiap materi wajib menyimpan komponen ilustrasi vektor akademisnya di `src/data/presentation-decks/materi/[materi-slug]/illustration.tsx`. Berkas `ScienceSvgIllustrations.tsx` dan `HumanitiesSvgIllustrations.tsx` hanya bertindak sebagai facade re-export untuk kompatibilitas.
+> 3. **1 Slide = 1 File Dedikasi:** Disimpan di subfolder `slides/` (misal: `slide-1-narrative.ts`, `slide-2-infografis.ts`, dst).
+> 4. **Data Mini-Game Terpisah:** Disimpan di `minigames-data.ts` (Sequence, Match Pairs, Flashcards). Slide yang memuat tantangan harus mengimpor referensi konstan dari berkas ini, BUKAN mendefinisikan array inline.
+> 5. **Entry Point Deck Bersih:** Disimpan di `index.ts` folder materi yang mengekspor data deck dan re-ekspor slides, minigames, serta illustration.
+> 6. **Registry Barrel:** `science-decks.ts` dan `humanities-decks.ts` hanya bertindak sebagai barrel re-export registry ke `index.ts`.
 
 ```
 ueeee/
@@ -127,12 +128,13 @@ ueeee/
 │   │   ├── presentation-decks/ # Story Presentation Decks Architecture
 │   │   │   ├── materi/         # FOLDER MODULAR PER MATERI
 │   │   │   │   ├── [materi-slug]/
+│   │   │   │   │   ├── illustration.tsx   # SVG Vektor Edukasi Akademis Spesifik Materi
 │   │   │   │   │   ├── minigames-data.ts  # Urutan, pasangan, kartu konsep
 │   │   │   │   │   ├── slides/            # 1 FILE PER SLIDE
 │   │   │   │   │   │   ├── slide-1-....ts
 │   │   │   │   │   │   ├── slide-2-....ts
 │   │   │   │   │   │   └── slide-N-....ts
-│   │   │   │   │   └── index.ts           # Export deck & items materi
+│   │   │   │   │   └── index.ts           # Export deck, illustration & items materi
 │   │   │   ├── science-decks.ts    # Barrel re-export Sains & Lab
 │   │   │   ├── humanities-decks.ts # Barrel re-export Matematika, Budaya & Logika
 │   │   │   └── index.ts            # Master ALL_PRESENTATION_DECKS registry

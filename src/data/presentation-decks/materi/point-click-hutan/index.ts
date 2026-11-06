@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1PatroliKoridorSatwaRimbaBo } from './slides/slide-1-patroli-koridor-satwa-rimba-bo';
 export { slide1PatroliKoridorSatwaRimbaBo } from './slides/slide-1-patroli-koridor-satwa-rimba-bo';

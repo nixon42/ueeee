@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1MisiPenyelamatanLembahHutan } from './slides/slide-1-misi-penyelamatan-lembah-hutan';
 export { slide1MisiPenyelamatanLembahHutan } from './slides/slide-1-misi-penyelamatan-lembah-hutan';

@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1MenuntaskanJembatanGantungF } from './slides/slide-1-menuntaskan-jembatan-gantung-f';
 export { slide1MenuntaskanJembatanGantungF } from './slides/slide-1-menuntaskan-jembatan-gantung-f';

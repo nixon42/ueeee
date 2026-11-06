@@ -3,6 +3,18 @@ import { GameStageTheme } from '@/components/game-shell';
 import { SubjectCategory, GradeLevel } from '@/types/game';
 
 /**
+ * Shared props for academic vector illustrations across presentation decks
+ */
+export interface DeckIllustrationProps {
+  className?: string;
+  width?: number | string;
+  height?: number | string;
+}
+
+export type ScienceSvgProps = DeckIllustrationProps;
+export type HumanitiesSvgProps = DeckIllustrationProps;
+
+/**
  * 10 Supported Slide Archetypes for Indonesian K-12 Interactive Decks
  */
 export type SlideType =

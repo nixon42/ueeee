@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1MemulihkanNaskahEmasBahasa } from './slides/slide-1-memulihkan-naskah-emas-bahasa';
 export { slide1MemulihkanNaskahEmasBahasa } from './slides/slide-1-memulihkan-naskah-emas-bahasa';

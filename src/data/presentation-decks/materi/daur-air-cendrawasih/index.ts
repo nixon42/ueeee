@@ -8,6 +8,7 @@ import { slide6Resolusi } from './slides/slide-6-resolusi';
 import { slide7Refleksi } from './slides/slide-7-refleksi';
 
 export * from './minigames-data';
+export * from './illustration';
 export * from './slides/slide-1-narrative';
 export * from './slides/slide-2-infografis';
 export * from './slides/slide-3-fotosintesis';

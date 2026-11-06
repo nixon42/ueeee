@@ -1,5 +1,6 @@
 import { PresentationDeckData } from '@/types/presentation';
 export * from './minigames-data';
+export * from './illustration';
 
 import { slide1MengarungiLinimasaKedaulatan } from './slides/slide-1-mengarungi-linimasa-kedaulatan';
 export { slide1MengarungiLinimasaKedaulatan } from './slides/slide-1-mengarungi-linimasa-kedaulatan';
