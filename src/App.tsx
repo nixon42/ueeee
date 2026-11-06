@@ -18,6 +18,7 @@ import { PresentationDeckData } from '@/types/presentation';
 import { Heart, Sparkles, BookOpen } from 'lucide-react';
 import { LogoIcon } from '@/components/common/Logo';
 import { isGameMatchingSearch } from '@/lib/search';
+import { useFavorites, useGameStats } from '@/business';
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -25,14 +26,9 @@ export default function App() {
   const [selectedGrade, setSelectedGrade] = useState<GradeLevel>('Semua Kelas');
   const [activeTab, setActiveTab] = useState<string>('all');
 
-  // Favorites & History from localStorage
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    try {
-      return JSON.parse(localStorage.getItem('ueeee_favorites') || '[]');
-    } catch {
-      return [];
-    }
-  });
+  // Clean Architecture: Domain Hooks for Favorites and Catalog Stats
+  const { favorites, toggleFavorite } = useFavorites();
+  const { recordPlay } = useGameStats();
 
   const [recentGameIds, setRecentGameIds] = useState<string[]>(() => {
     try {
@@ -77,17 +73,6 @@ export default function App() {
     }
   }, []);
 
-  // Save favorites to localStorage
-  const toggleFavorite = (gameId: string) => {
-    setFavorites(prev => {
-      const updated = prev.includes(gameId)
-        ? prev.filter(id => id !== gameId)
-        : [...prev, gameId];
-      localStorage.setItem('ueeee_favorites', JSON.stringify(updated));
-      return updated;
-    });
-  };
-
   // Record recent play
   const recordRecentPlay = (gameId: string) => {
     setRecentGameIds(prev => {
@@ -104,6 +89,7 @@ export default function App() {
     initialSlide: number = 1
   ) => {
     recordRecentPlay(game.id);
+    recordPlay(game.id).catch(() => {});
 
     // Update query string cleanly without reloading
     const url = new URL(window.location.href);
@@ -327,6 +313,11 @@ export default function App() {
           onClose={() => closeGameModal('presentation')}
           deck={activePresentationDeck || undefined}
           initialSlide={presentationInitialSlide}
+          onComplete={() => {
+            if (activePresentationDeck) {
+              recordPlay(activePresentationDeck.gameId, true, 180).catch(() => {});
+            }
+          }}
         />
       )}
       <TeacherSheetModal

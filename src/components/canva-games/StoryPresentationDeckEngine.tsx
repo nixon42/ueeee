@@ -25,6 +25,7 @@ import {
   StoryResolutionSlide, 
   ReflectionSparkSlide 
 } from './slides';
+import { progressService } from '@/business';
 
 export interface StoryPresentationDeckEngineProps {
   isOpen: boolean;
@@ -67,6 +68,7 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
     sound.playSlideTransition();
     const clamped = Math.max(1, Math.min(totalSlides, slideNum));
     setCurrentSlide(clamped);
+    progressService.updateProgress(deck.gameId, { currentSlide: clamped, totalSlides }).catch(() => {});
   };
 
   const handleNextSlide = () => {
@@ -74,6 +76,7 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
       goToSlide(currentSlide + 1);
     } else {
       setIsVictoryOpen(true);
+      progressService.updateProgress(deck.gameId, { isCompleted: true, currentSlide: totalSlides, score: 100 }).catch(() => {});
     }
   };
 
@@ -92,6 +95,9 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
 
   const recordChallenge = (key: string, isSuccess: boolean) => {
     setChallengesState(prev => ({ ...prev, [key]: isSuccess }));
+    if (isSuccess) {
+      progressService.recordChallengeCompleted(deck.gameId, key).catch(() => {});
+    }
   };
 
   // Keyboard navigation listener (ArrowRight / ArrowLeft / PageUp / PageDown)

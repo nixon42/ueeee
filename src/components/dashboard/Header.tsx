@@ -5,6 +5,7 @@ import {
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
 import { Logo } from '@/components/common/Logo';
+import { CloudSyncBadge } from '@/components/common/CloudSyncBadge';
 
 interface Props {
   searchQuery: string;
@@ -55,6 +56,9 @@ export const Header: React.FC<Props> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Cloud Sync Status Indicator */}
+          <CloudSyncBadge />
+
           {/* Tombol Main Acak (Surprise Me) */}
           <button
             onClick={() => {
