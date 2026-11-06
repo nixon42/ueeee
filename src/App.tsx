@@ -582,7 +582,6 @@ export default function App() {
           isOpen={!!activePrologGame}
           onClose={() => setActivePrologGame(null)}
           onPlay={(game) => launchGame(game, 'presentation')}
-          onPlayClassic={(game) => launchGame(game, 'arcade')}
         />
         <SuperadminModal
           isOpen={isSuperadminModalOpen}
