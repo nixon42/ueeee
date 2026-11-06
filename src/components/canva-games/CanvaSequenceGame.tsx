@@ -234,21 +234,23 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
 
   return (
     <div
-      className={`w-full flex flex-col items-center justify-between p-4 sm:p-6 rounded-3xl border shadow-sm relative ${themeStyle.container} ${className}`}
+      className={`w-full h-full flex flex-col items-center justify-between relative ${className}`}
     >
       {/* Header Tantangan Canva */}
-      <div className="text-center max-w-xl mb-4 sm:mb-6">
+      <div className="text-center max-w-2xl mb-3 sm:mb-4">
         <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
         <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
       </div>
 
-      {/* Barisan Kartu Urutan (Horizontal Grid) */}
+      {/* Barisan Kartu Urutan (Full Width Responsive Canvas Grid) */}
       <div
         className={`w-full grid ${
           currentOrder.length <= 4
             ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4'
-            : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-5'
-        } gap-3 sm:gap-4 my-auto`}
+            : currentOrder.length <= 6
+            ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
+            : 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8'
+        } gap-2.5 sm:gap-3.5 my-auto w-full`}
       >
         {currentOrder.map((item, index) => {
           const isCorrectPosition = checkedState && item.order === index + 1;

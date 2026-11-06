@@ -262,10 +262,10 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
           <span>Mode Presentasi Guru</span>
         </div>
       }
-      contentClassName="flex-1 min-h-0 p-3 sm:p-6 flex flex-col justify-between overflow-hidden relative"
+      contentClassName="flex-1 min-h-0 p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative"
     >
-      {/* ARENA SLIDE PRESENTASI DINAMIS */}
-      <div className="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200/90 shadow-xl flex flex-col overflow-y-auto relative p-4 sm:p-8">
+      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS */}
+      <div className="flex-1 min-h-0 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-y-auto relative p-3 sm:p-6 md:p-8">
         {renderSlideContent()}
       </div>
 

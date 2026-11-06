@@ -298,7 +298,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-full flex flex-col items-center justify-between p-4 sm:p-6 rounded-3xl border shadow-sm relative overflow-hidden ${themeStyle.container} ${className}`}
+      className={`w-full h-full flex flex-col items-center justify-between relative ${className}`}
     >
       {/* SVG Garis Penghubung (Rubber-Band Bezier Lines Khas Canva) */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
@@ -335,8 +335,8 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
         <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
       </div>
 
-      {/* Grid Dua Kolom Sejajar */}
-      <div className="w-full grid grid-cols-2 gap-4 sm:gap-8 my-auto z-20">
+      {/* Grid Dua Kolom Sejajar (Full Canvas Space Utilization) */}
+      <div className="w-full max-w-4xl grid grid-cols-2 gap-6 sm:gap-10 md:gap-14 my-auto z-20">
         {/* Kolom Kiri: Istilah / Konsep */}
         <div className="flex flex-col space-y-3">
           <span className={`text-xs font-black uppercase tracking-wider px-1 ${themeStyle.leftHeader}`}>
