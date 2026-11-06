@@ -78,7 +78,17 @@ Struktur modular di bawah folder `src/games/`:
 
 ---
 
-## 5. Struktur Direktori Proyek
+## 5. Struktur Direktori Proyek & Arsitektur Modular Materi
+
+> [!IMPORTANT]
+> **STANDAR MODULARISASI MATERI (ANTI 1-FILE JUMBO):**
+> Rencana platform akan menampung puluhan hingga ratusan game/materi baru. DILARANG KERAS menumpuk definisi slide dan materi ke dalam satu file besar!
+> Setiap materi **WAJIB** mengikuti hierarki berikut di bawah `src/data/presentation-decks/materi/`:
+> 1. **1 Materi = 1 Folder Dedikasi:** Misal `materi/daur-air-cendrawasih/`, `materi/lab-kimia-maya/`.
+> 2. **1 Slide = 1 File Dedikasi:** Disimpan di subfolder `slides/` (misal: `slide-1-narrative.ts`, `slide-2-infografis.ts`, dst).
+> 3. **Data Mini-Game Terpisah:** Disimpan di `minigames-data.ts` (Sequence, Match Pairs, Flashcards). Slide yang memuat tantangan harus mengimpor referensi konstan dari berkas ini, BUKAN mendefinisikan array inline.
+> 4. **Entry Point Deck Bersih:** Disimpan di `index.ts` folder materi yang mengekspor data deck dan re-ekspor slides serta minigames.
+> 5. **Registry Barrel:** `science-decks.ts` dan `humanities-decks.ts` hanya bertindak sebagai barrel re-export registry ke `index.ts`.
 
 ```
 ueeee/
@@ -95,32 +105,31 @@ ueeee/
 ├── src/
 │   ├── assets/                 # SVGs, icons, illustrations
 │   ├── components/
+│   │   ├── canva-games/        # StoryPresentationDeckEngine, CanvaSequenceGame, dsb.
 │   │   ├── dashboard/          # Canva-style header, search, category pills, banner
-│   │   ├── game-card/          # Reusable card component
+│   │   ├── visuals/            # KakGalihAvatar, EcosystemCanvasBackground, Svg illustrations
 │   │   ├── modals/             # Game modal launcher & instructions
 │   │   └── ui/                 # Buttons, badges, dialogs, tabs
-│   ├── games/
-│   │   ├── ular-tangga/        # Snakes & Ladders game engine
-│   │   ├── point-and-click/    # Point and Click exploration engine
-│   │   └── common/             # Game shell, scoring, sound managers
 │   ├── data/
 │   │   ├── categories.ts       # Kategori mapel & game
 │   │   ├── games-catalog.ts    # Daftar katalog game dan materi
+│   │   ├── presentation-decks/ # Story Presentation Decks Architecture
+│   │   │   ├── materi/         # FOLDER MODULAR PER MATERI
+│   │   │   │   ├── [materi-slug]/
+│   │   │   │   │   ├── minigames-data.ts  # Urutan, pasangan, kartu konsep
+│   │   │   │   │   ├── slides/            # 1 FILE PER SLIDE
+│   │   │   │   │   │   ├── slide-1-....ts
+│   │   │   │   │   │   ├── slide-2-....ts
+│   │   │   │   │   │   └── slide-N-....ts
+│   │   │   │   │   └── index.ts           # Export deck & items materi
+│   │   │   ├── science-decks.ts    # Barrel re-export Sains & Lab
+│   │   │   ├── humanities-decks.ts # Barrel re-export Matematika, Budaya & Logika
+│   │   │   └── index.ts            # Master ALL_PRESENTATION_DECKS registry
 │   │   └── questions-bank.ts   # Bank soal untuk Ular Tangga dsb.
-│   ├── lib/
-│   │   ├── supabase.ts         # Supabase client setup (persiapan cloud)
-│   │   ├── storage.ts          # LocalStorage helpers
-│   │   └── sound.ts            # Sound effects player
-│   ├── types/                  # TypeScript interfaces
+│   ├── types/                  # TypeScript interfaces (presentation, games, catalog)
 │   ├── App.tsx                 # Root component
 │   ├── main.tsx                # Entry point
 │   └── index.css               # Tailwind CSS imports & animations
-├── agent.md                    # File ini (pedoman developer & AI agent)
-├── PRODUCT.md                  # Impeccable product specification
-├── package.json
-├── tsconfig.json
-├── tailwind.config.js
-└── vite.config.ts
 ```
 
 ---

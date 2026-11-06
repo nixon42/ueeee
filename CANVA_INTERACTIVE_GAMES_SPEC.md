@@ -163,3 +163,36 @@ Untuk menjaga estetika Canva yang bersih, bersahabat, dan flat:
   - Aksen Sequence: Oranye hangat (`bg-amber-500`, `bg-amber-50`, border `border-amber-200`).
   - Aksen Match Pairs: Lavender ungu (`bg-purple-600`, `bg-purple-50`, border `border-purple-200`).
   - Aksen Quiz: Rose pink (`bg-pink-600`, `bg-pink-50`, border `border-pink-200`).
+
+
+---
+
+## 5. Arsitektur File Modular Materi & Slide (Standar Wajib Anti File Menumpuk)
+
+> [!IMPORTANT]
+> **ATURAN MUTLAK MANAJEMEN BERKAS:**
+> Mengingat platform akan terus bertambah dengan puluhan hingga ratusan game/materi kurikulum baru, **DILARANG KERAS** menyatukan banyak slide atau banyak materi ke dalam satu file typescript monolithic!
+
+Setiap materi pembelajaran atau game slide deck baru **WAJIB** diorganisasikan ke dalam direktori modular di `src/data/presentation-decks/materi/[materi-slug]/`:
+
+```
+src/data/presentation-decks/materi/[materi-slug]/
+├── minigames-data.ts        # Data array mini-game (Sequence items, Match pairs, Flashcards)
+├── slides/                  # FOLDER BERISI 1 FILE PER SLIDE
+│   ├── slide-1-narrative.ts
+│   ├── slide-2-infografis.ts
+│   ├── slide-3-fotosintesis.ts
+│   ├── slide-4-urutkan.ts
+│   ├── slide-5-jodohkan.ts
+│   ├── slide-6-resolusi.ts
+│   └── slide-7-refleksi.ts
+└── index.ts                 # Export deck data, re-export all slides & minigames
+```
+
+### Konvensi Pembuatan Slide Baru:
+1. **Pemisahan Slide Per Berkas:** Setiap slide harus mengekspor objek bertipe `SlideDefinition` dengan ID unik berawalan inisial game (misal: `uts-slide-1`, `lab-slide-2`).
+2. **Integritas Referensi Mini-Game:** Jika slide memuat mini-game (`mini-game-sequence`, `mini-game-match`, atau `mini-game-flashcard`), properti `items`, `pairs`, atau `cards` **WAJIB** mengimpor konstanta dari `../minigames-data` (contoh: `items: WATER_CYCLE_SEQUENCE`). Jangan menulis array literal baru di dalam slide untuk menjaga referensi identitas data (*data identity parity*).
+3. **Pendaftaran di Barrel:**
+   - Masukkan materi sains ke `science-decks.ts` dan daftarkan di `SCIENCE_PRESENTATION_DECKS`.
+   - Masukkan materi humaniora/matematika/bahasa ke `humanities-decks.ts` dan daftarkan di `HUMANITIES_PRESENTATION_DECKS`.
+   - Master registry `ALL_PRESENTATION_DECKS` di `src/data/presentation-decks/index.ts` akan otomatis mengenali game baru tanpa duplikasi kode.
