@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle2, AlertCircle, GripVertical, Compass, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { RotateCcw, CheckCircle2, AlertCircle, Compass, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { KakGalihAvatar } from './characters/KakGalihAvatar';
+import { TgcSequenceCard } from './TgcSequenceCard';
 
 export interface SequenceItem {
   id: string;
@@ -26,81 +27,67 @@ export interface CanvaSequenceGameProps {
 const THEME_STYLES: Record<SequenceTheme, {
   container: string;
   badge: string;
-  tag: string;
   checkBtn: string;
   cardHover: string;
-  dragOverRing: string;
 }> = {
   amber: {
     container: 'bg-amber-50/40 border-amber-200/80',
     badge: 'text-amber-700 bg-amber-100',
-    tag: 'text-amber-700/80 bg-amber-100/60 border-amber-200/50',
-    checkBtn: 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-200',
+    checkBtn: 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-200 border-amber-500',
     cardHover: 'hover:border-amber-400',
-    dragOverRing: 'ring-2 ring-dashed ring-amber-400',
   },
   emerald: {
     container: 'bg-emerald-50/40 border-emerald-200/80',
     badge: 'text-emerald-700 bg-emerald-100',
-    tag: 'text-emerald-700/80 bg-emerald-100/60 border-emerald-200/50',
-    checkBtn: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-200',
+    checkBtn: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-200 border-emerald-500',
     cardHover: 'hover:border-emerald-400',
-    dragOverRing: 'ring-2 ring-dashed ring-emerald-400',
   },
   purple: {
     container: 'bg-purple-50/40 border-purple-200/80',
     badge: 'text-purple-700 bg-purple-100',
-    tag: 'text-purple-700/80 bg-purple-100/60 border-purple-200/50',
-    checkBtn: 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-200',
+    checkBtn: 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-200 border-purple-500',
     cardHover: 'hover:border-purple-400',
-    dragOverRing: 'ring-2 ring-dashed ring-purple-400',
   },
   blue: {
     container: 'bg-blue-50/40 border-blue-200/80',
     badge: 'text-blue-700 bg-blue-100',
-    tag: 'text-blue-700/80 bg-blue-100/60 border-blue-200/50',
-    checkBtn: 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200',
+    checkBtn: 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200 border-blue-500',
     cardHover: 'hover:border-blue-400',
-    dragOverRing: 'ring-2 ring-dashed ring-blue-400',
   },
   indigo: {
     container: 'bg-indigo-50/40 border-indigo-200/80',
     badge: 'text-indigo-700 bg-indigo-100',
-    tag: 'text-indigo-700/80 bg-indigo-100/60 border-indigo-200/50',
-    checkBtn: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200',
+    checkBtn: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 border-indigo-500',
     cardHover: 'hover:border-indigo-400',
-    dragOverRing: 'ring-2 ring-dashed ring-indigo-400',
   },
   rose: {
     container: 'bg-rose-50/40 border-rose-200/80',
     badge: 'text-rose-700 bg-rose-100',
-    tag: 'text-rose-700/80 bg-rose-100/60 border-rose-200/50',
-    checkBtn: 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200',
+    checkBtn: 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200 border-rose-500',
     cardHover: 'hover:border-rose-400',
-    dragOverRing: 'ring-2 ring-dashed ring-rose-400',
   },
   teal: {
     container: 'bg-teal-50/40 border-teal-200/80',
     badge: 'text-teal-700 bg-teal-100',
-    tag: 'text-teal-700/80 bg-teal-100/60 border-teal-200/50',
-    checkBtn: 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200',
+    checkBtn: 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200 border-teal-500',
     cardHover: 'hover:border-teal-400',
-    dragOverRing: 'ring-2 ring-dashed ring-teal-400',
   },
   orange: {
     container: 'bg-orange-50/40 border-orange-200/80',
     badge: 'text-orange-700 bg-orange-100',
-    tag: 'text-orange-700/80 bg-orange-100/60 border-orange-200/50',
-    checkBtn: 'bg-orange-600 hover:bg-orange-700 text-white shadow-orange-200',
+    checkBtn: 'bg-orange-600 hover:bg-orange-700 text-white shadow-orange-200 border-orange-500',
     cardHover: 'hover:border-orange-400',
-    dragOverRing: 'ring-2 ring-dashed ring-orange-400',
   },
 };
 
 /**
  * Komponen Game Interaktif Canva Education: "Sequence / Put the steps in order"
- * Mengurutkan kartu tahapan proses, siklus alamiah, atau kronologi sejarah.
- * Mendukung interaksi ganda: Drag & Drop HTML5 native dan tombol panah tap-to-swap.
+ * Disempurnakan dengan standar Chess.com Engine:
+ * 1. Pointer Events asli (setPointerCapture) untuk mouse & touchscreen tanpa ghosting native.
+ * 2. Strict Boundary Clamping: Kartu mustahil diseret keluar batas arena canvas.
+ * 3. Animasi Merapat & Preview Gap: Kartu lain bergeser dinamis membuka slot preview kosong.
+ * 4. Desain Kartu TCG Mewah: Tanpa header angka, tanpa grip dots, tanpa tombol panah geser.
+ * 5. Tap-to-Swap Mode: Klik kartu A lalu klik kartu B untuk bertukar posisi secara instan.
  */
 export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
   title = 'Urutkan Langkah-Langkah Berikut',
@@ -111,7 +98,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
   theme = 'amber',
   className = '',
 }) => {
-  const displayInstructions = instructions || subtitle || 'Geser atau gunakan tombol panah untuk menyusun tahapan dari awal hingga akhir.';
+  const displayInstructions = instructions || subtitle || 'Seret kartu ke posisi yang tepat atau ketuk dua kartu untuk bertukar posisi.';
   const themeStyle = THEME_STYLES[theme] || THEME_STYLES.amber;
 
   // Acak urutan awal saat pertama kali dimuat atau saat initialItems berganti
@@ -120,9 +107,21 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
   });
   const [checkedState, setCheckedState] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
-  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
+
+  // Chess.com-style Pointer Drag Engine States
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const [hoverSlotIndex, setHoverSlotIndex] = useState<number | null>(null);
+  const [dragPos, setDragPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null); // For tap-to-swap
+
+  // DOM Refs for strict bounding clamping and slot alignment
+  const arenaRef = useRef<HTMLDivElement>(null);
+  const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dragPointerOffsetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const dragStartPointerPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const cardSizeRef = useRef<{ width: number; height: number }>({ width: 200, height: 300 });
 
   const isWaterCycle = initialItems?.some(item => 
     item.label?.toLowerCase().includes('evaporasi') || 
@@ -135,78 +134,144 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
     setCheckedState(false);
     setIsSuccess(false);
     setShowExplanation(false);
+    setSelectedIdx(null);
   }, [initialItems]);
 
-  // Geser kartu ke kiri (Tap-to-swap)
-  const moveLeft = (index: number) => {
-    if (index === 0) return;
-    sound.playClick();
-    setCurrentOrder(prev => {
-      const next = [...prev];
-      const temp = next[index - 1];
-      next[index - 1] = next[index];
-      next[index] = temp;
-      return next;
+  // Pointer Down Handler
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>, index: number) => {
+    if (e.button !== 0) return; // Only primary button
+    if (!arenaRef.current) return;
+
+    const targetCard = cardRefs.current[index];
+    if (!targetCard) return;
+
+    // Capture pointer on arena container so drag flows continuously even with fast sweeps
+    try {
+      arenaRef.current.setPointerCapture(e.pointerId);
+    } catch {}
+
+    const arenaRect = arenaRef.current.getBoundingClientRect();
+    const cardRect = targetCard.getBoundingClientRect();
+
+    dragPointerOffsetRef.current = {
+      x: e.clientX - cardRect.left,
+      y: e.clientY - cardRect.top,
+    };
+
+    const initialX = cardRect.left - arenaRect.left;
+    const initialY = cardRect.top - arenaRect.top;
+
+    dragStartPointerPosRef.current = { x: e.clientX, y: e.clientY };
+    cardSizeRef.current = { width: cardRect.width, height: cardRect.height };
+
+    setDraggingIdx(index);
+    setHoverSlotIndex(index);
+    setDragPos({ x: initialX, y: initialY });
+  };
+
+  // Pointer Move Handler with STRICT CANVAS CLAMPING
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (draggingIdx === null || !arenaRef.current) return;
+
+    const arenaRect = arenaRef.current.getBoundingClientRect();
+    const cardWidth = cardSizeRef.current.width;
+    const cardHeight = cardSizeRef.current.height;
+
+    // Unclamped new coordinates in arena space
+    const rawX = e.clientX - arenaRect.left - dragPointerOffsetRef.current.x;
+    const rawY = e.clientY - arenaRect.top - dragPointerOffsetRef.current.y;
+
+    // HARD BOUNDARY CLAMPING: Card CANNOT be dragged outside arena canvas!
+    const minX = 0;
+    const maxX = Math.max(0, arenaRect.width - cardWidth);
+    const minY = 0;
+    const maxY = Math.max(0, arenaRect.height - cardHeight);
+
+    const clampedX = Math.max(minX, Math.min(maxX, rawX));
+    const clampedY = Math.max(minY, Math.min(maxY, rawY));
+
+    setDragPos({ x: clampedX, y: clampedY });
+
+    // Detect which slot the dragged card's horizontal center is closest to
+    const draggedCenterX = clampedX + cardWidth / 2;
+    let closestSlot = 0;
+    let minDistance = Infinity;
+
+    slotRefs.current.forEach((slotEl, sIdx) => {
+      if (!slotEl) return;
+      const slotRect = slotEl.getBoundingClientRect();
+      const slotCenterX = slotRect.left - arenaRect.left + slotRect.width / 2;
+      const dist = Math.abs(draggedCenterX - slotCenterX);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestSlot = sIdx;
+      }
     });
-    setCheckedState(false);
-  };
 
-  // Geser kartu ke kanan (Tap-to-swap)
-  const moveRight = (index: number) => {
-    if (index === currentOrder.length - 1) return;
-    sound.playClick();
-    setCurrentOrder(prev => {
-      const next = [...prev];
-      const temp = next[index + 1];
-      next[index + 1] = next[index];
-      next[index] = temp;
-      return next;
-    });
-    setCheckedState(false);
-  };
-
-  // HTML5 Native Drag & Drop Handlers
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    setDraggedIdx(index);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', String(index));
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    if (dragOverIdx !== index) {
-      setDragOverIdx(index);
+    if (closestSlot !== hoverSlotIndex) {
+      sound.playClick();
+      setHoverSlotIndex(closestSlot);
     }
   };
 
-  const handleDragLeave = () => {
-    setDragOverIdx(null);
-  };
+  // Pointer Up Handler: Drop & Reorder or Tap-to-Swap
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (draggingIdx === null) return;
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetIdx: number) => {
-    e.preventDefault();
-    if (draggedIdx === null || draggedIdx === targetIdx) {
-      setDraggedIdx(null);
-      setDragOverIdx(null);
-      return;
+    try {
+      if (arenaRef.current && arenaRef.current.hasPointerCapture(e.pointerId)) {
+        arenaRef.current.releasePointerCapture(e.pointerId);
+      }
+    } catch {}
+
+    const dx = Math.abs(e.clientX - dragStartPointerPosRef.current.x);
+    const dy = Math.abs(e.clientY - dragStartPointerPosRef.current.y);
+    const isClick = dx < 6 && dy < 6;
+
+    if (isClick) {
+      // Tap-to-Swap Mode (Alternative for accessibility & smartboards)
+      if (selectedIdx === null) {
+        setSelectedIdx(draggingIdx);
+        sound.playClick();
+      } else if (selectedIdx === draggingIdx) {
+        setSelectedIdx(null);
+      } else {
+        // Swap selectedIdx and draggingIdx
+        sound.playClick();
+        setCurrentOrder((prev) => {
+          const next = [...prev];
+          const temp = next[selectedIdx];
+          next[selectedIdx] = next[draggingIdx];
+          next[draggingIdx] = temp;
+          return next;
+        });
+        setSelectedIdx(null);
+        setCheckedState(false);
+      }
+    } else {
+      // Genuine Drag-and-Drop Drop Trigger
+      if (hoverSlotIndex !== null && hoverSlotIndex !== draggingIdx) {
+        sound.playClick();
+        setCurrentOrder((prev) => {
+          const next = [...prev];
+          const [moved] = next.splice(draggingIdx, 1);
+          next.splice(hoverSlotIndex, 0, moved);
+          return next;
+        });
+        setCheckedState(false);
+      }
     }
 
-    sound.playClick();
-    setCurrentOrder(prev => {
-      const next = [...prev];
-      const [moved] = next.splice(draggedIdx, 1);
-      next.splice(targetIdx, 0, moved);
-      return next;
-    });
-    setCheckedState(false);
-    setDraggedIdx(null);
-    setDragOverIdx(null);
+    setDraggingIdx(null);
+    setHoverSlotIndex(null);
   };
 
-  const handleDragEnd = () => {
-    setDraggedIdx(null);
-    setDragOverIdx(null);
+  // Helper to compute slot shift distance
+  const getSlotStep = () => {
+    if (slotRefs.current[1] && slotRefs.current[0]) {
+      return slotRefs.current[1].offsetLeft - slotRefs.current[0].offsetLeft;
+    }
+    return (arenaRef.current?.offsetWidth || 800) / currentOrder.length;
   };
 
   // Acak ulang (Shuffle)
@@ -215,6 +280,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
     setCurrentOrder([...initialItems].sort(() => Math.random() - 0.5));
     setCheckedState(false);
     setIsSuccess(false);
+    setSelectedIdx(null);
   };
 
   // Periksa urutan (Check my order)
@@ -241,116 +307,139 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
     }
   };
 
+  const stepDistance = getSlotStep();
+
   return (
     <div
-      className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden ${className}`}
+      className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden select-none ${className}`}
     >
       {/* Header Tantangan Canva */}
-      <div className="text-center max-w-2xl mb-3 sm:mb-4">
-        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
-        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
+      <div className="text-center max-w-2xl shrink-0 mb-1 sm:mb-2">
+        <h3 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">{title}</h3>
+        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">{displayInstructions}</p>
       </div>
 
-      {/* Barisan Kartu Urutan (Full Width Responsive Canvas Grid) */}
+      {/* Main Drag Arena (Clamped to Canvas Bounds) */}
       <div
-        className={`w-full grid ${
-          currentOrder.length <= 4
-            ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4'
-            : currentOrder.length <= 6
-            ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
-            : 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8'
-        } gap-2.5 sm:gap-3.5 my-auto w-full`}
+        ref={arenaRef}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        className="relative w-full flex-1 min-h-[280px] sm:min-h-[330px] md:min-h-[350px] flex items-center justify-center select-none touch-none overflow-hidden my-auto"
       >
-        {currentOrder.map((item, index) => {
-          const isCorrectPosition = checkedState && item.order === index + 1;
-          const isWrongPosition = checkedState && item.order !== index + 1;
-          const isBeingDragged = draggedIdx === index;
-          const isTargetedByDrag = dragOverIdx === index;
+        {/* Horizontal Card Slots Grid */}
+        <div
+          className={`grid ${
+            currentOrder.length <= 4
+              ? 'grid-cols-2 sm:grid-cols-4'
+              : currentOrder.length <= 6
+              ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
+              : 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8'
+          } gap-3 sm:gap-4 w-full max-w-4xl h-full items-stretch relative`}
+        >
+          {currentOrder.map((item, index) => {
+            const isBeingDragged = draggingIdx === index;
+            const isCorrectPosition = checkedState && item.order === index + 1;
+            const isWrongPosition = checkedState && item.order !== index + 1;
 
-          return (
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDragLeave={handleDragLeave}
-              onDrop={(e) => handleDrop(e, index)}
-              onDragEnd={handleDragEnd}
-              className={`flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl bg-white border-2 transition-all duration-200 shadow-sm cursor-grab active:cursor-grabbing select-none ${
-                isBeingDragged ? 'opacity-40 scale-95' : 'opacity-100'
-              } ${isTargetedByDrag ? themeStyle.dragOverRing : ''} ${
-                isCorrectPosition
-                  ? 'border-emerald-500 bg-emerald-50/50 shadow-emerald-100 ring-2 ring-emerald-300'
-                  : isWrongPosition
-                  ? 'border-rose-400 bg-rose-50/50 shadow-rose-100 ring-2 ring-rose-200'
-                  : `border-slate-200 ${themeStyle.cardHover} hover:shadow-md`
-              }`}
-            >
-              {/* Badge Nomor Posisi, Grip Icon & Ikon Status */}
-              <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
-                <div className="flex items-center gap-1.5">
-                  <GripVertical size={14} className="text-slate-400 hover:text-slate-600 cursor-grab" />
-                  <span className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-black text-xs flex items-center justify-center">
-                    {index + 1}
-                  </span>
+            // Merapat Shift Calculation:
+            let shiftX = 0;
+            if (draggingIdx !== null && hoverSlotIndex !== null) {
+              if (hoverSlotIndex > draggingIdx) {
+                // Dragged card moved right; items in between slide LEFT
+                if (index > draggingIdx && index <= hoverSlotIndex) {
+                  shiftX = -stepDistance;
+                }
+              } else if (hoverSlotIndex < draggingIdx) {
+                // Dragged card moved left; items in between slide RIGHT
+                if (index >= hoverSlotIndex && index < draggingIdx) {
+                  shiftX = stepDistance;
+                }
+              }
+            }
+
+            return (
+              <div
+                key={`slot-${index}`}
+                ref={(el) => {
+                  slotRefs.current[index] = el;
+                }}
+                className="relative w-full h-full flex flex-col items-center justify-center min-h-0"
+              >
+                {/* Preview Ghost Slot: Appears at hover target slot showing where card will land */}
+                {draggingIdx !== null && hoverSlotIndex === index && (
+                  <div className="absolute inset-0 rounded-3xl border-2 border-dashed border-emerald-400 bg-emerald-500/10 flex flex-col items-center justify-center p-3 animate-pulse pointer-events-none z-10 shadow-inner">
+                    <Sparkles size={24} className="text-emerald-600 mb-1 animate-spin" style={{ animationDuration: '4s' }} />
+                    <span className="text-xs font-black text-emerald-950 tracking-wider text-center uppercase">
+                      Letakkan di Sini
+                    </span>
+                  </div>
+                )}
+
+                {/* Non-dragged Card with smooth shift merapat animation */}
+                <div
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
+                  style={{
+                    transform: `translate3d(${shiftX}px, 0, 0)`,
+                    transition: isBeingDragged ? 'none' : 'transform 220ms cubic-bezier(0.2, 0, 0, 1)',
+                    willChange: 'transform',
+                    visibility: isBeingDragged ? 'hidden' : 'visible',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  className="w-full h-full"
+                >
+                  <TgcSequenceCard
+                    item={item}
+                    index={index}
+                    isSelected={selectedIdx === index}
+                    isCorrectPosition={isCorrectPosition}
+                    isWrongPosition={isWrongPosition}
+                    theme={theme}
+                    onPointerDown={(e) => handlePointerDown(e, index)}
+                  />
                 </div>
-
-                {checkedState && (
-                  <span>
-                    {isCorrectPosition ? (
-                      <CheckCircle2 size={18} className="text-emerald-600" />
-                    ) : (
-                      <AlertCircle size={18} className="text-rose-500" />
-                    )}
-                  </span>
-                )}
               </div>
+            );
+          })}
+        </div>
 
-              {/* Konten Kartu */}
-              <div className="flex flex-col items-center text-center my-2 space-y-1.5">
-                <span className="text-3xl sm:text-4xl filter drop-shadow-sm select-none">{item.iconEmoji}</span>
-                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">{item.label}</h4>
-                {item.description && (
-                  <p className="text-[11px] sm:text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                    {item.description}
-                  </p>
-                )}
-              </div>
-
-              {/* Tombol Geser Panah (Proyektor & Touchscreen Friendly) */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
-                <button
-                  type="button"
-                  onClick={() => moveLeft(index)}
-                  disabled={index === 0}
-                  className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition cursor-pointer"
-                  title="Geser ke Kiri"
-                >
-                  <ArrowLeft size={14} />
-                </button>
-                <span className="text-[10px] font-bold text-slate-400">Geser</span>
-                <button
-                  type="button"
-                  onClick={() => moveRight(index)}
-                  disabled={index === currentOrder.length - 1}
-                  className="p-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition cursor-pointer"
-                  title="Geser ke Kanan"
-                >
-                  <ArrowRight size={14} />
-                </button>
-              </div>
-            </div>
-          );
-        })}
+        {/* Dedicated 60 FPS Elevated Dragged Card Floating in Real-time (Clamped to Arena) */}
+        {draggingIdx !== null && (
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: cardSizeRef.current.width,
+              height: cardSizeRef.current.height,
+              transform: `translate3d(${dragPos.x}px, ${dragPos.y}px, 0) scale(1.06) rotate(1.5deg)`,
+              zIndex: 50,
+              pointerEvents: 'none',
+              willChange: 'transform',
+              transition: 'none',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+            }}
+          >
+            <TgcSequenceCard
+              item={currentOrder[draggingIdx]}
+              index={draggingIdx}
+              isDragging={true}
+              theme={theme}
+            />
+          </div>
+        )}
       </div>
 
-      {/* Umpan Balik Hasil Validasi */}
+      {/* Validation Result Toast Indicator */}
       {checkedState && (
         <div
-          className={`w-full max-w-md my-4 p-3 rounded-2xl border text-center text-xs sm:text-sm font-bold flex items-center justify-center gap-2 ${
+          className={`w-full max-w-md my-2 p-2.5 rounded-2xl border text-center text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shrink-0 animate-in fade-in duration-200 ${
             isSuccess
-              ? 'bg-emerald-100 border-emerald-300 text-emerald-900'
-              : 'bg-rose-100 border-rose-300 text-rose-900'
+              ? 'bg-emerald-100 border-emerald-300 text-emerald-900 shadow-sm'
+              : 'bg-rose-100 border-rose-300 text-rose-900 shadow-sm'
           }`}
         >
           {isSuccess ? (
@@ -361,21 +450,21 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
           ) : (
             <>
               <AlertCircle size={18} className="text-rose-700 shrink-0" />
-              <span>Ada langkah yang belum tepat. Coba geser kartu yang berwarna merah!</span>
+              <span>Ada langkah yang belum tepat. Coba seret kartu yang berbingkai merah!</span>
             </>
           )}
         </div>
       )}
 
-      {/* Action Buttons Bawah Gaya Canva */}
-      <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mt-4 w-full max-w-lg justify-center">
+      {/* Action Buttons: Chunky Tablet Buttons (Min 48px Height) */}
+      <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0 w-full max-w-lg justify-center mt-2">
         {/* Tombol Shuffle */}
         <button
           type="button"
           onClick={handleShuffle}
-          className="flex-1 min-w-[120px] py-2.5 px-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition"
+          className="h-11 sm:h-12 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95 transition"
         >
-          <RotateCcw size={15} />
+          <RotateCcw size={16} />
           <span>Acak Ulang</span>
         </button>
 
@@ -383,9 +472,9 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
         <button
           type="button"
           onClick={handleCheckOrder}
-          className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-xl ${themeStyle.checkBtn} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition`}
+          className={`h-11 sm:h-12 px-6 rounded-2xl ${themeStyle.checkBtn} font-black text-xs sm:text-sm flex items-center justify-center gap-2 border-2 shadow-md hover:shadow-lg cursor-pointer active:scale-95 transition`}
         >
-          <CheckCircle2 size={16} />
+          <CheckCircle2 size={18} />
           <span>Periksa Urutan</span>
         </button>
 
@@ -395,11 +484,11 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
             type="button"
             onClick={() => {
               sound.playClick();
-              setShowExplanation(prev => !prev);
+              setShowExplanation((prev) => !prev);
             }}
-            className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
+            className="h-11 sm:h-12 px-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
           >
-            <Compass size={15} className="text-emerald-700" />
+            <Compass size={16} className="text-emerald-700" />
             <span>{showExplanation ? 'Tutup Penjelasan' : 'Penjelasan Kak Galih'}</span>
             {showExplanation ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
@@ -408,7 +497,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
 
       {/* PANEL PENJELASAN KAK GALIH: KONDENSASI, EVAPORASI, PRESIPITASI, INFILTRASI (MODAL OVERLAY TANPA OVERFLOW) */}
       {showExplanation && isWaterCycle && (
-        <div className="absolute inset-0 z-30 bg-white/98 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 border-emerald-300 p-4 sm:p-6 shadow-2xl flex flex-col justify-between overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
+        <div className="absolute inset-0 z-50 bg-white/98 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 border-emerald-300 p-4 sm:p-6 shadow-2xl flex flex-col justify-between overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
           {/* Header Penjelasan dengan Avatar Kak Galih & Tombol Tutup */}
           <div className="flex items-center justify-between gap-3 pb-3 border-b border-emerald-100 shrink-0">
             <div className="flex items-center gap-3">

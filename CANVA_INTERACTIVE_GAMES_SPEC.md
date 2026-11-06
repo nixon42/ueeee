@@ -36,17 +36,17 @@ Berikut adalah 4 jenis game interaktif Canva Education beserta spesifikasi tekni
 #### 1. Tujuan Pedagogis
 Melatih kemampuan siswa dalam memahami **proses algoritmik, siklus alamiah, atau linimasa sejarah** yang memiliki tahapan berurutan (misal: Tahapan Fotosintesis, Metamorfosis Kupu-Kupu, Siklus Air, Kronologi Kemerdekaan RI).
 
-#### 2. Tampilan & Interaksi
-- **Kartu Horizontal / Vertikal:** Tiap kartu memiliki nomor langkah tersembunyi, ikon visual, dan teks ringkas.
+#### 2. Tampilan & Interaksi (Standar Chess.com & Kartu TCG)
+- **Desain Kartu TCG (Trading Card Game):** Tiap kartu berwujud kartu koleksi indah dengan border foil emas, visual art penuh (high-res SVG), badge materi, dan kotak penjelasan proses (*lore plate*). Bebas dari header angka kaku (`:: 1`), grip dots, atau tombol panah geser.
 - **Dukungan Dua Cara Interaksi (Proyektor & Layar Sentuh):**
-  1. *Drag & Drop:* Menyeret kartu menggunakan *drag handle* ikon baris strip (`GripVertical`).
-  2. *Tap-to-Swap / Panah Geser:* Tombol panah kiri/kanan (`[ ← ]` `[ → ]`) di setiap kartu untuk memudahkan guru menggeser posisi dengan tongkat proyektor atau TV touchscreen tanpa perlu menyeret panjang.
-- **Tombol Kontrol Bawah:**
-  - `[ 🔀 Acak Ulang (Shuffle) ]`: Mengacak ulang susunan kartu.
-  - `[ ✨ Periksa Urutan (Check my order) ]`: Memvalidasi urutan saat ini.
+  1. *Pointer Drag (Chess.com Style):* Menyeret kartu secara real-time 60 FPS menggunakan Pointer Events (`setPointerCapture`, `translate3d`). Kartu terkunci di dalam canvas (*strictly clamped*) dan kartu lain bergeser otomatis membuka celah (*merapat slide animation*) disertai slot preview (*Letakkan di Sini*).
+  2. *Tap-to-Swap:* Mengetuk kartu A lalu mengetuk kartu B untuk bertukar posisi secara instan tanpa perlu menyeret panjang di layar proyektor besar.
+- **Tombol Kontrol Bawah (Tablet First):**
+  - `[ 🔀 Acak Ulang (Shuffle) ]`: Mengacak ulang susunan kartu (tinggi 48px).
+  - `[ ✨ Periksa Urutan (Check my order) ]`: Memvalidasi urutan saat ini (tinggi 48px).
 - **Status Umpan Balik:**
-  - Kartu yang sudah di posisi benar menyala border hijau lembut (`border-emerald-500 bg-emerald-50`).
-  - Kartu yang keliru menyala border oranye lembut (`border-amber-400 bg-amber-50`).
+  - Kartu yang sudah di posisi benar menyala border hijau emas berkilau (`border-emerald-500 shadow-emerald-200 ring-2 ring-emerald-400`).
+  - Kartu yang keliru menyala border merah lembut (`border-rose-400 ring-2 ring-rose-300`).
 
 #### 3. Schema Data TypeScript
 ```typescript
@@ -168,6 +168,7 @@ Untuk menjaga estetika Canva yang bersih, bersahabat, dan flat:
 - **HARD RULE: Zero-Scroll & Anti-Overflow pada Canvas Slide:** Canvas panggung presentasi WAJIB 100% bebas scroll (`overflow-hidden`). DILARANG KERAS membiarkan ada elemen yang meluap (*overflow*) atau memicu munculnya scrollbar vertikal/horizontal. Seluruh elemen materi (infografis, diagram SVG, kartu tahapan proses, opsi jawaban) harus fit secara proporsional di dalam viewport proyektor (`flex-1 min-h-0`). Jika ada detail konsep lanjutan, tampilkan via overlay/modal terpisah dengan tombol tutup.
 - **HARD RULE: Larangan Switcher/Segmented Tab Kerdil di Dalam Slide — Desain UI/UX Game Tablet:** DILARANG KERAS membuat widget switcher/tab segmented kerdil (`[ Mode A | Mode B ]`) atau tombol *perbesar zoom* kecil di dalam slide. Komponen desktop seperti ini terlalu kecil, sulit dibaca, dan tidak ergonomis pada layar sentuh tablet atau smartboard interaktif di kelas. Desain slide wajib terfokus dan deterministik (jika ada infografis, tampilkan infografis langsung; jika kartu konsep, tampilkan kartu konsep langsung). Setiap tombol interaktif pada slide wajib berstandar permainan tablet: target sentuh minimal 44px–48px, sudut membulat lebar (`rounded-2xl`), tipografi tebal (`font-black`), kontras tinggi, dan efek sentuh tactile (`active:scale-95`).
 - **HARD RULE: Larangan Tombol Aksi Mini/Pill Kerdil di Dalam Canvas — Standar Chunky Tablet Buttons:** Seluruh tombol aksi interaktif di dalam slide (seperti selector tahapan daur air, kontrol langkah mini-game, dan hotspot materi) WAJIB bertaraf **Tablet & Smartboard First** dengan tinggi target sentuh minimal **48px–56px** (atau minimal 44px–48px pada grid padat). DILARANG KERAS membuat tombol aksi berukuran chip tipis atau pill kerdil (`py-0.5`, `py-1`, teks 10px-11px) yang mengambang tanpa dock aksi. Tombol aksi wajib memiliki affordance sentuh yang tegas: `rounded-2xl`, border 2px solid tebal, tipografi `font-black text-xs sm:text-sm`, shadow fisik, dan efek pegas sentuh (`active:scale-95`).
+- **HARD RULE: Standar Chess.com Pointer Drag & Desain Kartu TCG pada Sequence Game:** DILARANG KERAS menggunakan drag-and-drop native HTML5 (`draggable`) dengan ghost transparan, header angka kaku (`:: 1`), atau tombol panah geser footer (`[ ← ] Geser [ → ]`) pada kartu Sequence. Mini-game Sequence WAJIB menggunakan engine **Pointer Events** (`setPointerCapture`) dengan batas sentuh terkunci di dalam canvas (`strictly clamped`). Kartu lain wajib bergeser otomatis membuka slot kosong (*merapat slide animation*) dan menampilkan preview gap (`Letakkan di Sini`). Desain kartu wajib bertaraf **Trading Card Game (TCG)**: visual art penuh/berbingkai indah, tanpa nomor posisi kaku, tanpa grip dots, dan mendukung tap-to-swap untuk kemudahan aksesibilitas kelas.
 
 
 ---
