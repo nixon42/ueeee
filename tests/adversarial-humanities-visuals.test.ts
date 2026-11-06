@@ -603,7 +603,7 @@ describe('Adversarial Verification: Humanities Visual SVGs & Deck Navigation Res
         );
 
         expect(html).toContain('Laporan Hasil Misi Arsitektur Jembatan:');
-        expect(html).toContain('Buka Lembar Diskusi Guru &amp; Refleksi');
+        expect(html).not.toContain('Buka Lembar Diskusi Guru');
       }
     });
 

@@ -1,27 +1,20 @@
 import React from 'react';
-import { ChevronRight, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { StoryResolutionSlide as StoryResolutionSlideData } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
-import { sound } from '@/lib/sound';
 
 export interface StoryResolutionSlideProps {
   slide: StoryResolutionSlideData;
   themeColor: PresentationThemeKey;
   challengesState?: Record<string, boolean>;
-  onNext: () => void;
+  onNext?: () => void;
 }
 
 export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
   slide,
   themeColor,
-  onNext,
 }) => {
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
-
-  const handleAction = () => {
-    sound.playClick();
-    onNext();
-  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center space-y-5 sm:space-y-6 my-auto animate-in fade-in duration-300">
@@ -61,16 +54,6 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
           &ldquo;{slide.resolutionStory}&rdquo;
         </p>
       </div>
-
-      {/* Next Button */}
-      <button
-        type="button"
-        onClick={handleAction}
-        className={`py-3.5 px-8 rounded-2xl ${theme.btnPrimary} font-black text-sm sm:text-base shadow-md flex items-center gap-2 cursor-pointer transition transform hover:scale-105 active:scale-95`}
-      >
-        <span>{slide.actionButtonText || 'Buka Lembar Diskusi Guru & Refleksi'}</span>
-        <ChevronRight size={18} />
-      </button>
     </div>
   );
 };
