@@ -12,7 +12,7 @@ interface Props {
   onToggleFavorite?: (gameId: string) => void;
 }
 
-export const GameCard: React.FC<Props> = ({
+const GameCardComponent: React.FC<Props> = ({
   game,
   onPlay,
   onOpenProlog,
@@ -152,3 +152,5 @@ export const GameCard: React.FC<Props> = ({
     </div>
   );
 };
+
+export const GameCard = React.memo(GameCardComponent);

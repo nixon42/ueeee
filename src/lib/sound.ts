@@ -1,6 +1,9 @@
+import { safeStorage } from './safeStorage';
+
 /**
  * Web Audio API synthesizer mandiri untuk efektivitas tinggi dan tanpa aset audio eksternal.
  * Menyediakan efek suara dadu, lompatan pion, tangga, ular, kuis, dan fanfare.
+ * Dilengkapi resource lifecycle management (auto-suspend saat tab di-background/minimized).
  */
 class SoundEffects {
   private ctx: AudioContext | null = null;
@@ -9,13 +12,28 @@ class SoundEffects {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('ueeee_sound_enabled');
+      const saved = safeStorage.getItem('ueeee_sound_enabled');
       if (saved !== null) {
         this.soundEnabled = saved === 'true';
       }
-      const savedVol = localStorage.getItem('ueeee_sound_volume');
+      const savedVol = safeStorage.getItem('ueeee_sound_volume');
       if (savedVol !== null) {
         this.volume = parseFloat(savedVol) || 0.5;
+      }
+
+      // Lifecycle management: auto-suspend Web Audio Context when tab is inactive to free hardware & battery
+      if (typeof document !== 'undefined') {
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            if (this.ctx && this.ctx.state === 'running') {
+              this.ctx.suspend().catch(() => {});
+            }
+          } else {
+            if (this.ctx && this.ctx.state === 'suspended' && this.soundEnabled) {
+              this.ctx.resume().catch(() => {});
+            }
+          }
+        });
       }
     }
   }
@@ -32,9 +50,7 @@ class SoundEffects {
 
   public toggleSound(): boolean {
     this.soundEnabled = !this.soundEnabled;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('ueeee_sound_enabled', String(this.soundEnabled));
-    }
+    safeStorage.setItem('ueeee_sound_enabled', String(this.soundEnabled));
     return this.soundEnabled;
   }
 
@@ -44,9 +60,7 @@ class SoundEffects {
 
   public setVolume(vol: number) {
     this.volume = Math.max(0, Math.min(1, vol));
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('ueeee_sound_volume', String(this.volume));
-    }
+    safeStorage.setItem('ueeee_sound_volume', String(this.volume));
   }
 
   public getVolume(): number {

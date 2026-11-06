@@ -1,15 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import { Header } from '@/components/dashboard/Header';
 import { CategoryPills } from '@/components/dashboard/CategoryPills';
 import { FeaturedBanner } from '@/components/dashboard/FeaturedBanner';
 import { GameGrid } from '@/components/dashboard/GameGrid';
-import { UlarTanggaModal } from '@/games/ular-tangga/UlarTanggaModal';
-import { PointAndClickModal } from '@/games/point-and-click/PointAndClickModal';
-import { PuzzleModal } from '@/games/puzzle/PuzzleModal';
-import { ChessPuzzleModal } from '@/games/chess-puzzle';
-import { InteractiveStoryPresentationModal } from '@/components/canva-games';
-import { TeacherSheetModal } from '@/components/modals/TeacherSheetModal';
-import { PrologModal } from '@/components/dashboard/PrologModal';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { GAMES_CATALOG } from '@/data/games-catalog';
 import { GameItem, SubjectCategory, GradeLevel } from '@/types/game';
@@ -19,6 +12,16 @@ import { Heart, Sparkles, BookOpen } from 'lucide-react';
 import { LogoIcon } from '@/components/common/Logo';
 import { isGameMatchingSearch } from '@/lib/search';
 import { useFavorites, useGameStats } from '@/business';
+import { safeStorage } from '@/lib/safeStorage';
+
+// Performance: Code splitting heavy game modals with dynamic lazy loading
+const UlarTanggaModal = lazy(() => import('@/games/ular-tangga/UlarTanggaModal').then(m => ({ default: m.UlarTanggaModal })));
+const PointAndClickModal = lazy(() => import('@/games/point-and-click/PointAndClickModal').then(m => ({ default: m.PointAndClickModal })));
+const PuzzleModal = lazy(() => import('@/games/puzzle/PuzzleModal').then(m => ({ default: m.PuzzleModal })));
+const ChessPuzzleModal = lazy(() => import('@/games/chess-puzzle').then(m => ({ default: m.ChessPuzzleModal })));
+const InteractiveStoryPresentationModal = lazy(() => import('@/components/canva-games').then(m => ({ default: m.InteractiveStoryPresentationModal })));
+const TeacherSheetModal = lazy(() => import('@/components/modals/TeacherSheetModal').then(m => ({ default: m.TeacherSheetModal })));
+const PrologModal = lazy(() => import('@/components/dashboard/PrologModal').then(m => ({ default: m.PrologModal })));
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -31,11 +34,7 @@ export default function App() {
   const { recordPlay } = useGameStats();
 
   const [recentGameIds, setRecentGameIds] = useState<string[]>(() => {
-    try {
-      return JSON.parse(localStorage.getItem('ueeee_recent') || '[]');
-    } catch {
-      return [];
-    }
+    return safeStorage.getJson<string[]>('ueeee_recent', []);
   });
 
   // Game Modals state
@@ -78,7 +77,7 @@ export default function App() {
     setRecentGameIds(prev => {
       const filtered = prev.filter(id => id !== gameId);
       const updated = [gameId, ...filtered].slice(0, 3);
-      localStorage.setItem('ueeee_recent', JSON.stringify(updated));
+      safeStorage.setJson('ueeee_recent', updated);
       return updated;
     });
   };
@@ -280,57 +279,59 @@ export default function App() {
         />
       </main>
 
-      {/* Game Modals */}
-      {isUlarTanggaOpen && (
-        <UlarTanggaModal
-          isOpen={isUlarTanggaOpen}
-          onClose={() => closeGameModal('ular')}
-          defaultSubject={activeUlarTanggaSubject}
+      {/* Game & Feature Modals (Lazy Loaded for minimal initial bundle) */}
+      <Suspense fallback={null}>
+        {isUlarTanggaOpen && (
+          <UlarTanggaModal
+            isOpen={isUlarTanggaOpen}
+            onClose={() => closeGameModal('ular')}
+            defaultSubject={activeUlarTanggaSubject}
+          />
+        )}
+        {isPointAndClickOpen && (
+          <PointAndClickModal
+            isOpen={isPointAndClickOpen}
+            onClose={() => closeGameModal('point')}
+            defaultSceneId={activePointAndClickScene}
+          />
+        )}
+        {isPuzzleOpen && (
+          <PuzzleModal
+            isOpen={isPuzzleOpen}
+            onClose={() => closeGameModal('puzzle')}
+          />
+        )}
+        {isChessOpen && (
+          <ChessPuzzleModal
+            isOpen={isChessOpen}
+            onClose={() => closeGameModal('chess')}
+          />
+        )}
+        {isPresentationOpen && (
+          <InteractiveStoryPresentationModal
+            isOpen={isPresentationOpen}
+            onClose={() => closeGameModal('presentation')}
+            deck={activePresentationDeck || undefined}
+            initialSlide={presentationInitialSlide}
+            onComplete={() => {
+              if (activePresentationDeck) {
+                recordPlay(activePresentationDeck.gameId, true, 180).catch(() => {});
+              }
+            }}
+          />
+        )}
+        <TeacherSheetModal
+          isOpen={isTeacherModalOpen}
+          onClose={() => setIsTeacherModalOpen(false)}
         />
-      )}
-      {isPointAndClickOpen && (
-        <PointAndClickModal
-          isOpen={isPointAndClickOpen}
-          onClose={() => closeGameModal('point')}
-          defaultSceneId={activePointAndClickScene}
+        <PrologModal
+          game={activePrologGame}
+          isOpen={!!activePrologGame}
+          onClose={() => setActivePrologGame(null)}
+          onPlay={(game) => launchGame(game, 'presentation')}
+          onPlayClassic={(game) => launchGame(game, 'arcade')}
         />
-      )}
-      {isPuzzleOpen && (
-        <PuzzleModal
-          isOpen={isPuzzleOpen}
-          onClose={() => closeGameModal('puzzle')}
-        />
-      )}
-      {isChessOpen && (
-        <ChessPuzzleModal
-          isOpen={isChessOpen}
-          onClose={() => closeGameModal('chess')}
-        />
-      )}
-      {isPresentationOpen && (
-        <InteractiveStoryPresentationModal
-          isOpen={isPresentationOpen}
-          onClose={() => closeGameModal('presentation')}
-          deck={activePresentationDeck || undefined}
-          initialSlide={presentationInitialSlide}
-          onComplete={() => {
-            if (activePresentationDeck) {
-              recordPlay(activePresentationDeck.gameId, true, 180).catch(() => {});
-            }
-          }}
-        />
-      )}
-      <TeacherSheetModal
-        isOpen={isTeacherModalOpen}
-        onClose={() => setIsTeacherModalOpen(false)}
-      />
-      <PrologModal
-        game={activePrologGame}
-        isOpen={!!activePrologGame}
-        onClose={() => setActivePrologGame(null)}
-        onPlay={(game) => launchGame(game, 'presentation')}
-        onPlayClassic={(game) => launchGame(game, 'arcade')}
-      />
+      </Suspense>
 
       {/* Clean Canva-style Footer */}
       <footer className="w-full border-t border-slate-200/80 bg-white py-6 mb-14 sm:mb-0">

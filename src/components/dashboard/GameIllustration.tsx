@@ -7,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-export const GameIllustration: React.FC<Props> = ({ gameId, className = '' }) => {
+const GameIllustrationComponent: React.FC<Props> = ({ gameId, className = '' }) => {
   // Render specific rich illustration based on gameId
   switch (gameId) {
     // 1. Ekspedisi Satwa Endemik (Hutan Hujan & Fauna)
@@ -924,3 +924,5 @@ export const GameIllustration: React.FC<Props> = ({ gameId, className = '' }) =>
       );
   }
 };
+
+export const GameIllustration = React.memo(GameIllustrationComponent);

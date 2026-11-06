@@ -5,6 +5,7 @@
  */
 
 import { SessionProfile } from '../models';
+import { safeStorage } from '@/lib/safeStorage';
 
 const STORAGE_KEY_SESSION = 'ueeee_session_profile_v1';
 
@@ -23,16 +24,9 @@ class SessionService {
   }
 
   private loadOrInitProfile(): SessionProfile {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY_SESSION);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.sessionId) {
-          return parsed;
-        }
-      }
-    } catch {
-      // Ignore JSON parse errors and generate fresh
+    const stored = safeStorage.getJson<SessionProfile | null>(STORAGE_KEY_SESSION, null);
+    if (stored && typeof stored.sessionId === 'string' && stored.sessionId.length > 0) {
+      return stored;
     }
 
     const newProfile: SessionProfile = {
@@ -42,12 +36,7 @@ class SessionService {
       createdAt: new Date().toISOString(),
     };
 
-    try {
-      localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(newProfile));
-    } catch {
-      // Ignore localStorage write failure in incognito/restricted modes
-    }
-
+    safeStorage.setJson(STORAGE_KEY_SESSION, newProfile);
     return newProfile;
   }
 
@@ -64,11 +53,7 @@ class SessionService {
       ...this.currentProfile,
       ...updates,
     };
-    try {
-      localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(this.currentProfile));
-    } catch {
-      // Ignore
-    }
+    safeStorage.setJson(STORAGE_KEY_SESSION, this.currentProfile);
     return { ...this.currentProfile };
   }
 }

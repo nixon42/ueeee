@@ -11,6 +11,7 @@ export * from './services/favorites.service';
 export * from './services/stats.service';
 export * from './services/teacher.service';
 export * from './services/sync.service';
+export * from '@/lib/safeStorage';
 export * from './hooks/useCloudSync';
 export * from './hooks/useFavorites';
 export * from './hooks/useGameProgress';

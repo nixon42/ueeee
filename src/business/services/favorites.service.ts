@@ -5,6 +5,7 @@
  */
 
 import { apiFetchFavorites, apiAddFavorite, apiRemoveFavorite } from '@/api';
+import { safeStorage } from '@/lib/safeStorage';
 import { sessionService } from './session.service';
 
 const STORAGE_KEY_FAVORITES = 'ueeee_favorites';
@@ -21,26 +22,15 @@ class FavoritesService {
   }
 
   private loadLocalFavorites(): string[] {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY_FAVORITES);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          return parsed;
-        }
-      }
-    } catch {
-      // Storage read error
+    const stored = safeStorage.getJson<string[] | null>(STORAGE_KEY_FAVORITES, null);
+    if (Array.isArray(stored)) {
+      return stored.filter(item => typeof item === 'string' && item.length <= 128);
     }
     return [];
   }
 
   private saveLocalFavorites(favorites: string[]): void {
-    try {
-      localStorage.setItem(STORAGE_KEY_FAVORITES, JSON.stringify(favorites));
-    } catch {
-      // Storage write error
-    }
+    safeStorage.setJson(STORAGE_KEY_FAVORITES, favorites);
   }
 
   private notifyListeners(): void {
