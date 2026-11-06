@@ -73,7 +73,7 @@ export const Header: React.FC<Props> = ({
                 }
               }}
               className="px-3.5 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 hover:from-purple-800 hover:to-indigo-700 text-white shadow-md flex items-center gap-1.5 transition cursor-pointer border border-purple-400/60 ring-2 ring-purple-300/40"
-              title={`Buka Dashboard Superadmin (${user.email})`}
+              title="Buka Dashboard Superadmin"
             >
               <ShieldCheck size={15} className="text-amber-300 shrink-0" />
               <span>Dashboard Superadmin</span>
