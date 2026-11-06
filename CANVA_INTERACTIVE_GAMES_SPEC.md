@@ -165,6 +165,7 @@ Untuk menjaga estetika Canva yang bersih, bersahabat, dan flat:
   - Aksen Quiz: Rose pink (`bg-pink-600`, `bg-pink-50`, border `border-pink-200`).
 - **Larangan Pill Status Percakapan AI ("Berbicara...", dsb):** DILARANG KERAS menyematkan badge teks seperti "Berbicara...", "Sedang Bicara...", atau animasi ping status pada balon ucapan karakter mentor. Balon dialog komik dan animasi SVG karakter sudah cukup menyampaikan konteks percakapan secara natural tanpa clutter visual.
 - **Larangan Tombol Next Slide di Dalam Konten Slide:** Navigasi antarslide dipusatkan secara eksklusif pada **Footer Navigation Bar panggung presentasi** (`[ < Slide Sebelumnya ]` dan `[ Slide Berikutnya > ]`). DILARANG KERAS menempatkan tombol "Next Slide", "Buka Materi Selanjutnya", atau tombol CTA pergantian slide di dalam konten slide atau di dalam balon dialog karakter. Hal tersebut menyebabkan duplikasi kontrol navigasi dan mengotori estetika layout presentasi.
+- **HARD RULE: Zero-Scroll & Anti-Overflow pada Canvas Slide:** Canvas panggung presentasi WAJIB 100% bebas scroll (`overflow-hidden`). DILARANG KERAS membiarkan ada elemen yang meluap (*overflow*) atau memicu munculnya scrollbar vertikal/horizontal. Seluruh elemen materi (infografis, diagram SVG, kartu tahapan proses, opsi jawaban) harus fit secara proporsional di dalam viewport proyektor (`flex-1 min-h-0`). Jika ada detail konsep lanjutan, tampilkan via overlay/modal terpisah dengan tombol tutup.
 
 
 ---

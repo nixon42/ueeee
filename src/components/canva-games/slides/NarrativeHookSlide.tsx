@@ -21,7 +21,7 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   const isKakGalih = activeMentor.name.toLowerCase().includes('galih');
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-between max-w-4xl mx-auto my-auto py-2 sm:py-4 space-y-4 sm:space-y-6 animate-in fade-in duration-300 relative z-10">
+    <div className="w-full h-full flex flex-col items-center justify-between max-w-4xl mx-auto my-auto py-1 sm:py-3 space-y-2 sm:space-y-4 animate-in fade-in duration-300 relative z-10 overflow-hidden">
       {/* Chapter Tag & Mission Title */}
       <div className="text-center space-y-1 sm:space-y-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-emerald-200/80 shadow-2xs">

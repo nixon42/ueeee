@@ -24,7 +24,7 @@ export const ReflectionSparkSlide: React.FC<ReflectionSparkSlideProps> = ({
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
 
   return (
-    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-5 sm:space-y-6 animate-in fade-in duration-300">
+    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-3 sm:space-y-4 animate-in fade-in duration-300 overflow-hidden">
       {/* Header */}
       <div className="text-center space-y-1">
         <span

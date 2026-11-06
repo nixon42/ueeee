@@ -104,27 +104,27 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const activeHotspotInfo = WATER_CYCLE_HOTSPOTS.find((h) => h.id === selectedHotspot);
 
   return (
-    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-3 sm:space-y-4 animate-in fade-in duration-300 relative z-10">
+    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-2 sm:space-y-3 animate-in fade-in duration-300 relative z-10 overflow-hidden">
       {/* Header */}
-      <div className="text-center space-y-1">
+      <div className="text-center space-y-1 shrink-0">
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/80 border border-slate-200 shadow-2xs">
           <Sparkles size={12} className={theme.textPrimary} />
           <span className={`text-[11px] sm:text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}>
             {slide.chapterBadge || 'BABAK 2: KONSEP DASAR PEMBELAJARAN'}
           </span>
         </div>
-        <h2 className="text-xl sm:text-3xl font-black text-slate-900 leading-tight">
+        <h2 className="text-lg sm:text-2xl font-black text-slate-900 leading-tight">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto">
+          <p className="text-xs text-slate-500 font-semibold max-w-2xl mx-auto truncate sm:whitespace-normal">
             {slide.subtitle}
           </p>
         )}
 
         {/* View Mode Switcher when Illustration is Available */}
         {IllustrationComponent && (
-          <div className="pt-1.5 flex items-center justify-center gap-2">
+          <div className="pt-1 flex items-center justify-center gap-2">
             <div className="bg-slate-100 p-0.5 rounded-xl border border-slate-200 inline-flex items-center">
               <button
                 type="button"
@@ -173,14 +173,14 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
 
       {/* Main Content Area */}
       {viewMode === 'infographic' && IllustrationComponent ? (
-        <div className="flex-1 w-full flex flex-col justify-center my-auto space-y-2.5">
-          {/* Framed Interactive High-Res Looping SVG Infographic */}
-          <div className="w-full max-h-[46vh] sm:max-h-[50vh] aspect-[16/10] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-emerald-300/80 shadow-lg bg-emerald-950/5 relative flex items-center justify-center">
+        <div className="flex-1 min-h-0 w-full flex flex-col justify-center my-auto space-y-1.5 overflow-hidden">
+          {/* Framed Interactive High-Res Looping SVG Infographic (Strictly bounded to available height) */}
+          <div className="flex-1 min-h-0 w-full max-h-[38vh] sm:max-h-[44vh] aspect-[16/10] mx-auto rounded-2xl overflow-hidden border-2 border-emerald-300/80 shadow-md bg-emerald-950/5 relative flex items-center justify-center">
             <IllustrationComponent className="w-full h-full object-contain" />
           </div>
 
           {/* Interactive Phase Badges Bar */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 shrink-0">
             {WATER_CYCLE_HOTSPOTS.map((hotspot) => {
               const isSelected = selectedHotspot === hotspot.id;
               return (
@@ -191,7 +191,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                     sound.playClick();
                     setSelectedHotspot(isSelected ? null : hotspot.id);
                   }}
-                  className={`px-2.5 sm:px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer border flex items-center gap-1 ${
+                  className={`px-2.5 py-0.5 sm:py-1 rounded-xl text-xs font-bold transition cursor-pointer border flex items-center gap-1 ${
                     isSelected
                       ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs scale-105'
                       : 'bg-white/90 hover:bg-emerald-50 text-slate-700 border-slate-200 hover:border-emerald-300'
@@ -205,14 +205,14 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
 
           {/* Quick Active Hotspot Callout Box */}
           {activeHotspotInfo && (
-            <div className="bg-emerald-50/90 border border-emerald-200 p-2.5 sm:p-3 rounded-2xl text-left animate-in fade-in duration-200">
-              <div className="flex items-center gap-2 mb-1">
+            <div className="bg-emerald-50/90 border border-emerald-200 px-3 py-1.5 rounded-xl text-left animate-in fade-in duration-200 shrink-0">
+              <div className="flex items-center gap-2 mb-0.5">
                 <span className="font-extrabold text-xs text-emerald-900">{activeHotspotInfo.label}</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
                   {activeHotspotInfo.sub}
                 </span>
               </div>
-              <p className="text-xs text-emerald-950 font-medium leading-relaxed">{activeHotspotInfo.desc}</p>
+              <p className="text-xs text-emerald-950 font-medium leading-tight">{activeHotspotInfo.desc}</p>
             </div>
           )}
         </div>
@@ -221,9 +221,9 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
         <div
           className={`grid ${
             isFourCards
-              ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4'
-              : 'grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6'
-          } my-auto w-full`}
+              ? 'grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3'
+              : 'grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4'
+          } flex-1 min-h-0 items-stretch my-auto w-full overflow-hidden`}
         >
           {slide.cards.map((card, idx) => {
             const cardColor =
@@ -234,20 +234,22 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             return (
               <div
                 key={card.id || `card-${idx}`}
-                className={`p-4 sm:p-5 rounded-3xl ${cardColor.bg} border-2 ${cardColor.border} shadow-sm flex flex-col space-y-2 hover:shadow-md transition bg-white/90 backdrop-blur-xs`}
+                className={`p-3 sm:p-4 rounded-2xl ${cardColor.bg} border-2 ${cardColor.border} shadow-xs flex flex-col justify-between hover:shadow-sm transition bg-white/90 backdrop-blur-xs overflow-hidden`}
               >
-                <span className="text-3xl sm:text-4xl filter drop-shadow-sm select-none">
-                  {card.iconEmoji || '📘'}
-                </span>
-                {card.levelBadge && (
-                  <span className={`text-[11px] font-black uppercase tracking-wider ${cardColor.badge}`}>
-                    {card.levelBadge}
+                <div className="space-y-1">
+                  <span className="text-2xl sm:text-3xl filter drop-shadow-xs select-none">
+                    {card.iconEmoji || '📘'}
                   </span>
-                )}
-                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">
-                  {card.title}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed font-medium flex-1">
+                  {card.levelBadge && (
+                    <div className={`text-[10px] font-black uppercase tracking-wider ${cardColor.badge}`}>
+                      {card.levelBadge}
+                    </div>
+                  )}
+                  <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug">
+                    {card.title}
+                  </h3>
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-medium mt-1">
                   {card.description}
                 </p>
               </div>
@@ -257,9 +259,9 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       )}
 
       {/* Teacher Speaker Prompt Banner */}
-      <div className="bg-white/90 backdrop-blur-xs p-3 sm:p-3.5 rounded-2xl border border-slate-200/90 flex items-center gap-3 text-xs sm:text-sm text-slate-700 shrink-0 shadow-2xs">
-        <Lightbulb className="text-amber-500 shrink-0" size={18} />
-        <span>
+      <div className="bg-white/90 backdrop-blur-xs px-3 py-2 rounded-xl border border-slate-200/90 flex items-center gap-2.5 text-xs text-slate-700 shrink-0 shadow-2xs">
+        <Lightbulb className="text-amber-500 shrink-0" size={16} />
+        <span className="line-clamp-2">
           <strong>Panduan Guru di Kelas:</strong>{' '}
           {slide.teacherNotes ||
             'Ajak siswa mengamati animasi loop pergerakan molekul air: dari penguapan sungai oleh energi surya, pembentukan awan dingin di pegunungan, hingga turunnya hujan yang diserap oleh akar pohon.'}

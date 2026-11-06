@@ -189,7 +189,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
 
   return (
     <div
-      className={`w-full h-full flex flex-col items-center justify-between relative ${className}`}
+      className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden ${className}`}
     >
       {/* Header Tantangan Flashcard */}
       <div className="text-center max-w-xl mb-4 sm:mb-6">

@@ -17,7 +17,7 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center space-y-5 sm:space-y-6 my-auto animate-in fade-in duration-300">
+    <div className="w-full h-full flex flex-col items-center justify-center max-w-4xl mx-auto text-center space-y-4 sm:space-y-5 my-auto animate-in fade-in duration-300 overflow-hidden">
       {/* Hero Trophy Icon */}
       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-900 flex items-center justify-center text-4xl sm:text-5xl shadow-xl shadow-amber-200 border-4 border-white ring-4 ring-amber-100">
         {slide.celebrationEmoji || '🏆'}

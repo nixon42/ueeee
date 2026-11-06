@@ -243,7 +243,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
 
   return (
     <div
-      className={`w-full h-full flex flex-col items-center justify-between relative ${className}`}
+      className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden ${className}`}
     >
       {/* Header Tantangan Canva */}
       <div className="text-center max-w-2xl mb-3 sm:mb-4">
@@ -406,79 +406,88 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
         )}
       </div>
 
-      {/* PANEL PENJELASAN KAK GALIH: KONDENSASI, EVAPORASI, PRESIPITASI, INFILTRASI */}
+      {/* PANEL PENJELASAN KAK GALIH: KONDENSASI, EVAPORASI, PRESIPITASI, INFILTRASI (MODAL OVERLAY TANPA OVERFLOW) */}
       {showExplanation && isWaterCycle && (
-        <div className="w-full max-w-3xl mt-5 p-4 sm:p-6 bg-white/95 backdrop-blur-md rounded-3xl border-2 border-emerald-200/90 shadow-xl animate-in fade-in slide-in-from-bottom-3 duration-300 text-left relative z-20">
-          {/* Header Penjelasan dengan Avatar Kak Galih */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pb-4 border-b border-emerald-100">
-            <KakGalihAvatar size="sm" mood="explaining" />
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-wider text-emerald-700">
-                  Ulasan Konsep Kunci Sains
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">
-                  Kak Galih Menjelaskan
-                </span>
+        <div className="absolute inset-0 z-30 bg-white/98 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 border-emerald-300 p-4 sm:p-6 shadow-2xl flex flex-col justify-between overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
+          {/* Header Penjelasan dengan Avatar Kak Galih & Tombol Tutup */}
+          <div className="flex items-center justify-between gap-3 pb-3 border-b border-emerald-100 shrink-0">
+            <div className="flex items-center gap-3">
+              <KakGalihAvatar size="sm" mood="explaining" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-emerald-700">
+                    Ulasan Konsep Kunci Sains
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">
+                    Kak Galih Menjelaskan
+                  </span>
+                </div>
+                <h4 className="text-sm sm:text-base font-black text-slate-900 mt-0.5">
+                  Misteri Daur Air Lembah Cendrawasih Terpecahkan!
+                </h4>
               </div>
-              <p className="text-xs sm:text-sm text-slate-700 font-semibold mt-1 leading-relaxed">
-                &ldquo;Hebat sekali! Urutan tahapan daur air sudah tepat. Sekarang mari kita pahami bersama rahasia ilmiah di balik setiap prosesnya:&rdquo;
-              </p>
             </div>
+            <button
+              type="button"
+              onClick={() => setShowExplanation(false)}
+              className="py-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 cursor-pointer transition shrink-0"
+            >
+              <span>✕ Tutup</span>
+            </button>
           </div>
 
           {/* 4 Kolom Penjelasan Detail: Evaporasi, Kondensasi, Presipitasi, Infiltrasi */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 flex-1 min-h-0 py-2.5 my-auto overflow-hidden">
             {/* 1. EVAPORASI */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/70 border border-amber-200 shadow-2xs">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-xl">☀️</span>
-                <h4 className="font-extrabold text-sm text-amber-900">1. Evaporasi (Penguapan)</h4>
+            <div className="p-2.5 sm:p-3 rounded-2xl bg-amber-50/70 border border-amber-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="text-lg">☀️</span>
+                <h5 className="font-extrabold text-xs sm:text-sm text-amber-900">1. Evaporasi (Penguapan)</h5>
               </div>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                <strong>Apa itu?</strong> Panas sinar matahari memanaskan air di sungai, danau, dan laut Lembah Cendrawasih. Molekul air berubah wujud dari cair menjadi gas (uap air) yang ringan dan melayang naik ke udara. Tumbuhan hutan juga ikut menguapkan air melalui stomata daun (disebut <em>transpirasi</em>).
+              <p className="text-[11px] sm:text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Panas surya menguapkan air sungai, danau, dan laut. Tumbuhan juga melepaskan uap air melalui stomata daun (<em>transpirasi</em>).
               </p>
             </div>
 
             {/* 2. KONDENSASI */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-blue-50/70 border border-blue-200 shadow-2xs">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-xl">☁️</span>
-                <h4 className="font-extrabold text-sm text-blue-900">2. Kondensasi (Pengembunan)</h4>
+            <div className="p-2.5 sm:p-3 rounded-2xl bg-blue-50/70 border border-blue-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="text-lg">☁️</span>
+                <h5 className="font-extrabold text-xs sm:text-sm text-blue-900">2. Kondensasi (Pengembunan)</h5>
               </div>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                <strong>Apa itu?</strong> Saat uap air membubung tinggi ke atmosfer yang dingin, suhunya turun drastis. Uap air mendingin dan mengembun kembali menjadi miliaran titik-titik air mikro yang saling berkumpul membentuk awan mendung tebal di atas puncak pegunungan.
+              <p className="text-[11px] sm:text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Uap air yang membubung ke atmosfer dingin mendingin dan mengembun menjadi titik-titik air pembentuk awan mendung tebal.
               </p>
             </div>
 
             {/* 3. PRESIPITASI */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 shadow-2xs">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-xl">🌧️</span>
-                <h4 className="font-extrabold text-sm text-indigo-900">3. Presipitasi (Curah Hujan)</h4>
+            <div className="p-2.5 sm:p-3 rounded-2xl bg-indigo-50/70 border border-indigo-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="text-lg">🌧️</span>
+                <h5 className="font-extrabold text-xs sm:text-sm text-indigo-900">3. Presipitasi (Curah Hujan)</h5>
               </div>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                <strong>Apa itu?</strong> Ketika butiran air di awan semakin padat dan bertambah berat, awan menjadi jenuh. Arus udara tidak lagi sanggup menahannya, sehingga gaya gravitasi bumi menarik butiran air jatuh kembali ke daratan sebagai hujan yang menyirami hutan kita.
+              <p className="text-[11px] sm:text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Saat awan jenuh dan tak mampu lagi menahan berat air, gravitasi bumi menjatuhkannya sebagai air hujan yang menyiram bumi.
               </p>
             </div>
 
             {/* 4. INFILTRASI */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 shadow-2xs">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-xl">🌱</span>
-                <h4 className="font-extrabold text-sm text-emerald-900">4. Infiltrasi (Resapan Air Tanah)</h4>
+            <div className="p-2.5 sm:p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="text-lg">🌱</span>
+                <h5 className="font-extrabold text-xs sm:text-sm text-emerald-900">4. Infiltrasi (Resapan Air)</h5>
               </div>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                <strong>Apa itu?</strong> Air hujan yang jatuh ke tanah meresap masuk ke pori-pori tanah berkat bantuan jalinan akar pepohonan hutan yang lebat. Air ini tersaring alami menjadi cadangan air tanah yang kemudian memancar sebagai mata air pegunungan yang jernih dan mengalir ke sungai!
+              <p className="text-[11px] sm:text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Air hujan meresap ke dalam pori tanah berkat akar pohon hutan, tersaring alami menjadi cadangan mata air pegunungan jernih.
               </p>
             </div>
           </div>
 
           {/* Catatan Konservasi Kak Galih */}
-          <div className="p-3 bg-emerald-100/70 border border-emerald-300/80 rounded-xl flex items-start gap-2.5 text-xs text-emerald-950 font-medium">
+          <div className="p-2.5 bg-emerald-100/70 border border-emerald-300/80 rounded-xl flex items-center gap-2 text-xs text-emerald-950 font-medium shrink-0">
             <span className="text-base shrink-0">💡</span>
-            <div>
-              <strong>Catatan Lapangan Kak Galih:</strong> Hutan lindung Lembah Cendrawasih bertindak sebagai spons raksasa. Jika pohon ditebang, air hujan tidak dapat terinfiltrasi dan akan langsung menjadi banjir lumpur, sementara mata air akan mengering saat musim kemarau.
+            <div className="line-clamp-2">
+              <strong>Catatan Lapangan:</strong> Hutan lindung bertindak sebagai spons raksasa alami. Akar pohon mengikat air tanah agar tidak terjadi banjir dan mata air tetap mengalir abadi.
             </div>
           </div>
         </div>

@@ -298,7 +298,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-full h-full flex flex-col items-center justify-between relative ${className}`}
+      className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden ${className}`}
     >
       {/* SVG Garis Penghubung (Rubber-Band Bezier Lines Khas Canva) */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
