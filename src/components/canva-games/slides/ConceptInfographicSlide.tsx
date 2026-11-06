@@ -57,6 +57,7 @@ const PHASE_THEMES: Record<
 
 export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = ({
   slide,
+  themeColor = 'emerald',
   gameId,
 }) => {
   const cards = slide.cards ?? [];
@@ -86,6 +87,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   }, [isPlaying, cards.length]);
 
   const activeCard = cards[selectedIdx] ?? cards[0];
+  const isPurple = themeColor === 'purple' || gameId === 'ular-tangga-tatasurya';
   const activeTheme =
     PHASE_THEMES[activeCard?.badgeColor ?? 'amber'] ?? PHASE_THEMES.amber;
 
@@ -95,12 +97,28 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col overflow-hidden rounded-3xl border-4 border-emerald-950/40 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)] animate-in fade-in duration-300 select-none">
+    <div
+      className={`relative w-full h-full flex flex-col overflow-hidden rounded-3xl border-4 ${
+        isPurple
+          ? 'border-purple-900/40 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 shadow-[0_18px_40px_-12px_rgba(59,7,100,0.55)]'
+          : 'border-emerald-950/40 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)]'
+      } animate-in fade-in duration-300 select-none`}
+    >
       {/* ── COCKPIT HUD TOP BAR ───────────────────────────── */}
       <div className="relative z-20 px-3 sm:px-5 pt-2.5 sm:pt-3.5 pb-1 shrink-0 flex items-center justify-between gap-2.5">
-        <div className="inline-block max-w-[75%] sm:max-w-[80%] rounded-2xl bg-gradient-to-r from-emerald-950/95 via-emerald-900/90 to-emerald-900/55 border-l-[6px] border-amber-400 backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl">
+        <div
+          className={`inline-block max-w-[75%] sm:max-w-[80%] rounded-2xl ${
+            isPurple
+              ? 'bg-gradient-to-r from-purple-950/95 via-indigo-900/90 to-slate-950/55 border-l-[6px] border-cyan-400'
+              : 'bg-gradient-to-r from-emerald-950/95 via-emerald-900/90 to-emerald-900/55 border-l-[6px] border-amber-400'
+          } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
+        >
           <div className="flex items-center gap-2">
-            <span className="px-1.5 py-0.5 rounded-md bg-amber-400 text-emerald-950 font-black text-[9px] sm:text-[10px] tracking-widest uppercase">
+            <span
+              className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
+                isPurple ? 'bg-cyan-400 text-slate-950' : 'bg-amber-400 text-emerald-950'
+              }`}
+            >
               SIMULATOR
             </span>
             <h2 className="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight drop-shadow truncate">
@@ -108,7 +126,11 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             </h2>
           </div>
           {slide.subtitle && (
-            <p className="text-[10.5px] sm:text-xs font-bold text-amber-300/95 leading-snug mt-0.5 truncate hidden sm:block">
+            <p
+              className={`text-[10.5px] sm:text-xs font-bold leading-snug mt-0.5 truncate hidden sm:block ${
+                isPurple ? 'text-cyan-300/95' : 'text-amber-300/95'
+              }`}
+            >
               {slide.subtitle}
             </p>
           )}
@@ -120,7 +142,11 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           onClick={toggleAutoPlay}
           className={`shrink-0 min-h-[44px] px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl border-2 font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all duration-150 cursor-pointer shadow-md active:scale-95 ${
             isPlaying
-              ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.6)] animate-pulse'
+              ? isPurple
+                ? 'bg-cyan-400 text-slate-950 border-cyan-300 shadow-[0_0_16px_rgba(6,182,212,0.6)] animate-pulse'
+                : 'bg-amber-400 text-slate-950 border-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.6)] animate-pulse'
+              : isPurple
+              ? 'bg-purple-900/80 hover:bg-purple-800 text-cyan-200 border-cyan-400/50 backdrop-blur-sm'
               : 'bg-emerald-900/80 hover:bg-emerald-800 text-amber-200 border-amber-400/50 backdrop-blur-sm'
           }`}
         >
@@ -175,7 +201,11 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           {/* Active Phase TCG Card */}
           {activeCard && (
             <div
-              className={`flex-1 min-h-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95 border-2 ${activeTheme.glow} p-3.5 sm:p-4 flex flex-col justify-between overflow-hidden backdrop-blur-md transition-all duration-200`}
+              className={`flex-1 min-h-0 rounded-2xl sm:rounded-3xl ${
+                isPurple
+                  ? 'bg-gradient-to-br from-purple-950/95 via-indigo-950/95 to-slate-950/95'
+                  : 'bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95'
+              } border-2 ${activeTheme.glow} p-3.5 sm:p-4 flex flex-col justify-between overflow-hidden backdrop-blur-md transition-all duration-200`}
             >
               <div>
                 {/* Header: Phase badge & Progress dots */}
