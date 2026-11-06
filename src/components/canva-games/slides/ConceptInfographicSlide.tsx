@@ -26,31 +26,36 @@ const CARD_THEME_COLORS: Record<string, { bg: string; border: string; text: stri
 const WATER_CYCLE_HOTSPOTS = [
   {
     id: 'evaporasi',
-    label: '☀️ 1. Evaporasi',
+    emoji: '☀️',
+    label: '1. Evaporasi',
     sub: 'Penguapan H2O',
     desc: 'Panas surya memanaskan air permukaan laut, sungai, dan danau sehingga molekul air menguap membubung ke atmosfer (termasuk transpirasi dari daun tumbuhan).',
   },
   {
     id: 'kondensasi',
-    label: '☁️ 2. Kondensasi',
+    emoji: '☁️',
+    label: '2. Kondensasi',
     sub: 'Pembentukan Awan',
     desc: 'Uap air di atmosfer dingin mendingin dan mengembun menjadi miliaran titik-titik air mikro yang saling berkumpul membentuk awan mendung tebal.',
   },
   {
     id: 'presipitasi',
-    label: '🌧️ 3. Presipitasi',
+    emoji: '🌧️',
+    label: '3. Presipitasi',
     sub: 'Curah Hujan',
     desc: 'Awan jenuh tidak mampu lagi menahan berat air, sehingga gravitasi bumi menarik butiran air jatuh ke tanah sebagai hujan membasahi pegunungan.',
   },
   {
     id: 'infiltrasi',
-    label: '🌱 4. Infiltrasi',
+    emoji: '🌱',
+    label: '4. Infiltrasi',
     sub: 'Mata Air Tanah',
     desc: 'Air hujan meresap ke dalam pori-pori tanah berkat jalinan akar pohon hutan, tersaring alami menjadi cadangan mata air pegunungan yang jernih.',
   },
   {
     id: 'fotosintesis',
-    label: '🌿 5. Fotosintesis',
+    emoji: '🌿',
+    label: '5. Fotosintesis',
     sub: 'Pertukaran Gas O2',
     desc: 'Stomata daun menyerap CO2 dan energi foton surya untuk memproduksi glukosa serta melepaskan oksigen segar bagi seluruh makhluk hidup.',
   },
@@ -94,40 +99,46 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       {IllustrationComponent ? (
         <div className="flex-1 min-h-0 w-full flex flex-col justify-between space-y-2 overflow-hidden my-auto">
           {/* Framed Interactive High-Res Looping SVG Infographic */}
-          <div className="flex-1 min-h-0 w-full max-h-[38vh] sm:max-h-[44vh] aspect-[16/10] mx-auto rounded-3xl overflow-hidden border-2 border-emerald-400/50 shadow-md bg-emerald-950/5 relative flex items-center justify-center">
+          <div className="flex-1 min-h-0 w-full max-h-[34vh] sm:max-h-[38vh] aspect-[16/10] mx-auto rounded-3xl overflow-hidden border-2 border-emerald-400/50 shadow-md bg-emerald-950/5 relative flex items-center justify-center">
             <IllustrationComponent className="w-full h-full object-contain" />
           </div>
 
-          {/* Chunky Tablet Touch Target Buttons for Water Cycle Phases (Min 44px height, high contrast, tactile) */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 shrink-0 w-full max-w-3xl mx-auto">
-            {WATER_CYCLE_HOTSPOTS.map((hotspot) => {
-              const isSelected = selectedHotspot === hotspot.id;
-              return (
-                <button
-                  key={hotspot.id}
-                  type="button"
-                  onClick={() => {
-                    sound.playClick();
-                    setSelectedHotspot(hotspot.id);
-                  }}
-                  className={`h-10 sm:h-11 px-3 sm:px-4 rounded-2xl text-xs sm:text-sm font-black transition-all duration-150 cursor-pointer border-2 flex items-center gap-1.5 shadow-xs active:scale-95 ${
-                    isSelected
-                      ? 'bg-emerald-600 text-white border-emerald-500 shadow-md ring-2 ring-emerald-300/60 scale-[1.02]'
-                      : 'bg-white/95 hover:bg-emerald-50 text-slate-700 border-slate-200 hover:border-emerald-300'
-                  }`}
-                >
-                  <span>{hotspot.label}</span>
-                </button>
-              );
-            })}
+          {/* Chunky Tablet Action Dock for Water Cycle Phases (Strictly Hard-Ruled Min 48px Touch Targets) */}
+          <div className="bg-slate-100/70 p-1.5 sm:p-2 rounded-3xl border border-slate-200/80 shadow-2xs shrink-0 w-full max-w-3xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2">
+              {WATER_CYCLE_HOTSPOTS.map((hotspot, idx) => {
+                const isSelected = selectedHotspot === hotspot.id;
+                const isLastOnMobile = idx === WATER_CYCLE_HOTSPOTS.length - 1;
+
+                return (
+                  <button
+                    key={hotspot.id}
+                    type="button"
+                    onClick={() => {
+                      sound.playClick();
+                      setSelectedHotspot(hotspot.id);
+                    }}
+                    className={`min-h-[46px] sm:min-h-[50px] px-3 sm:px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-black transition-all duration-150 cursor-pointer border-2 flex items-center justify-center gap-1.5 shadow-xs active:scale-95 ${
+                      isSelected
+                        ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-3 ring-emerald-300/60 -translate-y-0.5'
+                        : 'bg-white hover:bg-emerald-50 text-slate-800 border-slate-200 hover:border-emerald-300 hover:shadow-xs'
+                    } ${isLastOnMobile ? 'col-span-2 sm:col-span-1' : ''}`}
+                  >
+                    <span className="text-base sm:text-lg select-none shrink-0">{hotspot.emoji}</span>
+                    <span className="truncate">{hotspot.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Active Hotspot Tablet Callout Info Box */}
           {activeHotspotInfo && (
-            <div className="bg-emerald-50/95 border-2 border-emerald-300/80 px-4 py-2 sm:py-2.5 rounded-2xl text-left animate-in fade-in duration-150 shrink-0 shadow-2xs">
+            <div className="bg-emerald-50/95 border-2 border-emerald-300/90 px-4 py-2 sm:py-2.5 rounded-2xl text-left animate-in fade-in duration-150 shrink-0 shadow-2xs">
               <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-base select-none">{activeHotspotInfo.emoji}</span>
                 <span className="font-black text-xs sm:text-sm text-emerald-950">{activeHotspotInfo.label}</span>
-                <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-bold">
+                <span className="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-extrabold uppercase tracking-wide">
                   {activeHotspotInfo.sub}
                 </span>
               </div>
@@ -178,7 +189,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       )}
 
       {/* Teacher Speaker Prompt Banner */}
-      <div className="bg-white/90 backdrop-blur-xs px-3 py-1.5 sm:py-2 rounded-2xl border border-slate-200/90 flex items-center gap-2.5 text-xs text-slate-700 shrink-0 shadow-2xs">
+      <div className="bg-white/90 backdrop-blur-xs px-3.5 py-2 rounded-2xl border border-slate-200/90 flex items-center gap-2.5 text-xs text-slate-700 shrink-0 shadow-2xs">
         <Lightbulb className="text-amber-500 shrink-0" size={16} />
         <span className="line-clamp-2">
           <strong>Panduan Guru di Kelas:</strong>{' '}
