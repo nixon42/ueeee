@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { X, Printer, BookOpen, CheckCircle2, MessageSquare, Plus, Trash2 } from 'lucide-react';
+import React from 'react';
+import { X, Printer, BookOpen, CheckCircle2 } from 'lucide-react';
 import { QUESTIONS_BANK } from '@/data/questions-bank';
-import { useTeacherNotes } from '@/business';
 
 interface Props {
   isOpen: boolean;
@@ -9,22 +8,7 @@ interface Props {
 }
 
 export const TeacherSheetModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { notes, addNote, deleteNote } = useTeacherNotes('kelas-umum');
-  const [newTopic, setNewTopic] = useState('');
-  const [newContent, setNewContent] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   if (!isOpen) return null;
-
-  const handleAddNote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newContent.trim()) return;
-    setIsSubmitting(true);
-    await addNote(1, newTopic.trim() || 'Evaluasi Diskusi Kelas', newContent.trim());
-    setNewTopic('');
-    setNewContent('');
-    setIsSubmitting(false);
-  };
 
   const handlePrint = () => {
     window.print();
@@ -52,14 +36,14 @@ export const TeacherSheetModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
             >
               <Printer size={15} />
               <span>Cetak Lembar Soal (Print)</span>
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
+              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer"
             >
               <X size={20} />
             </button>
@@ -81,75 +65,6 @@ export const TeacherSheetModal: React.FC<Props> = ({ isOpen, onClose }) => {
               <span>Nama Siswa: ______________________</span>
               <span>Kelas: _________</span>
             </div>
-          </div>
-
-          {/* Catatan Refleksi & Diskusi Guru (Tersinkronisasi Cloud) */}
-          <div className="pt-6 border-t-2 border-purple-200 space-y-4 print:hidden">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-purple-600" />
-                <span>Catatan & Evaluasi Kelas Guru (Tersinkronisasi Cloud)</span>
-              </h3>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700">
-                {notes.length} Catatan Tersimpan
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-500">
-              Tuliskan refleksi hasil diskusi siswa atau catatan observasi kelas. Catatan ini otomatis tersimpan secara aman di Supabase Cloud dan memori lokal.
-            </p>
-
-            <form onSubmit={handleAddNote} className="p-4 bg-purple-50/60 rounded-2xl border border-purple-200/80 space-y-3">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  placeholder="Topik / Materi (misal: Fotosintesis Kelas 5B)"
-                  value={newTopic}
-                  onChange={(e) => setNewTopic(e.target.value)}
-                  className="px-3.5 py-2 text-xs rounded-xl border border-purple-200 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-400 flex-1"
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !newContent.trim()}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Plus size={15} />
-                  <span>{isSubmitting ? 'Menyimpan...' : 'Tambah Catatan'}</span>
-                </button>
-              </div>
-              <textarea
-                rows={2}
-                placeholder="Tuliskan catatan observasi pemahaman konsep, pertanyaan kritis siswa, atau tindak lanjut pembelajaran..."
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
-              />
-            </form>
-
-            {notes.length > 0 && (
-              <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-                {notes.map((note) => (
-                  <div key={note.id} className="p-3.5 bg-white rounded-xl border border-slate-200 shadow-sm flex items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-xs text-purple-700">{note.topic}</span>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          {new Date(note.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-700 whitespace-pre-wrap">{note.notes}</p>
-                    </div>
-                    <button
-                      onClick={() => deleteNote(note.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition shrink-0"
-                      title="Hapus Catatan"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* List Soal per Mapel */}
