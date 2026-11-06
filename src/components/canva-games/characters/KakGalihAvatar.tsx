@@ -8,8 +8,6 @@ export interface KakGalihAvatarProps {
   dialogueTitle?: string;
   missionObjective?: string;
   className?: string;
-  onCtaClick?: () => void;
-  ctaText?: string;
 }
 
 const SIZE_MAP = {
@@ -27,8 +25,6 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
   dialogueTitle = 'Kak Galih • Penjelajah Rimba Lembah Cendrawasih',
   missionObjective,
   className = '',
-  onCtaClick,
-  ctaText,
 }) => {
   const isSpeaking = mood === 'speaking' || mood === 'explaining';
   const sizeConfig = SIZE_MAP[size];
@@ -251,19 +247,6 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
             <div className="mt-4 pt-3 border-t border-emerald-100/80 flex items-start sm:items-center gap-2 text-xs font-semibold text-slate-700 bg-emerald-50/50 p-2.5 rounded-xl">
               <span className="text-emerald-700 font-black shrink-0">🎯 Target Ekspedisi:</span>
               <span className="text-emerald-950">{missionObjective}</span>
-            </div>
-          )}
-
-          {/* Optional CTA Button */}
-          {ctaText && onCtaClick && (
-            <div className="mt-4 flex justify-end">
-              <button
-                type="button"
-                onClick={onCtaClick}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-md active:scale-95 transition cursor-pointer"
-              >
-                <span>{ctaText}</span>
-              </button>
             </div>
           )}
         </div>

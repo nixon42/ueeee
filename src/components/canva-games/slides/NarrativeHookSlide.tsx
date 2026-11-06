@@ -15,7 +15,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   slide,
   mentor,
   themeColor,
-  onNext,
 }) => {
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const activeMentor = { ...mentor, ...slide.mentorOverride };
@@ -51,8 +50,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
             speechText={slide.dialogue}
             dialogueTitle={`${activeMentor.name} • ${activeMentor.role}`}
             missionObjective={slide.missionObjective}
-            onCtaClick={onNext}
-            ctaText={slide.actionButtonText || 'Mulai Ekspedisi Sains →'}
             className="w-full max-w-3xl"
           />
         </div>
@@ -91,18 +88,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
               <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-slate-600">
                 <span className="text-amber-600">🎯 Target:</span>
                 <span>{slide.missionObjective}</span>
-              </div>
-            )}
-
-            {slide.actionButtonText && onNext && (
-              <div className="mt-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={onNext}
-                  className={`px-4 py-2 rounded-xl bg-gradient-to-r ${theme.gradient} text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-md active:scale-95 transition cursor-pointer`}
-                >
-                  <span>{slide.actionButtonText}</span>
-                </button>
               </div>
             )}
           </div>

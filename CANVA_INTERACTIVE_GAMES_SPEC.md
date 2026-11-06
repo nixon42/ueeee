@@ -164,6 +164,7 @@ Untuk menjaga estetika Canva yang bersih, bersahabat, dan flat:
   - Aksen Match Pairs: Lavender ungu (`bg-purple-600`, `bg-purple-50`, border `border-purple-200`).
   - Aksen Quiz: Rose pink (`bg-pink-600`, `bg-pink-50`, border `border-pink-200`).
 - **Larangan Pill Status Percakapan AI ("Berbicara...", dsb):** DILARANG KERAS menyematkan badge teks seperti "Berbicara...", "Sedang Bicara...", atau animasi ping status pada balon ucapan karakter mentor. Balon dialog komik dan animasi SVG karakter sudah cukup menyampaikan konteks percakapan secara natural tanpa clutter visual.
+- **Larangan Tombol Next Slide di Dalam Konten Slide:** Navigasi antarslide dipusatkan secara eksklusif pada **Footer Navigation Bar panggung presentasi** (`[ < Slide Sebelumnya ]` dan `[ Slide Berikutnya > ]`). DILARANG KERAS menempatkan tombol "Next Slide", "Buka Materi Selanjutnya", atau tombol CTA pergantian slide di dalam konten slide atau di dalam balon dialog karakter. Hal tersebut menyebabkan duplikasi kontrol navigasi dan mengotori estetika layout presentasi.
 
 
 ---

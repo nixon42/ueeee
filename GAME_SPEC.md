@@ -30,6 +30,7 @@ Setiap agent **WAJIB** mematuhi aturan berikut dan **DILARANG** melanggarnya:
 | ❌ 4 | **DILARANG mencampur jenis game ke dalam baris kategori mata pelajaran.** | Kategori lingkaran atas adalah **Mata Pelajaran Murni** (`Matematika`, `Sains Maya`, `Bahasa & Kata`, `Sejarah & Budaya`, `Teka-Teki Logika`). Jenis game (Ular Tangga, Point & Click, Puzzle) diatur pada tab switcher, bukan di kategori materi. |
 | ❌ 5 | **DILARANG membuat card materi tanpa screenshot ilustrasi visual.** | Setiap kartu di beranda wajib memiliki representasi visual/screenshot SVG atau cover gambar yang menarik di atas kartu (tidak boleh hanya kotak warna kosong). |
 | ❌ 6 | **DILARANG menyembunyikan tombol navigasi kembali.** | Tombol `[ ← Kembali ke Beranda ]` wajib ada di sudut kiri atas navbar panggung game agar guru bisa keluar dengan 1 klik. |
+| ❌ 7 | **DILARANG membuat tombol "Next Slide" / navigasi di dalam konten slide itu sendiri.** | Navigasi pergantian slide presentasi dipusatkan secara eksklusif pada **Footer Navigation Bar deck** (`[ < Slide Sebelumnya ]`, slide indicator dots, `[ Slide Berikutnya > ]`). Menaruh tombol "Next" tambahan di dalam konten slide (seperti di balon dialog mentor atau kartu materi) menduplikasi kontrol, membingungkan guru/siswa, dan menimbulkan *visual clutter*. Konten slide harus murni menyajikan materi atau tantangan interaktif. |
 
 ---
 
