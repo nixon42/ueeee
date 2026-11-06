@@ -10,3 +10,4 @@ export * from './progress.api';
 export * from './favorites.api';
 export * from './stats.api';
 export * from './teacher.api';
+export * from './auth.api';

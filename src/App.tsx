@@ -21,6 +21,7 @@ const PuzzleModal = lazy(() => import('@/games/puzzle/PuzzleModal').then(m => ({
 const ChessPuzzleModal = lazy(() => import('@/games/chess-puzzle').then(m => ({ default: m.ChessPuzzleModal })));
 const InteractiveStoryPresentationModal = lazy(() => import('@/components/canva-games').then(m => ({ default: m.InteractiveStoryPresentationModal })));
 const PrologModal = lazy(() => import('@/components/dashboard/PrologModal').then(m => ({ default: m.PrologModal })));
+const SuperadminModal = lazy(() => import('@/components/dashboard/SuperadminModal').then(m => ({ default: m.SuperadminModal })));
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -47,8 +48,9 @@ export default function App() {
   const [activePresentationDeck, setActivePresentationDeck] = useState<PresentationDeckData | null>(null);
   const [presentationInitialSlide, setPresentationInitialSlide] = useState<number>(1);
   const [activePrologGame, setActivePrologGame] = useState<GameItem | null>(null);
+  const [isSuperadminModalOpen, setIsSuperadminModalOpen] = useState<boolean>(false);
 
-  // Read URL query parameter for deep linking (?game=...&mode=...&slide=... or ?prolog=...)
+  // Read URL query parameter for deep linking (?game=...&mode=...&slide=... or ?prolog=... or ?admin=...)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const gameParam = params.get('game');
@@ -67,6 +69,10 @@ export default function App() {
       if (match) {
         setActivePrologGame(match);
       }
+    }
+    const adminParam = params.get('admin');
+    if (adminParam === 'true' || adminParam === 'login') {
+      setIsSuperadminModalOpen(true);
     }
   }, []);
 
@@ -216,6 +222,7 @@ export default function App() {
           selectedGrade={selectedGrade}
           onGradeChange={setSelectedGrade}
           onSurpriseMe={handleSurpriseMe}
+          onOpenSuperadmin={() => setIsSuperadminModalOpen(true)}
         />
 
         {/* Canva Horizontal Category Pills */}
@@ -324,6 +331,10 @@ export default function App() {
           onClose={() => setActivePrologGame(null)}
           onPlay={(game) => launchGame(game, 'presentation')}
           onPlayClassic={(game) => launchGame(game, 'arcade')}
+        />
+        <SuperadminModal
+          isOpen={isSuperadminModalOpen}
+          onClose={() => setIsSuperadminModalOpen(false)}
         />
       </Suspense>
 

@@ -45,3 +45,18 @@ export interface TeacherReflectionNote {
 }
 
 export type CloudSyncStatus = 'online' | 'offline' | 'syncing' | 'error';
+
+export interface SuperadminUser {
+  id: string;
+  email: string;
+  isSuperadmin: boolean;
+  name?: string;
+  avatarUrl?: string;
+}
+
+export interface SuperadminAuthState {
+  user: SuperadminUser | null;
+  isSuperadmin: boolean;
+  isLoading: boolean;
+  error: string | null;
+}

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { 
-  Search, Volume2, VolumeX, Dices, X 
+  Search, Volume2, VolumeX, Dices, X, Shield, ShieldCheck 
 } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { GradeLevel } from '@/types/game';
 import { Logo } from '@/components/common/Logo';
+import { useSuperadmin } from '@/business';
 
 interface Props {
   searchQuery: string;
@@ -13,6 +14,7 @@ interface Props {
   selectedGrade: GradeLevel;
   onGradeChange: (grade: GradeLevel) => void;
   onSurpriseMe: () => void;
+  onOpenSuperadmin?: () => void;
 }
 
 const GRADE_LEVELS: GradeLevel[] = [
@@ -30,8 +32,10 @@ export const Header: React.FC<Props> = ({
   selectedGrade,
   onGradeChange,
   onSurpriseMe,
+  onOpenSuperadmin,
 }) => {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const { user, isSuperadmin } = useSuperadmin();
 
   const handleToggleSound = () => {
     const next = sound.toggleSound();
@@ -55,6 +59,32 @@ export const Header: React.FC<Props> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Superadmin Indicator / Trigger Button */}
+          {isSuperadmin && user ? (
+            <button
+              onClick={() => {
+                sound.playClick();
+                if (onOpenSuperadmin) onOpenSuperadmin();
+              }}
+              className="px-3 py-1.5 rounded-full text-xs font-black bg-gradient-to-r from-purple-700 to-indigo-700 text-white shadow-sm flex items-center gap-1.5 hover:opacity-95 transition cursor-pointer border border-purple-400"
+              title={`Superadmin: ${user.email} (Klik untuk info status)`}
+            >
+              <ShieldCheck size={14} className="text-amber-300" />
+              <span className="hidden sm:inline">Superadmin</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                sound.playClick();
+                if (onOpenSuperadmin) onOpenSuperadmin();
+              }}
+              className="p-2 rounded-full bg-white hover:bg-purple-50 border border-slate-200 text-slate-500 hover:text-purple-700 transition shadow-sm cursor-pointer"
+              title="Superadmin Panel"
+            >
+              <Shield size={16} />
+            </button>
+          )}
+
           {/* Tombol Main Acak (Surprise Me) */}
           <button
             onClick={() => {
