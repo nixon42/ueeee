@@ -314,110 +314,122 @@ const GameIllustrationComponent: React.FC<Props> = ({ gameId, className = '' }) 
         </div>
       );
 
-    // 4. Ular Tangga: Petualangan Sains
+    // 4. Petualangan Sains: Ekspedisi Daur Air (Lembah Cendrawasih)
     case 'ular-tangga-sains':
       return (
         <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>
           <svg className="w-full h-full object-cover" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" fill="none">
             <defs>
-              <linearGradient id="boardSainsBg" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#c2410c" />
-                <stop offset="50%" stopColor="#be123c" />
-                <stop offset="100%" stopColor="#831843" />
+              <linearGradient id="daurAirSkyBg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#0284c7" />
+                <stop offset="45%" stopColor="#0d9488" />
+                <stop offset="100%" stopColor="#064e3b" />
+              </linearGradient>
+              <linearGradient id="daurAirRiver" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#38bdf8" />
+                <stop offset="100%" stopColor="#0284c7" />
+              </linearGradient>
+              <radialGradient id="daurAirSun" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#fef08a" />
+                <stop offset="50%" stopColor="#facc15" />
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="leafCardGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#22c55e" />
+                <stop offset="100%" stopColor="#15803d" />
               </linearGradient>
             </defs>
 
-            <rect width="400" height="200" fill="url(#boardSainsBg)" />
+            {/* Atmosphere Base */}
+            <rect width="400" height="200" fill="url(#daurAirSkyBg)" />
 
-            {/* Isometric 3D Board Grid (Simulating 100-petak board sector) */}
-            <g transform="translate(190, 110) rotate(-15) skewX(-20) scale(0.9)" opacity="0.9">
-              {/* Tiles Grid 4x3 */}
-              {[0, 1, 2, 3].map(col =>
-                [0, 1, 2].map(row => {
-                  const tileNum = 20 + row * 4 + col;
-                  const isBonus = tileNum === 24 || tileNum === 27;
-                  return (
-                    <g key={`${col}-${row}`} transform={`translate(${col * 44}, ${row * 44})`}>
-                      <rect
-                        width="40"
-                        height="40"
-                        rx="6"
-                        fill={isBonus ? '#fbbf24' : (col + row) % 2 === 0 ? '#ffffff' : '#fed7aa'}
-                        stroke="#ea580c"
-                        strokeWidth="1.5"
-                      />
-                      <text x="6" y="14" fill="#9a3412" fontSize="9" fontWeight="bold" fontFamily="sans-serif">
-                        {tileNum}
-                      </text>
-                      {isBonus && (
-                        <text x="22" y="32" fill="#b45309" fontSize="11">
-                          ⭐
-                        </text>
-                      )}
-                    </g>
-                  );
-                })
-              )}
+            {/* Radiant Golden Sun & Beams (Energi Surya) */}
+            <circle cx="80" cy="50" r="42" fill="url(#daurAirSun)" />
+            <circle cx="80" cy="50" r="22" fill="#facc15" stroke="#f59e0b" strokeWidth="2.5" />
+            <g stroke="#fef08a" strokeWidth="1.8" strokeDasharray="4 3" opacity="0.8">
+              <line x1="80" y1="18" x2="80" y2="6" />
+              <line x1="80" y1="82" x2="80" y2="94" />
+              <line x1="48" y1="50" x2="36" y2="50" />
+              <line x1="112" y1="50" x2="124" y2="50" />
+              <line x1="57" y1="27" x2="48" y2="18" />
+              <line x1="103" y1="73" x2="112" y2="82" />
+              <line x1="57" y1="73" x2="48" y2="82" />
+              <line x1="103" y1="27" x2="112" y2="18" />
+            </g>
 
-              {/* Wooden Ladder Stretching from tile 21 to tile 26 */}
-              <g stroke="#78350f" strokeWidth="2.5" opacity="0.95">
-                <line x1="20" y1="18" x2="60" y2="105" />
-                <line x1="30" y1="14" x2="70" y2="101" />
-                {/* Rungs */}
-                <line x1="22" y1="35" x2="32" y2="31" strokeWidth="2" stroke="#d97706" />
-                <line x1="32" y1="55" x2="42" y2="51" strokeWidth="2" stroke="#d97706" />
-                <line x1="42" y1="75" x2="52" y2="71" strokeWidth="2" stroke="#d97706" />
-                <line x1="52" y1="95" x2="62" y2="91" strokeWidth="2" stroke="#d97706" />
-              </g>
+            {/* Mountain Peaks & Misty Ridges of Lembah Cendrawasih */}
+            <path d="M0 130 L90 75 L180 125 L270 60 L360 120 L400 95 L400 200 L0 200 Z" fill="#047857" opacity="0.6" />
+            <path d="M60 145 L150 90 L240 140 L320 85 L400 130 L400 200 L0 200 L0 155 Z" fill="#065f46" opacity="0.85" />
 
-              {/* Cute Winding Green Snake sliding down */}
+            {/* Cascading Mountain Waterfall */}
+            <path d="M270 60 L266 115 L274 115 Z" fill="#e0f2fe" opacity="0.7" />
+
+            {/* Cumulus Rain Cloud & Raindrops (Kondensasi & Presipitasi) */}
+            <g transform="translate(190, 20)">
               <path
-                d="M150 25 Q130 50 145 75 Q160 100 110 120"
-                stroke="#22c55e"
-                strokeWidth="7"
-                strokeLinecap="round"
-                fill="none"
+                d="M35 55 Q20 55 12 45 Q5 32 18 25 Q25 12 45 15 Q60 5 80 15 Q95 8 108 22 Q120 32 115 45 Q118 55 100 55 Z"
+                fill="#cbd5e1"
+                stroke="#94a3b8"
+                strokeWidth="2"
+                opacity="0.9"
               />
+              {/* Rain Streaks */}
+              <g stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" opacity="0.8">
+                <line x1="30" y1="64" x2="24" y2="82" />
+                <line x1="50" y1="64" x2="44" y2="82" />
+                <line x1="70" y1="64" x2="64" y2="82" />
+                <line x1="90" y1="64" x2="84" y2="82" />
+              </g>
+            </g>
+
+            {/* Winding Crystal River (Aliran Permukaan & Infiltrasi) */}
+            <path
+              d="M268 115 C250 140 290 160 260 185 C240 200 200 200 170 200 L230 200 C270 195 320 170 300 145 C285 130 285 120 274 115 Z"
+              fill="url(#daurAirRiver)"
+            />
+            {/* Rising Water Vapor (Evaporasi) */}
+            <g stroke="#bae6fd" strokeWidth="1.8" strokeDasharray="3 3" opacity="0.85">
+              <path d="M320 170 Q315 150 325 130" fill="none" />
+              <path d="M340 180 Q335 160 345 140" fill="none" />
+            </g>
+            <circle cx="324" cy="148" r="2" fill="#e0f2fe" />
+            <circle cx="344" cy="158" r="2.5" fill="#e0f2fe" />
+
+            {/* Giant Rainforest Leaf with Dew Drop in Foreground Left */}
+            <g transform="translate(10, 105)">
               <path
-                d="M150 25 Q130 50 145 75 Q160 100 110 120"
-                stroke="#86efac"
+                d="M10 80 C30 20 90 10 130 25 C110 60 80 90 20 90 Z"
+                fill="url(#leafCardGrad)"
+                stroke="#14532d"
                 strokeWidth="2.5"
-                strokeDasharray="4 3"
-                strokeLinecap="round"
-                fill="none"
               />
-              {/* Snake Head */}
-              <circle cx="150" cy="23" r="5.5" fill="#16a34a" />
-              <circle cx="152" cy="21" r="1.5" fill="#000000" />
-
-              {/* Player 1 Pawn (Orange) */}
-              <g transform="translate(16, 16)">
-                <ellipse cx="6" cy="10" rx="6" ry="3" fill="#ea580c" opacity="0.4" />
-                <path d="M3 8 L9 8 L8 1 L4 1 Z" fill="#f97316" />
-                <circle cx="6" cy="-1" r="4" fill="#ffedd5" stroke="#ea580c" strokeWidth="1" />
-              </g>
-
-              {/* Player 2 Pawn (Blue) */}
-              <g transform="translate(104, 60)">
-                <ellipse cx="6" cy="10" rx="6" ry="3" fill="#0284c7" opacity="0.4" />
-                <path d="M3 8 L9 8 L8 1 L4 1 Z" fill="#0ea5e9" />
-                <circle cx="6" cy="-1" r="4" fill="#e0f2fe" stroke="#0284c7" strokeWidth="1" />
-              </g>
+              <path d="M10 80 C40 65 80 50 128 26" stroke="#fef08a" strokeWidth="2.5" fill="none" />
+              <path d="M40 65 Q60 50 75 30" stroke="#fef08a" strokeWidth="1.5" fill="none" />
+              <path d="M70 52 Q90 45 105 35" stroke="#fef08a" strokeWidth="1.5" fill="none" />
+              {/* Dew Drop */}
+              <circle cx="85" cy="40" r="5" fill="#e0f2fe" opacity="0.8" />
+              <circle cx="83.5" cy="38.5" r="1.5" fill="#ffffff" />
             </g>
 
-            {/* 3D Floating Dice on Left */}
-            <g transform="translate(60, 95) rotate(15) scale(1.15)">
-              <rect x="0" y="0" width="34" height="34" rx="7" fill="#ffffff" stroke="#cbd5e1" strokeWidth="2" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))" />
-              {/* 5 Dots pattern */}
-              <circle cx="9" cy="9" r="3" fill="#e11d48" />
-              <circle cx="25" cy="9" r="3" fill="#e11d48" />
-              <circle cx="17" cy="17" r="3.5" fill="#e11d48" />
-              <circle cx="9" cy="25" r="3" fill="#e11d48" />
-              <circle cx="25" cy="25" r="3" fill="#e11d48" />
+            {/* Vintage Explorer Compass Badge on Right Side */}
+            <g transform="translate(345, 130)">
+              <circle cx="20" cy="20" r="24" fill="#1e293b" opacity="0.3" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))" />
+              <circle cx="20" cy="20" r="22" fill="#d97706" stroke="#78350f" strokeWidth="2" />
+              <circle cx="20" cy="20" r="18" fill="#fffbeb" />
+              {/* Cardinal ticks */}
+              <line x1="20" y1="4" x2="20" y2="8" stroke="#78350f" strokeWidth="1.5" />
+              <line x1="20" y1="36" x2="20" y2="32" stroke="#78350f" strokeWidth="1.5" />
+              <line x1="4" y1="20" x2="8" y2="20" stroke="#78350f" strokeWidth="1.5" />
+              <line x1="36" y1="20" x2="32" y2="20" stroke="#78350f" strokeWidth="1.5" />
+              {/* Compass Needle */}
+              <polygon points="20,7 23,20 20,18 17,20" fill="#dc2626" />
+              <polygon points="20,33 23,20 20,22 17,20" fill="#2563eb" />
+              <circle cx="20" cy="20" r="2.5" fill="#78350f" />
             </g>
 
-            <text x="25" y="186" fill="#fecdd3" fontSize="8" fontWeight="bold" fontFamily="monospace" opacity="0.8">
-              PAPAN 100 PETAK • KUIS SAINS & ALAM
+            {/* HUD Footer Tag */}
+            <text x="20" y="188" fill="#a7f3d0" fontSize="8" fontWeight="bold" fontFamily="monospace" opacity="0.9">
+              🌿 LEMBAH CENDRAWASIH • EKSPEDISI DAUR AIR &amp; FOTOSINTESIS
             </text>
           </svg>
         </div>

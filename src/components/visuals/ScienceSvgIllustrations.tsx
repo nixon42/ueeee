@@ -27,6 +27,92 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
         className="w-full h-full"
       >
         <defs>
+          <style>{`
+            @keyframes loopSunPulse {
+              0%, 100% { transform: scale(1); opacity: 0.85; }
+              50% { transform: scale(1.06); opacity: 1; }
+            }
+            @keyframes loopSunRays {
+              0%, 100% { opacity: 0.6; stroke-width: 2.2; }
+              50% { opacity: 1; stroke-width: 3.2; }
+            }
+            @keyframes loopCloudDrift {
+              0%, 100% { transform: translateX(0); }
+              50% { transform: translateX(10px); }
+            }
+            @keyframes loopRainDrop {
+              0% { transform: translateY(0); opacity: 0; }
+              25% { opacity: 0.9; }
+              80% { opacity: 0.7; }
+              100% { transform: translateY(32px); opacity: 0; }
+            }
+            @keyframes loopVaporFlow {
+              0% { stroke-dashoffset: 28; opacity: 0.4; }
+              50% { opacity: 1; }
+              100% { stroke-dashoffset: 0; opacity: 0.4; }
+            }
+            @keyframes loopVaporBubble {
+              0% { transform: translateY(0) scale(0.7); opacity: 0; }
+              30% { opacity: 0.85; }
+              80% { opacity: 0.5; }
+              100% { transform: translateY(-75px) scale(1.1); opacity: 0; }
+            }
+            @keyframes loopRiverFlow {
+              0% { stroke-dashoffset: 0; }
+              100% { stroke-dashoffset: -32; }
+            }
+            @keyframes loopGasPulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+            }
+            @keyframes loopInfiltrate {
+              0% { transform: translateY(0); opacity: 0; }
+              40% { opacity: 0.85; }
+              100% { transform: translateY(22px); opacity: 0; }
+            }
+
+            .anim-sun-pulse {
+              animation: loopSunPulse 4.5s ease-in-out infinite;
+              transform-origin: 120px 90px;
+            }
+            .anim-sun-rays {
+              animation: loopSunRays 3s ease-in-out infinite;
+            }
+            .anim-cloud-drift {
+              animation: loopCloudDrift 7s ease-in-out infinite;
+            }
+            .anim-rain-1 {
+              animation: loopRainDrop 1.2s linear infinite;
+            }
+            .anim-rain-2 {
+              animation: loopRainDrop 1.2s linear infinite 0.4s;
+            }
+            .anim-rain-3 {
+              animation: loopRainDrop 1.2s linear infinite 0.8s;
+            }
+            .anim-vapor-stream {
+              animation: loopVaporFlow 2.8s linear infinite;
+            }
+            .anim-vapor-bubble-1 {
+              animation: loopVaporBubble 3.5s ease-out infinite;
+            }
+            .anim-vapor-bubble-2 {
+              animation: loopVaporBubble 3.5s ease-out infinite 1.2s;
+            }
+            .anim-vapor-bubble-3 {
+              animation: loopVaporBubble 3.5s ease-out infinite 2.2s;
+            }
+            .anim-river-stream {
+              animation: loopRiverFlow 3s linear infinite;
+            }
+            .anim-gas-pulse {
+              animation: loopGasPulse 3s ease-in-out infinite;
+            }
+            .anim-infiltrate {
+              animation: loopInfiltrate 2s linear infinite;
+            }
+          `}</style>
+
           <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0284c7" />
             <stop offset="50%" stopColor="#38bdf8" />
@@ -51,11 +137,13 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
         {/* BACKGROUND LANDSCAPE */}
         <rect width="800" height="500" fill="#f0fdf4" />
 
-        {/* SUN & THERMAL RADIATION */}
-        <circle cx="120" cy="90" r="70" fill="url(#sunGlow)" />
-        <circle cx="120" cy="90" r="38" fill="#facc15" stroke="#f59e0b" strokeWidth="3" />
-        {/* Sunbeams */}
-        <g stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.8">
+        {/* SUN & THERMAL RADIATION WITH LOOPING PULSE */}
+        <g className="anim-sun-pulse">
+          <circle cx="120" cy="90" r="70" fill="url(#sunGlow)" />
+          <circle cx="120" cy="90" r="38" fill="#facc15" stroke="#f59e0b" strokeWidth="3" />
+        </g>
+        {/* Sunbeams with Animated Glow */}
+        <g stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.8" className="anim-sun-rays">
           <line x1="120" y1="35" x2="120" y2="15" />
           <line x1="120" y1="145" x2="120" y2="165" />
           <line x1="65" y1="90" x2="45" y2="90" />
@@ -69,8 +157,8 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
           ENERGI SURYA
         </text>
 
-        {/* CUMULUS RAIN CLOUDS & PRECIPITATION */}
-        <g transform="translate(480, 50)">
+        {/* CUMULUS RAIN CLOUDS & PRECIPITATION WITH DRIFT */}
+        <g transform="translate(480, 50)" className="anim-cloud-drift">
           <path
             d="M50 80 Q30 80 20 65 Q10 45 30 35 Q40 15 70 20 Q95 5 125 20 Q145 10 165 30 Q185 45 175 65 Q180 80 155 80 Z"
             fill="#94a3b8"
@@ -78,13 +166,21 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
             strokeWidth="3"
             opacity="0.9"
           />
-          {/* Rain Streaks (Presipitasi) */}
-          <g stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" opacity="0.75">
-            <line x1="45" y1="95" x2="35" y2="125" />
-            <line x1="75" y1="95" x2="65" y2="125" />
-            <line x1="105" y1="95" x2="95" y2="125" />
-            <line x1="135" y1="95" x2="125" y2="125" />
-            <line x1="160" y1="95" x2="150" y2="125" />
+          {/* Looping Rain Streaks (Presipitasi) */}
+          <g stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" opacity="0.85">
+            <g className="anim-rain-1">
+              <line x1="45" y1="92" x2="35" y2="120" />
+              <line x1="105" y1="92" x2="95" y2="120" />
+              <line x1="160" y1="92" x2="150" y2="120" />
+            </g>
+            <g className="anim-rain-2">
+              <line x1="75" y1="95" x2="65" y2="125" />
+              <line x1="135" y1="95" x2="125" y2="125" />
+            </g>
+            <g className="anim-rain-3">
+              <line x1="60" y1="90" x2="52" y2="116" opacity="0.6" />
+              <line x1="120" y1="90" x2="112" y2="116" opacity="0.6" />
+            </g>
           </g>
           <text x="100" y="55" textAnchor="middle" fill="#ffffff" fontSize="10" fontWeight="bold" fontFamily="sans-serif">
             KONDENSASI AWAN
@@ -101,11 +197,46 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
           fill="url(#riverGrad)"
           opacity="0.85"
         />
+        {/* Animated River Flow Current */}
+        <path
+          d="M565 260 C545 315 625 365 585 435 C565 475 515 492 485 500"
+          stroke="#ffffff"
+          strokeWidth="2"
+          strokeDasharray="12 8"
+          fill="none"
+          opacity="0.5"
+          className="anim-river-stream"
+        />
 
-        {/* EVAPORATION VECTORS RISING FROM RIVER */}
-        <g stroke="#0284c7" strokeWidth="2" strokeDasharray="4 3" opacity="0.8">
+        {/* INFILTRASI GROUND WATER DROPLETS UNDER FOREST */}
+        <g className="anim-infiltrate" fill="#0284c7" opacity="0.75">
+          <circle cx="530" cy="360" r="2.5" />
+          <circle cx="545" cy="385" r="2" />
+          <circle cx="520" cy="410" r="3" />
+          <circle cx="505" cy="435" r="2" />
+          <circle cx="490" cy="460" r="2.5" />
+        </g>
+        <text x="530" y="440" fill="#047857" fontSize="8" fontWeight="bold" fontFamily="sans-serif">
+          ↓ Infiltrasi Tanah
+        </text>
+
+        {/* EVAPORATION VECTORS RISING FROM RIVER WITH LOOPING FLOW */}
+        <g stroke="#0284c7" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.85" className="anim-vapor-stream">
           <path d="M680 420 Q670 380 690 340 Q710 300 690 260" fill="none" />
           <path d="M720 440 Q710 400 730 360 Q750 320 730 280" fill="none" />
+        </g>
+        {/* Animated Rising Vapor Orbs */}
+        <g className="anim-vapor-bubble-1" fill="#38bdf8">
+          <circle cx="682" cy="410" r="3.5" opacity="0.8" />
+          <circle cx="722" cy="425" r="3" opacity="0.75" />
+        </g>
+        <g className="anim-vapor-bubble-2" fill="#0284c7">
+          <circle cx="688" cy="380" r="4" opacity="0.85" />
+          <circle cx="728" cy="390" r="3.5" opacity="0.8" />
+        </g>
+        <g className="anim-vapor-bubble-3" fill="#38bdf8">
+          <circle cx="692" cy="340" r="4.5" opacity="0.9" />
+          <circle cx="732" cy="350" r="4" opacity="0.85" />
         </g>
         <text x="740" y="340" fill="#0369a1" fontSize="10" fontWeight="bold" fontFamily="sans-serif">
           ↑ Evaporasi Air
@@ -151,14 +282,14 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
             <text x="0" y="58" textAnchor="middle" fill="#047857" fontSize="7" fontWeight="black">STOMATA (PORI DAUN)</text>
           </g>
 
-          {/* Gas Inflow / Outflow Callouts */}
-          <g transform="translate(60, 40)">
+          {/* Gas Inflow / Outflow Callouts with Looping Breath */}
+          <g transform="translate(60, 40)" className="anim-gas-pulse">
             <rect width="90" height="22" rx="11" fill="#065f46" />
             <text x="45" y="15" textAnchor="middle" fill="#ecfdf5" fontSize="9" fontWeight="bold">
               CO2 Masuk Stomata
             </text>
           </g>
-          <g transform="translate(260, 170)">
+          <g transform="translate(260, 170)" className="anim-gas-pulse">
             <rect width="90" height="22" rx="11" fill="#0284c7" />
             <text x="45" y="15" textAnchor="middle" fill="#f0f9ff" fontSize="9" fontWeight="bold">
               O2 Dilepas ke Udara

@@ -65,13 +65,13 @@ export const ENERGY_TRANSFORMATION_PAIRS: MatchGamePair[] = [
 
 export const ULAR_TANGGA_SAINS_DECK: PresentationDeckData = {
   gameId: 'ular-tangga-sains',
-  title: 'Ular Tangga: Petualangan Sains',
+  title: 'Petualangan Sains: Ekspedisi Daur Air',
   subtitle: 'Petualangan Daur Air, Fotosintesis, & Aliran Energi',
   themeColor: 'orange',
   icon: '🧭',
   category: 'sains',
   gradeLevel: 'SD Kelas 4-6',
-  subjectDetail: 'IPA / Sains & Fenomena Alam',
+  subjectDetail: 'IPA / Daur Air & Keseimbangan Ekosistem',
   mentor: {
     name: 'Kak Galih',
     role: 'Penjelajah Rimba',
@@ -88,7 +88,7 @@ export const ULAR_TANGGA_SAINS_DECK: PresentationDeckData = {
       dialogue:
         'Halo rekan-rekan penjelajah sains muda! Saya Kak Galih. Saat menjelajahi hulu sungai di Lembah Cendrawasih, tim kami menemukan bahwa aliran air pegunungan mulai surut dan dedaunan hutan menguning karena siklus hidrologi terganggu. Kita harus merekonstruksi tahapan daur air sempurna dan mengungkap bagaimana energi surya diubah menjadi tenaga kehidupan melalui fotosintesis. Siapkah kalian memulai ekspedisi ini?',
       missionObjective: 'Pulihkan siklus hidrologi dan aliran fotosintesis Lembah Cendrawasih',
-      actionButtonText: 'Buka Materi Konsep Kunci',
+      actionButtonText: 'Buka Infografis Daur Air',
     },
     {
       id: 'uts-slide-2',
@@ -135,7 +135,7 @@ export const ULAR_TANGGA_SAINS_DECK: PresentationDeckData = {
         },
       ],
       teacherNotes:
-        'Ajak siswa menunjuk embun di kaca jendela kelas pada pagi hari sebagai contoh konkret proses kondensasi uap air di sekitar kita.',
+        'Ajak siswa mengamati animasi loop pergerakan molekul air: dari penguapan sungai oleh energi surya, pembentukan awan dingin di pegunungan, hingga turunnya hujan yang diserap oleh akar pohon.',
     },
     {
       id: 'uts-slide-3',

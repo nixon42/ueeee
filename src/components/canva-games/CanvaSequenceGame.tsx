@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle2, AlertCircle, GripVertical } from 'lucide-react';
+import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle2, AlertCircle, GripVertical, Compass, ChevronDown, ChevronUp } from 'lucide-react';
 import { sound } from '@/lib/sound';
+import { KakGalihAvatar } from './characters/KakGalihAvatar';
 
 export interface SequenceItem {
   id: string;
@@ -121,12 +122,19 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
+
+  const isWaterCycle = initialItems?.some(item => 
+    item.label?.toLowerCase().includes('evaporasi') || 
+    item.id?.toLowerCase().includes('evaporasi')
+  );
 
   // Sinkronisasi bila props items berganti dinamis dari slide deck
   useEffect(() => {
     setCurrentOrder([...initialItems].sort(() => Math.random() - 0.5));
     setCheckedState(false);
     setIsSuccess(false);
+    setShowExplanation(false);
   }, [initialItems]);
 
   // Geser kartu ke kiri (Tap-to-swap)
@@ -223,6 +231,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
 
     if (allCorrect) {
       sound.playCorrect();
+      setShowExplanation(true);
     } else {
       sound.playWrong();
     }
@@ -359,12 +368,12 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
       )}
 
       {/* Action Buttons Bawah Gaya Canva */}
-      <div className="flex items-center gap-3 mt-4 w-full max-w-md justify-center">
+      <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 mt-4 w-full max-w-lg justify-center">
         {/* Tombol Shuffle */}
         <button
           type="button"
           onClick={handleShuffle}
-          className="flex-1 py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition"
+          className="flex-1 min-w-[120px] py-2.5 px-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition"
         >
           <RotateCcw size={15} />
           <span>Acak Ulang</span>
@@ -374,12 +383,106 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
         <button
           type="button"
           onClick={handleCheckOrder}
-          className={`flex-1 py-2.5 px-4 rounded-xl ${themeStyle.checkBtn} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition`}
+          className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-xl ${themeStyle.checkBtn} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition`}
         >
           <CheckCircle2 size={16} />
           <span>Periksa Urutan</span>
         </button>
+
+        {/* Tombol Toggle Penjelasan Kak Galih */}
+        {isWaterCycle && (
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              setShowExplanation(prev => !prev);
+            }}
+            className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
+          >
+            <Compass size={15} className="text-emerald-700" />
+            <span>{showExplanation ? 'Tutup Penjelasan' : 'Penjelasan Kak Galih'}</span>
+            {showExplanation ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        )}
       </div>
+
+      {/* PANEL PENJELASAN KAK GALIH: KONDENSASI, EVAPORASI, PRESIPITASI, INFILTRASI */}
+      {showExplanation && isWaterCycle && (
+        <div className="w-full max-w-3xl mt-5 p-4 sm:p-6 bg-white/95 backdrop-blur-md rounded-3xl border-2 border-emerald-200/90 shadow-xl animate-in fade-in slide-in-from-bottom-3 duration-300 text-left relative z-20">
+          {/* Header Penjelasan dengan Avatar Kak Galih */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pb-4 border-b border-emerald-100">
+            <KakGalihAvatar size="sm" mood="explaining" />
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-700">
+                  Ulasan Konsep Kunci Sains
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">
+                  Kak Galih Menjelaskan
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-700 font-semibold mt-1 leading-relaxed">
+                &ldquo;Hebat sekali! Urutan tahapan daur air sudah tepat. Sekarang mari kita pahami bersama rahasia ilmiah di balik setiap prosesnya:&rdquo;
+              </p>
+            </div>
+          </div>
+
+          {/* 4 Kolom Penjelasan Detail: Evaporasi, Kondensasi, Presipitasi, Infiltrasi */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 my-4">
+            {/* 1. EVAPORASI */}
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-50/70 border border-amber-200 shadow-2xs">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xl">☀️</span>
+                <h4 className="font-extrabold text-sm text-amber-900">1. Evaporasi (Penguapan)</h4>
+              </div>
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Panas sinar matahari memanaskan air di sungai, danau, dan laut Lembah Cendrawasih. Molekul air berubah wujud dari cair menjadi gas (uap air) yang ringan dan melayang naik ke udara. Tumbuhan hutan juga ikut menguapkan air melalui stomata daun (disebut <em>transpirasi</em>).
+              </p>
+            </div>
+
+            {/* 2. KONDENSASI */}
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-blue-50/70 border border-blue-200 shadow-2xs">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xl">☁️</span>
+                <h4 className="font-extrabold text-sm text-blue-900">2. Kondensasi (Pengembunan)</h4>
+              </div>
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Saat uap air membubung tinggi ke atmosfer yang dingin, suhunya turun drastis. Uap air mendingin dan mengembun kembali menjadi miliaran titik-titik air mikro yang saling berkumpul membentuk awan mendung tebal di atas puncak pegunungan.
+              </p>
+            </div>
+
+            {/* 3. PRESIPITASI */}
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200 shadow-2xs">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xl">🌧️</span>
+                <h4 className="font-extrabold text-sm text-indigo-900">3. Presipitasi (Curah Hujan)</h4>
+              </div>
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Ketika butiran air di awan semakin padat dan bertambah berat, awan menjadi jenuh. Arus udara tidak lagi sanggup menahannya, sehingga gaya gravitasi bumi menarik butiran air jatuh kembali ke daratan sebagai hujan yang menyirami hutan kita.
+              </p>
+            </div>
+
+            {/* 4. INFILTRASI */}
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 shadow-2xs">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-xl">🌱</span>
+                <h4 className="font-extrabold text-sm text-emerald-900">4. Infiltrasi (Resapan Air Tanah)</h4>
+              </div>
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                <strong>Apa itu?</strong> Air hujan yang jatuh ke tanah meresap masuk ke pori-pori tanah berkat bantuan jalinan akar pepohonan hutan yang lebat. Air ini tersaring alami menjadi cadangan air tanah yang kemudian memancar sebagai mata air pegunungan yang jernih dan mengalir ke sungai!
+              </p>
+            </div>
+          </div>
+
+          {/* Catatan Konservasi Kak Galih */}
+          <div className="p-3 bg-emerald-100/70 border border-emerald-300/80 rounded-xl flex items-start gap-2.5 text-xs text-emerald-950 font-medium">
+            <span className="text-base shrink-0">💡</span>
+            <div>
+              <strong>Catatan Lapangan Kak Galih:</strong> Hutan lindung Lembah Cendrawasih bertindak sebagai spons raksasa. Jika pohon ditebang, air hujan tidak dapat terinfiltrasi dan akan langsung menjadi banjir lumpur, sementara mata air akan mengering saat musim kemarau.
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

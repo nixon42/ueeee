@@ -24,6 +24,7 @@ import {
   StoryResolutionSlide, 
   ReflectionSparkSlide 
 } from './slides';
+import { EcosystemCanvasBackground } from './backgrounds/EcosystemCanvasBackground';
 import { progressService } from '@/business';
 
 export interface StoryPresentationDeckEngineProps {
@@ -257,9 +258,12 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
       resetTooltip="Mulai Ulang dari Slide 1"
       contentClassName="flex-1 min-h-0 p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative"
     >
-      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS */}
-      <div className="flex-1 min-h-0 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-y-auto relative p-3 sm:p-6 md:p-8">
-        {renderSlideContent()}
+      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS WITH ECOSYSTEM ART */}
+      <div className="flex-1 min-h-0 bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-y-auto relative p-3 sm:p-6 md:p-8">
+        <EcosystemCanvasBackground theme={deck.themeColor} />
+        <div className="relative z-10 w-full flex-1 flex flex-col">
+          {renderSlideContent()}
+        </div>
       </div>
 
       {/* FOOTER BAR NAVIGASI SLIDE PRESENTASI */}

@@ -3,9 +3,9 @@ import { GameItem } from '../types/game';
 export const GAMES_CATALOG: GameItem[] = [
   {
     id: 'ular-tangga-sains',
-    title: 'Ular Tangga: Petualangan Sains',
-    subtitle: 'Taklukkan tantangan petak dan hindari ular dengan kuis sains!',
-    description: 'Game papan Ular Tangga 100 petak yang dilengkapi dengan pertanyaan fisika, biologi, fotosintesis tumbuhan, dan fenomena alam. Naik tangga jika benar, hindari ular jika salah!',
+    title: 'Petualangan Sains: Ekspedisi Daur Air',
+    subtitle: 'Selamatkan mata air Lembah Cendrawasih lewat pemahaman daur air dan fotosintesis!',
+    description: 'Ekspedisi sains interaktif bersama Kak Galih! Amati infografis hidrologi beranimasi loop, selesaikan rekonstruksi 4 tahap daur air, dan pelajari fotosintesis untuk menyelamatkan mata air pegunungan.',
     type: 'ular-tangga',
     category: 'sains',
     gradeLevel: 'SD Kelas 4-6',
@@ -13,10 +13,10 @@ export const GAMES_CATALOG: GameItem[] = [
     badgeColor: 'bg-amber-100 text-amber-800 border-amber-300',
     accentColor: '#f97316',
     gradient: 'from-orange-500 via-rose-500 to-pink-500',
-    iconName: 'Dice5',
+    iconName: 'Compass',
     playTimeMinutes: 10,
     featured: true,
-    subjectDetail: 'IPA / Sains & Fenomena Alam',
+    subjectDetail: 'IPA / Daur Air & Keseimbangan Ekosistem',
     rating: 4.9,
     playsCount: 2480,
     hasStoryPresentation: true,
@@ -24,28 +24,28 @@ export const GAMES_CATALOG: GameItem[] = [
     slideCount: 7,
     mentorName: 'Kak Galih',
     tags: [
-      'sains', 'ipa', 'fotosintesis', 'tata surya', 'biologi', 
-      'fisika', 'energi', 'ekosistem', 'ular tangga', 'kuis sains'
+      'sains', 'ipa', 'daur air', 'hidrologi', 'fotosintesis', 
+      'ekosistem', 'lembah cendrawasih', 'petualangan alam', 'kak galih'
     ],
     prolog: {
-      story: 'Kamu berperan sebagai penjelajah sains muda yang bertualang di labirin alam 100 petak. Di sepanjang perjalanan, kamu akan menemukan berbagai fenomena alam menarik mulai dari rahasia daun berfotosintesis hingga gaya gravitasi bumi.',
+      story: 'Bersama Kak Galih (Penjelajah Rimba), kamu memulai ekspedisi ilmiah ke hulu sungai Lembah Cendrawasih. Aliran mata air pegunungan mulai surut dan dedaunan hutan menguning karena daur hidrologi terganggu. Misimu adalah merekonstruksi siklus air 4 tahap, memahami fotosintesis, dan menyelamatkan ekosistem lembah!',
       learningGoals: [
-        'Memahami proses fotosintesis tumbuhan dan pertukaran gas oksigen-karbondioksida.',
-        'Mengenal hukum dasar fisika (gaya gravitasi, energi kinetik, dan perpindahan panas).',
-        'Mengidentifikasi rantai makanan, produsen, konsumen, dan keseimbangan ekosistem.',
-        'Mengetahui karakteristik tata surya dan fenomena siang-malam.'
+        'Memahami 4 tahapan daur air sempurna (Evaporasi, Kondensasi, Presipitasi, dan Infiltrasi).',
+        'Menganalisis fotosintesis daun, penyerapan CO2 oleh stomata, dan pelepasan oksigen segar O2.',
+        'Mempelajari peran penting tutupan hutan dan akar pohon dalam menjaga cadangan mata air tanah.',
+        'Menghubungkan transformasi energi surya menjadi energi kimia bagi kelestarian rantai makanan.'
       ],
       howToPlay: [
-        'Pilih mode permainan: Solo vs Bot atau 2 Pemain lokal bersama teman/guru.',
-        'Tekan tombol "Lempar Dadu" atau tekan tombol [Spasi] pada keyboard.',
-        'Pion akan melangkah otomatis di papan sesuai angka mata dadu (1-6).',
-        'Ketika pion berhenti di petak tangga atau ular, selesaikan soal kuis sains yang muncul.'
+        'Simak arahan ekspedisi dari Kak Galih di setiap babak presentasi interaktif.',
+        'Amati bagan infografis hidrologi beranimasi loop untuk melihat pergerakan molekul H2O.',
+        'Selesaikan tantangan urutan daur air dan cocokkan transformasi energi alam.',
+        'Pelajari ulasan mendalam Kak Galih tentang evaporasi, kondensasi, presipitasi, dan infiltrasi.'
       ],
       rules: [
-        'Petak Tangga: Jawab kuis sains dengan benar untuk memanjat tangga dan melonjak hingga puluhan petak ke atas.',
-        'Petak Ular: Jika jawaban kuis salah saat menginjak kepala ular, pion akan meluncur turun ke ekor ular.',
-        'Pemain yang pertama kali mencapai petak 100 tepat dinobatkan sebagai Juara Penjelajah Sains.',
-        'Kuis dapat dicoba ulang dengan penjelasan ilmiah otomatis untuk memperdalam pemahaman.'
+        'Ikuti alur slide presentasi secara runtut atau navigasikan via titik progress di bawah.',
+        'Pada tantangan urutan daur air, geser kartu hingga urutan alaminya 100% tepat.',
+        'Gunakan tombol "Layar Penuh" untuk tampilan maksimal saat belajar di kelas.',
+        'Tuntaskan seluruh babak ekspedisi untuk merayakan kembalinya mata air Lembah Cendrawasih!'
       ]
     }
   },

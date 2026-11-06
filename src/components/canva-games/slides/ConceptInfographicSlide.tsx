@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lightbulb, Maximize2, ZoomIn, ZoomOut, RotateCcw, X } from 'lucide-react';
+import { Lightbulb, Maximize2, ZoomIn, ZoomOut, RotateCcw, X, Sparkles, Layers } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
@@ -23,6 +23,39 @@ const CARD_THEME_COLORS: Record<string, { bg: string; border: string; text: stri
   indigo: { bg: 'bg-indigo-50/70', border: 'border-indigo-200', text: 'text-indigo-800', badge: 'text-indigo-700' },
 };
 
+const WATER_CYCLE_HOTSPOTS = [
+  {
+    id: 'evaporasi',
+    label: '☀️ 1. Evaporasi',
+    sub: 'Penguapan H2O',
+    desc: 'Panas surya memanaskan air permukaan laut, sungai, dan danau sehingga molekul air menguap membubung ke atmosfer (termasuk transpirasi dari daun tumbuhan).',
+  },
+  {
+    id: 'kondensasi',
+    label: '☁️ 2. Kondensasi',
+    sub: 'Pembentukan Awan',
+    desc: 'Uap air di atmosfer dingin mendingin dan mengembun menjadi miliaran titik-titik air mikro yang saling berkumpul membentuk awan mendung tebal.',
+  },
+  {
+    id: 'presipitasi',
+    label: '🌧️ 3. Presipitasi',
+    sub: 'Curah Hujan',
+    desc: 'Awan jenuh tidak mampu lagi menahan berat air, sehingga gravitasi bumi menarik butiran air jatuh ke tanah sebagai hujan membasahi pegunungan.',
+  },
+  {
+    id: 'infiltrasi',
+    label: '🌱 4. Infiltrasi',
+    sub: 'Mata Air Tanah',
+    desc: 'Air hujan meresap ke dalam pori-pori tanah berkat jalinan akar pohon hutan, tersaring alami menjadi cadangan mata air pegunungan yang jernih.',
+  },
+  {
+    id: 'fotosintesis',
+    label: '🌿 5. Fotosintesis',
+    sub: 'Pertukaran Gas O2',
+    desc: 'Stomata daun menyerap CO2 dan energi foton surya untuk memproduksi glukosa serta melepaskan oksigen segar bagi seluruh makhluk hidup.',
+  },
+];
+
 export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = ({
   slide,
   themeColor,
@@ -31,6 +64,12 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const isFourCards = slide.cards.length === 4;
   const IllustrationComponent = gameId ? getDeckIllustration(gameId) : null;
+  const isDedicatedInfographic = slide.id === 'uts-slide-2' || (slide as any).renderFullIllustration === true;
+
+  const [viewMode, setViewMode] = useState<'infographic' | 'cards'>(() =>
+    isDedicatedInfographic && IllustrationComponent ? 'infographic' : 'cards'
+  );
+  const [selectedHotspot, setSelectedHotspot] = useState<string | null>(null);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
@@ -62,85 +101,168 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
     setZoomLevel(1);
   };
 
+  const activeHotspotInfo = WATER_CYCLE_HOTSPOTS.find((h) => h.id === selectedHotspot);
+
   return (
-    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-4 sm:space-y-5 animate-in fade-in duration-300">
+    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-3 sm:space-y-4 animate-in fade-in duration-300 relative z-10">
       {/* Header */}
       <div className="text-center space-y-1">
-        <span
-          className={`text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}
-        >
-          {slide.chapterBadge || 'BABAK 2: KONSEP DASAR PEMBELAJARAN'}
-        </span>
-        <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+        <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/80 border border-slate-200 shadow-2xs">
+          <Sparkles size={12} className={theme.textPrimary} />
+          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-widest ${theme.textPrimary}`}>
+            {slide.chapterBadge || 'BABAK 2: KONSEP DASAR PEMBELAJARAN'}
+          </span>
+        </div>
+        <h2 className="text-xl sm:text-3xl font-black text-slate-900 leading-tight">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+          <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto">
             {slide.subtitle}
           </p>
         )}
 
-        {/* Optional High-Res Infographic Fullscreen Trigger */}
+        {/* View Mode Switcher when Illustration is Available */}
         {IllustrationComponent && (
-          <div className="pt-1.5 flex items-center justify-center">
+          <div className="pt-1.5 flex items-center justify-center gap-2">
+            <div className="bg-slate-100 p-0.5 rounded-xl border border-slate-200 inline-flex items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  setViewMode('infographic');
+                }}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  viewMode === 'infographic'
+                    ? 'bg-white text-emerald-800 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Sparkles size={12} />
+                <span>Bagan Animasi Loop</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  setViewMode('cards');
+                }}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  viewMode === 'cards'
+                    ? 'bg-white text-emerald-800 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Layers size={12} />
+                <span>Kartu Konsep Ringkas</span>
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={handleOpenZoom}
-              className="text-xs font-bold text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100/80 px-3 py-1.5 rounded-xl border border-purple-200 transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
-              title="Buka bagan infografis visual resolusi tinggi di layar penuh"
+              className="text-xs font-bold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200 transition flex items-center gap-1 cursor-pointer shadow-2xs"
+              title="Perbesar Layar Penuh (Zoom)"
             >
-              <Maximize2 size={13} className="text-purple-600" />
-              <span>Buka Bagan Infografis Visual (Layar Penuh)</span>
+              <Maximize2 size={12} />
+              <span className="hidden sm:inline">Perbesar</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Main Content Area: Direct Concept Cards Grid */}
-      <div
-        className={`grid ${
-          isFourCards
-            ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4'
-            : 'grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6'
-        } my-auto w-full`}
-      >
-        {slide.cards.map((card, idx) => {
-          const cardColor =
-            card.badgeColor && CARD_THEME_COLORS[card.badgeColor]
-              ? CARD_THEME_COLORS[card.badgeColor]
-              : CARD_THEME_COLORS.emerald;
+      {/* Main Content Area */}
+      {viewMode === 'infographic' && IllustrationComponent ? (
+        <div className="flex-1 w-full flex flex-col justify-center my-auto space-y-2.5">
+          {/* Framed Interactive High-Res Looping SVG Infographic */}
+          <div className="w-full max-h-[46vh] sm:max-h-[50vh] aspect-[16/10] mx-auto rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-emerald-300/80 shadow-lg bg-emerald-950/5 relative flex items-center justify-center">
+            <IllustrationComponent className="w-full h-full object-contain" />
+          </div>
 
-          return (
-            <div
-              key={card.id || `card-${idx}`}
-              className={`p-4 sm:p-5 rounded-3xl ${cardColor.bg} border-2 ${cardColor.border} shadow-sm flex flex-col space-y-2.5 hover:shadow-md transition`}
-            >
-              <span className="text-3xl sm:text-4xl filter drop-shadow-sm select-none">
-                {card.iconEmoji || '📘'}
-              </span>
-              {card.levelBadge && (
-                <span className={`text-[11px] font-black uppercase tracking-wider ${cardColor.badge}`}>
-                  {card.levelBadge}
+          {/* Interactive Phase Badges Bar */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+            {WATER_CYCLE_HOTSPOTS.map((hotspot) => {
+              const isSelected = selectedHotspot === hotspot.id;
+              return (
+                <button
+                  key={hotspot.id}
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setSelectedHotspot(isSelected ? null : hotspot.id);
+                  }}
+                  className={`px-2.5 sm:px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer border flex items-center gap-1 ${
+                    isSelected
+                      ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs scale-105'
+                      : 'bg-white/90 hover:bg-emerald-50 text-slate-700 border-slate-200 hover:border-emerald-300'
+                  }`}
+                >
+                  <span>{hotspot.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Quick Active Hotspot Callout Box */}
+          {activeHotspotInfo && (
+            <div className="bg-emerald-50/90 border border-emerald-200 p-2.5 sm:p-3 rounded-2xl text-left animate-in fade-in duration-200">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="font-extrabold text-xs text-emerald-900">{activeHotspotInfo.label}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
+                  {activeHotspotInfo.sub}
                 </span>
-              )}
-              <h3 className="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">
-                {card.title}
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium flex-1">
-                {card.description}
-              </p>
+              </div>
+              <p className="text-xs text-emerald-950 font-medium leading-relaxed">{activeHotspotInfo.desc}</p>
             </div>
-          );
-        })}
-      </div>
+          )}
+        </div>
+      ) : (
+        /* Direct Concept Cards Grid */
+        <div
+          className={`grid ${
+            isFourCards
+              ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4'
+              : 'grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6'
+          } my-auto w-full`}
+        >
+          {slide.cards.map((card, idx) => {
+            const cardColor =
+              card.badgeColor && CARD_THEME_COLORS[card.badgeColor]
+                ? CARD_THEME_COLORS[card.badgeColor]
+                : CARD_THEME_COLORS.emerald;
 
-      {/* Teacher Speaker Prompt Banner (Classroom Proyektor Cue) */}
-      <div className="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex items-center gap-3 text-xs sm:text-sm text-slate-600 shrink-0">
-        <Lightbulb className="text-amber-500 shrink-0" size={20} />
+            return (
+              <div
+                key={card.id || `card-${idx}`}
+                className={`p-4 sm:p-5 rounded-3xl ${cardColor.bg} border-2 ${cardColor.border} shadow-sm flex flex-col space-y-2 hover:shadow-md transition bg-white/90 backdrop-blur-xs`}
+              >
+                <span className="text-3xl sm:text-4xl filter drop-shadow-sm select-none">
+                  {card.iconEmoji || '📘'}
+                </span>
+                {card.levelBadge && (
+                  <span className={`text-[11px] font-black uppercase tracking-wider ${cardColor.badge}`}>
+                    {card.levelBadge}
+                  </span>
+                )}
+                <h3 className="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">
+                  {card.title}
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed font-medium flex-1">
+                  {card.description}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Teacher Speaker Prompt Banner */}
+      <div className="bg-white/90 backdrop-blur-xs p-3 sm:p-3.5 rounded-2xl border border-slate-200/90 flex items-center gap-3 text-xs sm:text-sm text-slate-700 shrink-0 shadow-2xs">
+        <Lightbulb className="text-amber-500 shrink-0" size={18} />
         <span>
           <strong>Panduan Guru di Kelas:</strong>{' '}
           {slide.teacherNotes ||
-            'Ajak siswa mengulas kartu materi di atas dan memberikan contoh konkret dalam kehidupan sehari-hari sebelum melangkah ke tantangan mini-game!'}
+            'Ajak siswa mengamati animasi loop pergerakan molekul air: dari penguapan sungai oleh energi surya, pembentukan awan dingin di pegunungan, hingga turunnya hujan yang diserap oleh akar pohon.'}
         </span>
       </div>
 

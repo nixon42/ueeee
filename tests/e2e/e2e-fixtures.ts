@@ -27,7 +27,7 @@ export interface AuthoritativeGameSpec {
 export const AUTHORITATIVE_GAMES_SPEC: Record<string, AuthoritativeGameSpec> = {
   'ular-tangga-sains': {
     gameId: 'ular-tangga-sains',
-    expectedTitle: 'Ular Tangga: Petualangan Sains',
+    expectedTitle: 'Petualangan Sains: Ekspedisi Daur Air',
     category: 'sains',
     gradeLevel: 'SD Kelas 4-6',
     mentorName: 'Kak Galih',
