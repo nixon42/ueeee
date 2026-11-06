@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { X, ShieldCheck, ShieldAlert, LogOut, Sparkles, Loader2 } from 'lucide-react';
+import { X, LogOut, Loader2, AlertCircle } from 'lucide-react';
 import { useSuperadmin } from '@/business';
 import { sound } from '@/lib/sound';
+import { LogoIcon } from '@/components/common/Logo';
 
 interface Props {
   isOpen: boolean;
@@ -52,133 +53,98 @@ export const SuperadminModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
       <div
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden"
+        className="relative w-full max-w-sm bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-7 overflow-hidden animate-scaleUp"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header Ribbon */}
-        <div className="relative bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 p-6 text-white text-center">
-          <button
-            onClick={() => {
-              sound.playClick();
-              onClose();
-            }}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
-            title="Tutup Modal"
-          >
-            <X size={18} />
-          </button>
+        {/* Close Button */}
+        <button
+          onClick={() => {
+            sound.playClick();
+            onClose();
+          }}
+          className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+          title="Tutup"
+        >
+          <X size={18} />
+        </button>
 
-          <div className="inline-flex p-3 rounded-2xl bg-white/15 backdrop-blur-xs border border-white/20 mb-3 shadow-inner">
-            {isSuperadmin ? (
-              <ShieldCheck size={32} className="text-amber-300" />
-            ) : (
-              <ShieldAlert size={32} className="text-purple-200" />
-            )}
-          </div>
-
-          <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-            Superadmin Panel
-          </h2>
-          <p className="text-xs text-purple-200 mt-1 font-medium">
-            {isSuperadmin
-              ? 'Sesi Superadmin Terverifikasi Aktif'
-              : 'Otentikasi & Akses Khusus Pengelola Platform'}
-          </p>
-        </div>
-
-        {/* Content Body */}
-        <div className="p-6 space-y-5">
-          {error && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold leading-relaxed flex items-start gap-2.5">
-              <ShieldAlert size={18} className="text-rose-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-bold">Akses Ditolak</p>
-                <p className="text-[11px] text-rose-700 mt-0.5">{error}</p>
-              </div>
-            </div>
-          )}
-
-          {isSuperadmin && user ? (
-            /* Logged In as Superadmin */
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200/80">
-                <div className="flex items-center gap-3">
-                  {user.avatarUrl ? (
-                    <img
-                      src={user.avatarUrl}
-                      alt={user.name || user.email}
-                      className="w-12 h-12 rounded-full border-2 border-purple-300 shadow-xs"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-lg flex items-center justify-center shadow-xs">
-                      {user.email.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-
-                  <div className="overflow-hidden">
-                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black border border-amber-300">
-                      <Sparkles size={11} className="text-amber-600" />
-                      <span>SUPERADMIN RESMI</span>
-                    </div>
-                    <p className="font-extrabold text-slate-800 text-sm truncate mt-0.5">
-                      {user.name || 'Pengelola ueeee'}
-                    </p>
-                    <p className="text-xs text-slate-500 font-mono truncate">
-                      {user.email}
-                    </p>
-                  </div>
+        {isSuperadmin && user ? (
+          /* Profile / Already Logged In State */
+          <div className="space-y-5 text-center">
+            <div className="flex flex-col items-center">
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.name || 'Pengelola'}
+                  className="w-16 h-16 rounded-full border-2 border-purple-500 shadow-sm object-cover mb-3"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-black text-xl flex items-center justify-center shadow-sm mb-3">
+                  {(user.name || 'A').charAt(0).toUpperCase()}
                 </div>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
-                <p className="font-bold text-slate-800 mb-1">Status Dashboard:</p>
-                <p>
-                  Tampilan antarmuka tetap menyajikan seluruh daftar materi pembelajaran tanpa perubahan layout, menjaga pengalaman eksplorasi belajar yang konsisten dan interaktif.
-                </p>
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row gap-2">
-                <button
-                  onClick={handleSignOut}
-                  disabled={isLoading}
-                  className="flex-1 px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 hover:border-rose-200 transition flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <LogOut size={14} />
-                  <span>Keluar (Logout)</span>
-                </button>
-                <button
-                  onClick={() => {
-                    sound.playClick();
-                    onClose();
-                    if (onNavigateToDashboard) {
-                      onNavigateToDashboard();
-                    }
-                  }}
-                  className="flex-1 px-4 py-2.5 rounded-2xl text-xs font-extrabold bg-purple-700 hover:bg-purple-800 text-white shadow-sm transition flex items-center justify-center cursor-pointer"
-                >
-                  <span>Buka Dashboard</span>
-                </button>
-              </div>
+              )}
+              <h2 className="text-lg font-bold text-slate-900">
+                {user.name || 'Pengelola ueeee'}
+              </h2>
+              <span className="mt-1 px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-semibold border border-purple-100">
+                Akun Pengelola
+              </span>
             </div>
-          ) : (
-            /* Guest / Login State */
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600 space-y-2">
-                <p className="font-bold text-slate-800">Kebijakan Hak Akses:</p>
-                <p>
-                  Hanya akun Google pengelola resmi terdaftar yang berhak mengaktifkan hak akses Superadmin.
-                </p>
-                <p className="text-slate-500 text-[11px]">
-                  Akun lain yang mencoba login akan otomatis ditolak dan dikembalikan ke mode tamu (*guest*).
-                </p>
-              </div>
 
+            <div className="pt-2 space-y-2">
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  onClose();
+                  if (onNavigateToDashboard) onNavigateToDashboard();
+                }}
+                className="w-full py-2.5 px-4 rounded-xl font-bold text-sm bg-purple-600 hover:bg-purple-700 text-white shadow-sm transition cursor-pointer"
+              >
+                Buka Dashboard
+              </button>
+
+              <button
+                onClick={handleSignOut}
+                disabled={isLoading}
+                className="w-full py-2 px-4 rounded-xl font-semibold text-xs text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <LogOut size={14} />
+                <span>Keluar</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Normal Clean Login State */
+          <div className="space-y-5">
+            {/* Brand & Greeting */}
+            <div className="flex flex-col items-center text-center pt-1">
+              <div className="mb-3.5 flex items-center justify-center">
+                <LogoIcon size={44} idSuffix="login-modal" />
+              </div>
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                Masuk ke ueeee
+              </h2>
+              <p className="text-xs text-slate-500 mt-1.5 leading-relaxed max-w-xs">
+                Masuk dengan akun Google untuk mengelola konten dan materi pembelajaran.
+              </p>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="p-3 rounded-2xl bg-rose-50 border border-rose-100 text-rose-700 text-xs font-medium flex items-start gap-2 leading-relaxed">
+                <AlertCircle size={16} className="text-rose-500 shrink-0 mt-0.5" />
+                <p>{error}</p>
+              </div>
+            )}
+
+            {/* Google Sign In Button */}
+            <div className="pt-1">
               <button
                 onClick={handleSignIn}
                 disabled={isLoading}
-                className="w-full py-3 px-4 rounded-2xl font-bold text-sm bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-purple-300 text-slate-800 shadow-sm hover:shadow transition flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50"
+                className="w-full py-3 px-4 rounded-2xl font-bold text-sm bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-700 shadow-xs hover:shadow transition flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -187,7 +153,6 @@ export const SuperadminModal: React.FC<Props> = ({
                   </>
                 ) : (
                   <>
-                    {/* Official Google G SVG */}
                     <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                       <path
                         fill="#4285F4"
@@ -206,13 +171,18 @@ export const SuperadminModal: React.FC<Props> = ({
                         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                       />
                     </svg>
-                    <span>Masuk dengan Google</span>
+                    <span>Lanjutkan dengan Google</span>
                   </>
                 )}
               </button>
             </div>
-          )}
-        </div>
+
+            {/* Subtle Footer Note */}
+            <p className="text-[11px] text-slate-400 text-center pt-1 leading-normal">
+              Akses khusus diperuntukkan bagi tim pengelola resmi.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
