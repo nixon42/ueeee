@@ -64,9 +64,12 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
 
   const themeTokens = PRESENTATION_THEMES[deck.themeColor] || PRESENTATION_THEMES.emerald;
 
-  // Narasi & infografis dibiarkan mengisi seluruh kanvas sebagai scene game, bukan kartu di dalam gradient.
+  // Slide scene (narasi, infografis, resolusi, refleksi) mengisi seluruh kanvas sebagai scene game.
   const isSceneSlide =
-    activeSlide?.type === 'narrative-intro' || activeSlide?.type === 'concept-infographic';
+    activeSlide?.type === 'narrative-intro' ||
+    activeSlide?.type === 'concept-infographic' ||
+    activeSlide?.type === 'story-resolution' ||
+    activeSlide?.type === 'reflection-spark';
 
   const goToSlide = (slideNum: number) => {
     sound.playSlideTransition();
