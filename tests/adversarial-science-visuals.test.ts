@@ -507,8 +507,8 @@ describe('Tier 5 Adversarial Hardening: Science Visual SVGs & Presentation Resil
         })
       );
 
-      expect(html).toContain('Mode Layar Penuh (Proyektor/TV Kelas)');
-      expect(html).toContain('Layar Penuh (Proyektor)');
+      expect(html).toContain('Mode Layar Penuh');
+      expect(html).toContain('Layar Penuh');
       expect(html).toContain('Tutup Game');
     });
 

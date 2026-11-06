@@ -141,10 +141,10 @@ export const GameStageShell: React.FC<GameStageShellProps> = ({
           <button
             onClick={toggleFullscreen}
             className={`px-3 py-2 rounded-xl bg-slate-100 ${theme.hoverText} text-slate-700 font-bold text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer border border-slate-200 ${theme.hoverBorder}`}
-            title={isFullscreen ? 'Keluar dari Layar Penuh' : 'Mode Layar Penuh (Proyektor/TV Kelas)'}
+            title={isFullscreen ? 'Keluar dari Layar Penuh' : 'Mode Layar Penuh'}
           >
             {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            <span className="hidden md:inline">{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh (Proyektor)'}</span>
+            <span className="hidden md:inline">{isFullscreen ? 'Keluar Penuh' : 'Layar Penuh'}</span>
           </button>
 
           {/* Audio Sound Toggle */}
