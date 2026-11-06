@@ -141,3 +141,4 @@ ueeee/
 3. **Responsive by Default:** Setiap tampilan harus diuji baik untuk desktop (proyektor sekolah) maupun smartphone siswa.
 4. **No Mandatory Login:** Jangan pernah menambahkan form otentikasi yang memblokir akses ke game. Fitur akun atau sync cloud hanya bersifat opsional di masa mendatang.
 5. **Clean Commits:** Gunakan pesan commit yang deskriptif (misal: `feat(dashboard): add canva-style hero header with search`).
+6. **Larangan Pill/Badge Status Percakapan AI ('Berbicara...', dsb):** DILARANG KERAS menambahkan badge teks berkedip seperti `'Berbicara...'`, `'Sedang Menjelaskan...'`, atau indikator status percakapan AI yang redundan pada balon ucapan (*speech bubble*) karakter/mentor. Balon ucapan sudah memiliki pointer segitiga visual dan animasi mulut/napas natural. Menambahkan teks status seperti itu merusak estetika antarmuka, menambah *visual clutter*, dan terkesan artifisial (*AI slop*).

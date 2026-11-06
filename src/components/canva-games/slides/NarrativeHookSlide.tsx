@@ -76,17 +76,11 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
             <div className="hidden md:block absolute -left-3 top-8 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-12 border-r-white drop-shadow-xs" />
             <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-12 border-b-white drop-shadow-xs" />
 
-            <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <Compass className={theme.textPrimary} size={16} />
-                <span className={`font-extrabold text-xs sm:text-sm ${theme.textPrimary}`}>
-                  {activeMentor.name} ({activeMentor.role}):
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                <span>Berbicara</span>
-              </div>
+            <div className="flex items-center gap-2 pb-2 mb-2 border-b border-slate-100">
+              <Compass className={theme.textPrimary} size={16} />
+              <span className={`font-extrabold text-xs sm:text-sm ${theme.textPrimary}`}>
+                {activeMentor.name} ({activeMentor.role}):
+              </span>
             </div>
 
             <p className="text-xs sm:text-base leading-relaxed text-slate-700 font-medium">

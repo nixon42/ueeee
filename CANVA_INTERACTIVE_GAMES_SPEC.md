@@ -163,6 +163,7 @@ Untuk menjaga estetika Canva yang bersih, bersahabat, dan flat:
   - Aksen Sequence: Oranye hangat (`bg-amber-500`, `bg-amber-50`, border `border-amber-200`).
   - Aksen Match Pairs: Lavender ungu (`bg-purple-600`, `bg-purple-50`, border `border-purple-200`).
   - Aksen Quiz: Rose pink (`bg-pink-600`, `bg-pink-50`, border `border-pink-200`).
+- **Larangan Pill Status Percakapan AI ("Berbicara...", dsb):** DILARANG KERAS menyematkan badge teks seperti "Berbicara...", "Sedang Bicara...", atau animasi ping status pada balon ucapan karakter mentor. Balon dialog komik dan animasi SVG karakter sudah cukup menyampaikan konteks percakapan secara natural tanpa clutter visual.
 
 
 ---

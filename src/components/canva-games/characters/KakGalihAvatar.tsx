@@ -234,19 +234,11 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
           <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-12 border-b-white/95 drop-shadow-sm" />
 
           {/* Dialogue Header */}
-          <div className="flex items-center justify-between gap-2 pb-2.5 mb-3 border-b border-emerald-100">
-            <div className="flex items-center gap-2">
-              <span className="text-base">🧭</span>
-              <span className="font-extrabold text-xs sm:text-sm text-emerald-900 tracking-tight">
-                {dialogueTitle}
-              </span>
-            </div>
-            {isSpeaking && (
-              <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                <span>Berbicara...</span>
-              </div>
-            )}
+          <div className="flex items-center gap-2 pb-2.5 mb-3 border-b border-emerald-100">
+            <span className="text-base">🧭</span>
+            <span className="font-extrabold text-xs sm:text-sm text-emerald-900 tracking-tight">
+              {dialogueTitle}
+            </span>
           </div>
 
           {/* Spoken Dialogue Text */}
