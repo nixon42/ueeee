@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lightbulb, ChevronRight, Maximize2, ZoomIn, ZoomOut, RotateCcw, X } from 'lucide-react';
+import { Lightbulb, Maximize2, ZoomIn, ZoomOut, RotateCcw, X } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
@@ -27,7 +27,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   slide,
   themeColor,
   gameId,
-  onNext,
 }) => {
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const isFourCards = slide.cards.length === 4;
