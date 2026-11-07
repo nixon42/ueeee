@@ -21,13 +21,13 @@ export { slide8PertanyaanPemantikHotsLabor } from './slides/slide-8-pertanyaan-p
 
 export const POINT_CLICK_LAB_DECK: PresentationDeckData = {
   "gameId": "point-click-lab",
-  "title": "Point & Click: Misteri Lab Sains Maya",
-  "subtitle": "Eksplorasi K3, Derajat pH, & Metode Ilmiah Kimia-Biologi",
+  "title": "Petualangan Sains: Investigasi Forensik Lab Kimia",
+  "subtitle": "Pecahkan Anomali Reaktor, Kuasai K3, & Uji Derajat Keasaman pH",
   "themeColor": "teal",
   "icon": "🔬",
   "category": "sains",
   "gradeLevel": "SMP",
-  "subjectDetail": "Kimia & Biologi Eksperimental (SMP Kelas 7)",
+  "subjectDetail": "IPA Kimia & Biologi Eksperimental (SMP Kelas 7)",
   "mentor": {
     "name": "Dr. Maya Arisandi, M.Sc.",
     "role": "Ilmuwan Forensik Kimia-Biologi",

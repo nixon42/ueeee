@@ -141,6 +141,23 @@ const MATCH_THEME_STYLES: Record<MatchTheme, {
   },
 };
 
+const getHazardPikto = (text: string) => {
+  const lower = text.toLowerCase();
+  if (lower.includes('korosif') || lower.includes('asam')) {
+    return { icon: '⚠️', symbol: '🧪', color: 'bg-amber-100 text-amber-900 border-amber-300' };
+  }
+  if (lower.includes('toksik') || lower.includes('tengkorak') || lower.includes('racun')) {
+    return { icon: '☠️', symbol: '☣️', color: 'bg-rose-100 text-rose-900 border-rose-300' };
+  }
+  if (lower.includes('api') || lower.includes('menyala') || lower.includes('bakar')) {
+    return { icon: '🔥', symbol: '⚡', color: 'bg-orange-100 text-orange-900 border-orange-300' };
+  }
+  if (lower.includes('eksplosif') || lower.includes('reaktif') || lower.includes('ledak')) {
+    return { icon: '💥', symbol: '💣', color: 'bg-red-100 text-red-900 border-red-300' };
+  }
+  return null;
+};
+
 /**
  * Komponen Game Interaktif Canva Education: "Match the Pairs / Match A to B"
  * Menjodohkan konsep di kolom kiri dengan pasangan di kolom kanan.
@@ -300,18 +317,27 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
       ref={containerRef}
       className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden ${className}`}
     >
-      {/* SVG Garis Penghubung (Rubber-Band Bezier Lines Khas Canva) */}
+      {/* SVG Garis Penghubung (Rubber-Band Bezier Lines Khas Canva Game) */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
         {lines.map((line, idx) => {
           const isCorrect = checkedState && line.leftId === line.rightId;
           const isWrong = checkedState && line.leftId !== line.rightId;
 
           const strokeColor = isCorrect ? '#10b981' : isWrong ? '#f43f5e' : themeStyle.activeLine;
-
           const midX = (line.x1 + line.x2) / 2;
 
           return (
             <g key={`line-${idx}`}>
+              {/* Outer soft glow beam */}
+              <path
+                d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
+                fill="none"
+                stroke={strokeColor}
+                strokeWidth={isCorrect ? '8' : isWrong ? '7' : '6'}
+                strokeOpacity={0.3}
+                strokeLinecap="round"
+              />
+              {/* Core laser beam */}
               <path
                 d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
                 fill="none"
@@ -322,24 +348,24 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
                 className="transition-colors duration-200"
               />
               {/* Lingkaran Titik Temu di Ujung Garis */}
-              <circle cx={line.x1} cy={line.y1} r="4.5" fill={strokeColor} />
-              <circle cx={line.x2} cy={line.y2} r="4.5" fill={strokeColor} />
+              <circle cx={line.x1} cy={line.y1} r="6" fill={strokeColor} stroke="#ffffff" strokeWidth="2" />
+              <circle cx={line.x2} cy={line.y2} r="6" fill={strokeColor} stroke="#ffffff" strokeWidth="2" />
             </g>
           );
         })}
       </svg>
 
       {/* Header Tantangan Canva */}
-      <div className="text-center max-w-xl mb-4 sm:mb-6 z-20">
+      <div className="text-center max-w-xl mb-3 sm:mb-5 z-20 shrink-0">
         <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
-        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">{displayInstructions}</p>
+        <p className="text-xs sm:text-sm text-slate-600 font-semibold mt-1">{displayInstructions}</p>
       </div>
 
       {/* Grid Dua Kolom Sejajar (Full Canvas Space Utilization) */}
-      <div className="w-full max-w-4xl grid grid-cols-2 gap-6 sm:gap-10 md:gap-14 my-auto z-20">
+      <div className="w-full max-w-4xl grid grid-cols-2 gap-4 sm:gap-8 md:gap-12 my-auto z-20">
         {/* Kolom Kiri: Istilah / Konsep */}
-        <div className="flex flex-col space-y-3">
-          <span className={`text-xs font-black uppercase tracking-wider px-1 ${themeStyle.leftHeader}`}>
+        <div className="flex flex-col space-y-2.5 sm:space-y-3">
+          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider px-1 ${themeStyle.leftHeader}`}>
             {leftColumnHeader}
           </span>
           {leftItems.map(item => {
@@ -347,6 +373,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
             const connectedRightId = connections[item.id];
             const isCorrect = checkedState && connectedRightId === item.id;
             const isWrong = checkedState && connectedRightId && connectedRightId !== item.id;
+            const pikto = getHazardPikto(item.leftText);
 
             return (
               <button
@@ -354,26 +381,33 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
                 ref={el => { leftRefs.current[item.id] = el; }}
                 type="button"
                 onClick={() => handleSelectLeft(item.id)}
-                className={`w-full p-3 sm:p-4 rounded-2xl text-left border-2 transition-all flex items-center justify-between font-bold text-xs sm:text-sm cursor-pointer ${
+                className={`w-full p-2.5 sm:p-3.5 rounded-2xl sm:rounded-3xl text-left border-2.5 sm:border-3 border-b-5 sm:border-b-6 transition-all duration-150 flex items-center justify-between font-bold text-xs sm:text-sm cursor-pointer active:translate-y-1 active:border-b-2.5 backdrop-blur-xs ${
                   isCorrect
-                    ? 'border-emerald-500 bg-emerald-50 text-emerald-900 shadow-sm'
+                    ? 'border-emerald-500 border-b-emerald-600 bg-emerald-50/95 text-emerald-950 shadow-md ring-2 ring-emerald-300'
                     : isWrong
-                    ? 'border-rose-400 bg-rose-50 text-rose-900 shadow-sm'
+                    ? 'border-rose-400 border-b-rose-500 bg-rose-50/95 text-rose-950 shadow-md ring-2 ring-rose-300'
                     : isSelected
-                    ? themeStyle.leftSelected
+                    ? `${themeStyle.leftSelected} -translate-y-0.5`
                     : connectedRightId
-                    ? 'border-slate-300 bg-white text-slate-800 shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/70 shadow-sm'
+                    ? 'border-slate-300 border-b-slate-400 bg-white/95 text-slate-900 shadow-xs'
+                    : 'border-slate-200 border-b-slate-300 bg-white/95 text-slate-800 hover:border-teal-300 hover:border-b-teal-400 hover:bg-teal-50/40 shadow-xs'
                 }`}
               >
-                <span className="pr-2 leading-snug">{item.leftText}</span>
+                <div className="flex items-center gap-2 sm:gap-2.5 pr-2">
+                  {pikto && (
+                    <span className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center text-sm sm:text-base border-2 shadow-2xs shrink-0 select-none ${pikto.color}`}>
+                      {pikto.icon}
+                    </span>
+                  )}
+                  <span className="leading-snug">{item.leftText}</span>
+                </div>
                 <span className="shrink-0">
                   {isCorrect ? (
-                    <CheckCircle2 size={16} className="text-emerald-600" />
+                    <CheckCircle2 size={18} className="text-emerald-600" />
                   ) : isWrong ? (
-                    <AlertCircle size={16} className="text-rose-500" />
+                    <AlertCircle size={18} className="text-rose-500" />
                   ) : (
-                    <span className={`w-2.5 h-2.5 rounded-full ${themeStyle.dotLeft} inline-block`}></span>
+                    <span className={`w-3 h-3 rounded-full ${themeStyle.dotLeft} inline-block shadow-2xs`}></span>
                   )}
                 </span>
               </button>
@@ -382,8 +416,8 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
         </div>
 
         {/* Kolom Kanan: Definisi / Pasangan */}
-        <div className="flex flex-col space-y-3">
-          <span className={`text-xs font-black uppercase tracking-wider px-1 ${themeStyle.rightHeader}`}>
+        <div className="flex flex-col space-y-2.5 sm:space-y-3">
+          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider px-1 ${themeStyle.rightHeader}`}>
             {rightColumnHeader}
           </span>
           {rightItems.map(item => {
@@ -398,26 +432,26 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
                 ref={el => { rightRefs.current[item.id] = el; }}
                 type="button"
                 onClick={() => handleSelectRight(item.id)}
-                className={`w-full p-3 sm:p-4 rounded-2xl text-left border-2 transition-all flex items-center justify-between font-bold text-xs sm:text-sm cursor-pointer ${
+                className={`w-full p-2.5 sm:p-3.5 rounded-2xl sm:rounded-3xl text-left border-2.5 sm:border-3 border-b-5 sm:border-b-6 transition-all duration-150 flex items-center justify-between font-bold text-xs sm:text-sm cursor-pointer active:translate-y-1 active:border-b-2.5 backdrop-blur-xs ${
                   isCorrect
-                    ? 'border-emerald-500 bg-emerald-50 text-emerald-900 shadow-sm'
+                    ? 'border-emerald-500 border-b-emerald-600 bg-emerald-50/95 text-emerald-950 shadow-md ring-2 ring-emerald-300'
                     : isWrong
-                    ? 'border-rose-400 bg-rose-50 text-rose-900 shadow-sm'
+                    ? 'border-rose-400 border-b-rose-500 bg-rose-50/95 text-rose-950 shadow-md ring-2 ring-rose-300'
                     : isConnected
-                    ? 'border-slate-300 bg-white text-slate-800 shadow-sm'
+                    ? 'border-slate-300 border-b-slate-400 bg-white/95 text-slate-900 shadow-xs'
                     : selectedLeftId
-                    ? themeStyle.rightHover
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/70 shadow-sm'
+                    ? `${themeStyle.rightHover} -translate-y-0.5`
+                    : 'border-slate-200 border-b-slate-300 bg-white/95 text-slate-800 hover:border-teal-300 hover:border-b-teal-400 hover:bg-teal-50/40 shadow-xs'
                 }`}
               >
-                <span className={`w-2.5 h-2.5 rounded-full ${themeStyle.dotRight} inline-block mr-2 shrink-0`}></span>
+                <span className={`w-3 h-3 rounded-full ${themeStyle.dotRight} inline-block mr-2.5 shrink-0 shadow-2xs`}></span>
                 <span className="flex-1 pr-2 leading-snug">{item.rightText}</span>
                 {checkedState && (
                   <span className="shrink-0">
                     {isCorrect ? (
-                      <CheckCircle2 size={16} className="text-emerald-600" />
+                      <CheckCircle2 size={18} className="text-emerald-600" />
                     ) : (
-                      <AlertCircle size={16} className="text-rose-500" />
+                      <AlertCircle size={18} className="text-rose-500" />
                     )}
                   </span>
                 )}
@@ -430,10 +464,10 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
       {/* Umpan Balik Hasil Validasi */}
       {checkedState && (
         <div
-          className={`w-full max-w-md my-4 p-3 rounded-2xl border text-center text-xs sm:text-sm font-bold flex items-center justify-center gap-2 z-20 ${
+          className={`w-full max-w-md my-2 sm:my-3 p-3 rounded-2xl border-2 text-center text-xs sm:text-sm font-bold flex items-center justify-center gap-2 z-20 shadow-md animate-in fade-in duration-200 ${
             isSuccess
-              ? 'bg-emerald-100 border-emerald-300 text-emerald-900'
-              : 'bg-rose-100 border-rose-300 text-rose-900'
+              ? 'bg-emerald-100 border-emerald-400 text-emerald-950'
+              : 'bg-rose-100 border-rose-400 text-rose-950'
           }`}
         >
           {isSuccess ? (
@@ -451,20 +485,20 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
       )}
 
       {/* Action Buttons Bawah */}
-      <div className="flex items-center gap-3 mt-4 w-full max-w-md justify-center z-20">
+      <div className="flex items-center gap-3 mt-3 w-full max-w-md justify-center z-20 shrink-0">
         <button
           type="button"
           onClick={handleReset}
-          className="flex-1 py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition"
+          className="flex-1 py-2.5 sm:py-3 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 border-2 border-b-4 border-slate-300 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all"
         >
-          <RotateCcw size={15} />
+          <RotateCcw size={16} />
           <span>Reset Garis</span>
         </button>
 
         <button
           type="button"
           onClick={handleCheckMatches}
-          className={`flex-1 py-2.5 px-4 rounded-xl ${themeStyle.checkBtn} font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition`}
+          className={`flex-1 py-2.5 sm:py-3 px-4 rounded-2xl ${themeStyle.checkBtn} border-2 border-b-4 border-teal-800 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition-all`}
         >
           <LinkIcon size={16} />
           <span>Periksa Pasangan</span>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, CheckCircle2, AlertCircle, Compass, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { KakGalihAvatar } from './characters/KakGalihAvatar';
+import { DrMayaAvatar } from './characters/DrMayaAvatar';
 import { TgcSequenceCard } from './TgcSequenceCard';
 
 export interface SequenceItem {
@@ -123,9 +124,16 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
   const dragStartPointerPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const cardSizeRef = useRef<{ width: number; height: number }>({ width: 200, height: 300 });
 
-  const isWaterCycle = initialItems?.some(item => 
-    item.label?.toLowerCase().includes('evaporasi') || 
+  const isWaterCycle = initialItems?.some(item =>
+    item.label?.toLowerCase().includes('evaporasi') ||
     item.id?.toLowerCase().includes('evaporasi')
+  );
+
+  const isScientificMethod = initialItems?.some(item =>
+    item.label?.toLowerCase().includes('observasi') ||
+    item.id?.toLowerCase().includes('observasi') ||
+    item.label?.toLowerCase().includes('hipotesis') ||
+    item.id?.toLowerCase().includes('metode')
   );
 
   // Sinkronisasi bila props items berganti dinamis dari slide deck
@@ -478,22 +486,125 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
           <span>Periksa Urutan</span>
         </button>
 
-        {/* Tombol Toggle Penjelasan Kak Galih */}
-        {isWaterCycle && (
+        {/* Tombol Toggle Penjelasan Kak Galih / Dr. Maya */}
+        {(isWaterCycle || isScientificMethod) && (
           <button
             type="button"
             onClick={() => {
               sound.playClick();
               setShowExplanation((prev) => !prev);
             }}
-            className="h-11 sm:h-12 px-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95"
+            className={`h-11 sm:h-12 px-4 rounded-2xl ${
+              isScientificMethod
+                ? 'bg-teal-50 hover:bg-teal-100 text-teal-800 border-2 border-teal-300'
+                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-2 border-emerald-300'
+            } font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs active:scale-95`}
           >
-            <Compass size={16} className="text-emerald-700" />
-            <span>{showExplanation ? 'Tutup Penjelasan' : 'Penjelasan Kak Galih'}</span>
+            <Compass size={16} className={isScientificMethod ? 'text-teal-700' : 'text-emerald-700'} />
+            <span>
+              {showExplanation
+                ? 'Tutup Protokol'
+                : isScientificMethod
+                ? 'Protokol Dr. Maya'
+                : 'Penjelasan Kak Galih'}
+            </span>
             {showExplanation ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
         )}
       </div>
+
+      {/* PANEL PENJELASAN DR. MAYA: 5 LANGKAH METODE ILMIAH */}
+      {showExplanation && isScientificMethod && (
+        <div className="absolute inset-0 z-50 bg-white/98 backdrop-blur-md rounded-2xl sm:rounded-3xl border-2 border-teal-400 p-3 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
+          {/* Header Penjelasan dengan Avatar Dr. Maya & Tombol Tutup */}
+          <div className="flex items-center justify-between gap-3 pb-2 sm:pb-3 border-b border-teal-100 shrink-0">
+            <div className="flex items-center gap-3">
+              <DrMayaAvatar size="sm" mood="explaining" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-teal-700">
+                    Protokol Investigasi Forensik
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 text-[9px] sm:text-[10px] font-extrabold">
+                    Arahan Dr. Maya Arisandi
+                  </span>
+                </div>
+                <h4 className="text-xs sm:text-base font-black text-slate-900 mt-0.5">
+                  5 Siklus Baku Metode Ilmiah Pemecahan Kasus Reaktor
+                </h4>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowExplanation(false)}
+              className="py-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1 cursor-pointer transition shrink-0"
+            >
+              <span>✕ Tutup</span>
+            </button>
+          </div>
+
+          {/* 5 Kolom Ringkas Metode Ilmiah */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 flex-1 min-h-0 py-2 my-auto overflow-hidden">
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-teal-50/80 border border-teal-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base">🔍</span>
+                <h5 className="font-extrabold text-[11px] sm:text-xs text-teal-900 leading-tight">1. Observasi</h5>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug font-medium">
+                Mencatat fakta empiris anomali reaktor: perubahan warna, bau uap, dan suhu cairan.
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-amber-50/80 border border-amber-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base">❓</span>
+                <h5 className="font-extrabold text-[11px] sm:text-xs text-amber-900 leading-tight">2. Masalah</h5>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug font-medium">
+                Merumuskan pertanyaan spesifik: apa zat pemicu lonjakan asam drastis pada Unit 04?
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-purple-50/80 border border-purple-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base">💡</span>
+                <h5 className="font-extrabold text-[11px] sm:text-xs text-purple-900 leading-tight">3. Hipotesis</h5>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug font-medium">
+                Dugaan ilmiah sementara yang dapat diuji: kebocoran katalis asam memicu reaksi eksotermik.
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-rose-50/80 border border-rose-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base">🧪</span>
+                <h5 className="font-extrabold text-[11px] sm:text-xs text-rose-900 leading-tight">4. Eksperimen</h5>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug font-medium">
+                Menguji hipotesis dengan variabel terkontrol, lakmus, dan titrasi penetralan terukur.
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-2xl bg-blue-50/80 border border-blue-200 shadow-2xs flex flex-col justify-between overflow-hidden col-span-2 sm:col-span-1">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base">📊</span>
+                <h5 className="font-extrabold text-[11px] sm:text-xs text-blue-900 leading-tight">5. Kesimpulan</h5>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug font-medium">
+                Menarik konklusi objektif: hipotesis terbukti benar, data siap dilaporkan ke dewan lab.
+              </p>
+            </div>
+          </div>
+
+          {/* Catatan Forensik Dr. Maya */}
+          <div className="p-2 sm:p-2.5 bg-teal-100/70 border border-teal-300/80 rounded-xl flex items-center gap-2 text-[11px] sm:text-xs text-teal-950 font-medium shrink-0">
+            <span className="text-base shrink-0">🔬</span>
+            <div className="line-clamp-2">
+              <strong>Pesan Dr. Maya:</strong> Jangan pernah menarik kesimpulan hanya dari asumsi mata telanjang! Setiap temuan wajib didukung data eksperimental yang terverifikasi dan reproduktif.
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* PANEL PENJELASAN KAK GALIH: KONDENSASI, EVAPORASI, PRESIPITASI, INFILTRASI (MODAL OVERLAY TANPA OVERFLOW) */}
       {showExplanation && isWaterCycle && (

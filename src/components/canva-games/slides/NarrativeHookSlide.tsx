@@ -3,6 +3,7 @@ import { Compass } from 'lucide-react';
 import { NarrativeIntroSlide, PresentationMentor } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { KakGalihAvatar } from '../characters/KakGalihAvatar';
+import { DrMayaAvatar } from '../characters/DrMayaAvatar';
 
 export interface NarrativeHookSlideProps {
   slide: NarrativeIntroSlide;
@@ -19,6 +20,7 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const activeMentor = { ...mentor, ...slide.mentorOverride };
   const isKakGalih = activeMentor.name.toLowerCase().includes('galih');
+  const isDrMaya = activeMentor.name.toLowerCase().includes('maya');
 
   return (
     <div className="w-full h-full flex flex-col justify-between max-w-5xl mx-auto py-1 sm:py-2 md:py-3 space-y-2 sm:space-y-3 animate-in fade-in duration-300 relative z-10 overflow-hidden">
@@ -76,6 +78,55 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
               {slide.missionObjective && (
                 <div className="mt-4 sm:mt-5 p-2.5 sm:p-3 rounded-2xl bg-emerald-500/10 border-2 border-emerald-400/50 flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-extrabold text-emerald-950 shadow-2xs">
                   <span className="px-2.5 py-1 rounded-xl bg-emerald-600 text-white font-black text-[10px] sm:text-xs tracking-wider uppercase shrink-0 shadow-xs">
+                    🎯 Target Misi
+                  </span>
+                  <span className="font-bold text-slate-800 leading-snug">
+                    {slide.missionObjective}
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        ) : isDrMaya ? (
+          <>
+            {/* Dr. Maya Arisandi Animated Character Avatar */}
+            <div className="shrink-0 flex items-end justify-center select-none relative z-10">
+              <DrMayaAvatar
+                size="hero"
+                mood="speaking"
+                showSpeechBubble={false}
+                className="drop-shadow-2xl"
+              />
+            </div>
+
+            {/* Forensic Lab RPG Dialogue Box */}
+            <div className="relative flex-1 w-full bg-white/95 backdrop-blur-md p-5 sm:p-7 md:p-8 rounded-3xl border-3 sm:border-4 border-teal-500/90 shadow-2xl shadow-teal-950/20 ring-4 ring-teal-500/15 text-left flex flex-col justify-between max-w-3xl">
+              {/* Comic Speech Pointer pointing to Dr. Maya */}
+              <div className="hidden md:block absolute -left-3.5 bottom-12 sm:bottom-16 w-0 h-0 border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent border-r-[14px] border-r-white drop-shadow-sm" />
+              <div className="md:hidden absolute -top-3 left-10 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[14px] border-b-white drop-shadow-sm" />
+
+              {/* RPG Character Nameplate Tag */}
+              <div className="absolute -top-4 sm:-top-5 left-6 sm:left-8 inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-2xl bg-gradient-to-r from-teal-600 via-cyan-600 to-emerald-700 text-white shadow-lg border-2 border-white select-none">
+                <span className="text-sm sm:text-base">🔬</span>
+                <span className="font-black text-xs sm:text-sm tracking-wide">
+                  {activeMentor.name}
+                </span>
+                <span className="text-[10px] sm:text-xs font-bold text-teal-100 bg-black/20 px-2 py-0.5 rounded-lg border border-white/20">
+                  {activeMentor.role}
+                </span>
+              </div>
+
+              {/* Spoken Dialogue Text - Enlarged & Tactile */}
+              <div className="pt-2 sm:pt-3">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-bold leading-relaxed sm:leading-relaxed md:leading-loose text-slate-800 tracking-tight">
+                  &ldquo;{slide.dialogue}&rdquo;
+                </p>
+              </div>
+
+              {/* Mission Target Quest Pill */}
+              {slide.missionObjective && (
+                <div className="mt-4 sm:mt-5 p-2.5 sm:p-3 rounded-2xl bg-teal-500/10 border-2 border-teal-400/50 flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm font-extrabold text-teal-950 shadow-2xs">
+                  <span className="px-2.5 py-1 rounded-xl bg-teal-600 text-white font-black text-[10px] sm:text-xs tracking-wider uppercase shrink-0 shadow-xs">
                     🎯 Target Misi
                   </span>
                   <span className="font-bold text-slate-800 leading-snug">

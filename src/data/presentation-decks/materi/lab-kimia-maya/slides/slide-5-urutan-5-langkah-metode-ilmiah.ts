@@ -7,7 +7,7 @@ export const slide5Urutan5LangkahMetodeIlmiah: SlideDefinition = {
   "chapterBadge": "BABAK 5: TANTANGAN 2 - URUTAN METODE ILMIAH",
   "title": "Urutan 5 Langkah Metode Ilmiah",
   "subtitle": "Seorang ilmuwan bekerja sistematis dan terstruktur. Susun 5 tahapan penalaran ilmiah berikut:",
-  "instruction": "Gunakan tombol panah untuk menyusun langkah dari perumusan awal hingga kesimpulan.",
+  "instruction": "Sentuh & seret kartu tahapan metode ilmiah ke urutan kronologis yang tepat!",
   "challengeKey": "metode-ilmiah",
   items: SCIENTIFIC_METHOD_SEQUENCE
 };

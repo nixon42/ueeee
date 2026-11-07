@@ -25,6 +25,7 @@ import {
   ReflectionSparkSlide 
 } from './slides';
 import { EcosystemCanvasBackground } from './backgrounds/EcosystemCanvasBackground';
+import { LabCanvasBackground } from './backgrounds/LabCanvasBackground';
 import { progressService } from '@/business';
 
 export interface StoryPresentationDeckEngineProps {
@@ -63,6 +64,7 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
   const activeSlide: SlideDefinition = deck.slides[currentSlideIndex] || deck.slides[0];
 
   const themeTokens = PRESENTATION_THEMES[deck.themeColor] || PRESENTATION_THEMES.emerald;
+  const isLabGame = deck.gameId === 'point-click-lab' || deck.gameId.includes('lab');
 
   const goToSlide = (slideNum: number) => {
     sound.playSlideTransition();
@@ -258,9 +260,19 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
       resetTooltip="Mulai Ulang dari Slide 1"
       contentClassName="flex-1 min-h-0 p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative"
     >
-      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS WITH ECOSYSTEM ART (STRICT NO-SCROLL NO-OVERFLOW) */}
-      <div className="flex-1 min-h-0 bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-hidden relative p-3 sm:p-4 md:p-6">
-        <EcosystemCanvasBackground theme={deck.themeColor} />
+      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS WITH SPECIALIZED ART (STRICT NO-SCROLL NO-OVERFLOW) */}
+      <div
+        className={`flex-1 min-h-0 ${
+          isLabGame
+            ? 'bg-gradient-to-b from-teal-50/70 via-slate-50/60 to-emerald-50/50'
+            : 'bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60'
+        } rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-hidden relative p-3 sm:p-4 md:p-6`}
+      >
+        {isLabGame ? (
+          <LabCanvasBackground theme={deck.themeColor} />
+        ) : (
+          <EcosystemCanvasBackground theme={deck.themeColor} />
+        )}
         <div className="relative z-10 w-full flex-1 min-h-0 flex flex-col overflow-hidden">
           {renderSlideContent()}
         </div>
