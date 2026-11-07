@@ -746,7 +746,7 @@ export const TgcSequenceCard: React.FC<TgcSequenceCardProps> = ({
       onPointerDown={onPointerDown}
       onClick={onClick}
       style={style}
-      className={`group relative flex flex-col justify-between w-full h-full rounded-2xl sm:rounded-3xl bg-gradient-to-b from-slate-900/95 via-slate-950/95 to-slate-900/95 border-2 select-none overflow-hidden transition-all duration-200 cursor-grab active:cursor-grabbing ${
+      className={`group relative flex flex-col justify-between w-full h-full rounded-2xl sm:rounded-3xl bg-slate-950 border-2 select-none overflow-hidden transition-all duration-200 cursor-grab active:cursor-grabbing shadow-xl ${
         isDragging
           ? 'shadow-[0_24px_50px_rgba(0,0,0,0.85)] ring-4 ring-amber-400 scale-105 rotate-1 z-50 border-amber-300 opacity-98'
           : isSelected
@@ -760,58 +760,64 @@ export const TgcSequenceCard: React.FC<TgcSequenceCardProps> = ({
           : 'border-emerald-500/40 hover:border-amber-400 hover:shadow-[0_0_20px_rgba(251,191,36,0.35)] hover:-translate-y-1'
       } ${className}`}
     >
-      {/* Metallic Card Border Inset / Foil Line */}
-      <div className="absolute inset-1 rounded-[18px] sm:rounded-[22px] border border-amber-300/30 pointer-events-none z-10" />
-
-      {/* Top Foil Banner: Subject Badge & Status Icon */}
-      <div className="relative z-20 flex items-center justify-between px-2.5 sm:px-3 pt-2 sm:pt-2.5 pb-1">
-        <div
-          className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 rounded-full ${
-            isPurple
-              ? 'bg-purple-950/85 border border-cyan-400/50 text-cyan-200'
-              : 'bg-slate-950/85 border border-amber-400/50 text-amber-200'
-          } backdrop-blur-md shadow-sm`}
-        >
-          <Sparkles size={11} className={isPurple ? 'text-cyan-300' : 'text-amber-300'} />
-          <span className="text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider truncate max-w-[110px]">
-            {item.label}
+      {/* ── CARD HEADER NAMEPLATE (AUTHENTIC TCG STYLE) ─────────── */}
+      <div
+        className={`relative z-20 px-2.5 sm:px-3 py-1.5 sm:py-2 border-b flex items-center justify-between gap-1.5 ${
+          isPurple
+            ? 'bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 border-cyan-400/30'
+            : 'bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border-amber-400/30'
+        }`}
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-sm sm:text-base select-none shrink-0">
+            {item.iconEmoji || '✨'}
           </span>
+          <h4
+            className={`font-black text-xs sm:text-[13px] tracking-wide uppercase truncate ${
+              isPurple ? 'text-cyan-200' : 'text-amber-200'
+            }`}
+          >
+            {item.label}
+          </h4>
         </div>
 
-        {/* Validation Result Stamp */}
-        {isCorrectPosition && (
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-md animate-scaleUp">
-            <CheckCircle2 size={15} />
-          </div>
-        )}
-        {isWrongPosition && (
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md animate-scaleUp">
-            <AlertCircle size={15} />
-          </div>
-        )}
+        {/* Validation Result Stamp or Rarity Emblem */}
+        <div className="shrink-0 flex items-center">
+          {isCorrectPosition ? (
+            <div className="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-md animate-scaleUp">
+              <CheckCircle2 size={14} />
+            </div>
+          ) : isWrongPosition ? (
+            <div className="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-md animate-scaleUp">
+              <AlertCircle size={14} />
+            </div>
+          ) : (
+            <Sparkles
+              size={13}
+              className={isPurple ? 'text-cyan-400/60' : 'text-amber-400/60'}
+            />
+          )}
+        </div>
       </div>
 
-      {/* Main Full-Card Artwork Window */}
-      <div className="relative flex-1 min-h-[90px] sm:min-h-[120px] w-[calc(100%-12px)] mx-auto overflow-hidden rounded-xl sm:rounded-2xl border border-slate-700/60 shadow-inner bg-slate-950">
+      {/* ── MAIN FULL-BLEED ARTWORK FRAME ────────────────────── */}
+      <div className="relative flex-1 min-h-[95px] sm:min-h-[125px] w-full overflow-hidden bg-slate-950">
         <TgcCardArtwork item={item} theme={theme} />
         {/* Card Holographic Sheen Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/8 to-white/0 pointer-events-none" />
       </div>
 
-      {/* Card Lore / Explanation Box (Frosted Dark Card Plate) */}
-      <div className="relative z-20 p-2 sm:p-2.5 mt-1 bg-gradient-to-t from-slate-950 via-slate-950/95 to-slate-900/90 border-t border-amber-400/20 flex flex-col justify-between rounded-b-[18px] sm:rounded-b-[22px]">
-        <h4 className="font-black text-xs sm:text-[13px] text-amber-200 leading-snug tracking-tight mb-0.5 truncate">
-          {item.label}
-        </h4>
-        {item.description ? (
-          <p className="text-[10px] sm:text-[11.5px] text-amber-50/90 leading-tight sm:leading-relaxed font-medium line-clamp-2 sm:line-clamp-3">
-            {item.description}
-          </p>
-        ) : (
-          <p className="text-[10px] text-amber-200/50 italic">
-            Tahapan proses ilmiah dalam rangkaian materi.
-          </p>
-        )}
+      {/* ── CARD LORE & SCIENTIFIC EXPLANATION BOX ───────────── */}
+      <div
+        className={`relative z-20 px-2.5 sm:px-3 py-2 sm:py-2.5 border-t flex flex-col justify-center ${
+          isPurple
+            ? 'bg-gradient-to-b from-slate-900 via-slate-950 to-purple-950/80 border-cyan-400/20'
+            : 'bg-gradient-to-b from-slate-900 via-slate-950 to-emerald-950/80 border-amber-400/20'
+        }`}
+      >
+        <p className="text-[10.5px] sm:text-[11.5px] text-slate-100 font-medium leading-snug sm:leading-relaxed line-clamp-3">
+          {item.description || 'Tahapan proses ilmiah dalam rangkaian materi.'}
+        </p>
       </div>
     </div>
   );

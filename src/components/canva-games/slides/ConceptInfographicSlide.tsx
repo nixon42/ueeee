@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lightbulb, Play, Pause, Sparkles, FlaskConical } from 'lucide-react';
+import { Play, Pause, Sparkles, FlaskConical } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
 import { PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
@@ -227,17 +227,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
-            <span
-              className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
-                isPurple
-                  ? 'bg-cyan-400 text-slate-950'
-                  : isTeal
-                  ? 'bg-teal-400 text-slate-950'
-                  : 'bg-amber-400 text-emerald-950'
-              }`}
-            >
-              SIMULATOR
-            </span>
             <h2 className="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight drop-shadow truncate">
               {slide.title}
             </h2>
@@ -336,6 +325,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           ) : isSolarOrbitSlide ? (
             <SolarSystemOrbitStage
               activePhase={selectedIdx}
+              isPlaying={isPlaying}
               onSelectPhase={(idx) => {
                 setIsPlaying(false);
                 setSelectedIdx(idx);
@@ -344,6 +334,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           ) : isEclipseSlide ? (
             <EclipseMechanicsStage
               activePhase={selectedIdx}
+              isPlaying={isPlaying}
               onSelectPhase={(idx) => {
                 setIsPlaying(false);
                 setSelectedIdx(idx);
@@ -562,29 +553,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                 </button>
               );
             })}
-          </div>
-
-          {/* Teacher Guide Inset */}
-          <div
-            className={`shrink-0 border px-3 py-1.5 rounded-xl flex items-center gap-2 text-[10.5px] sm:text-[11.5px] shadow-sm ${
-              isTeal
-                ? 'bg-teal-950/90 border-teal-400/30 text-teal-100/90'
-                : 'bg-emerald-950/90 border-amber-400/30 text-amber-100/90'
-            }`}
-          >
-            <Lightbulb
-              className={`shrink-0 ${isTeal ? 'text-teal-400' : 'text-amber-400'}`}
-              size={14}
-            />
-            <span className="truncate">
-              <strong>Panduan Guru:</strong>{' '}
-              {slide.teacherNotes ||
-                (isChemistryLab
-                  ? 'Ajak siswa menganalisis indikator asam-basa dan mengapa reaktor kimia memerlukan titik netralisasi yang stabil.'
-                  : isPhotosynthesisSlide
-                  ? 'Ajak siswa menganalisis bagaimana energi cahaya matahari diikat menjadi molekul gula glukosa di daun.'
-                  : 'Ajak siswa mengamati animasi pergerakan molekul air dari penguapan surya hingga infiltrasi akuifer tanah.')}
-            </span>
           </div>
         </div>
       </div>

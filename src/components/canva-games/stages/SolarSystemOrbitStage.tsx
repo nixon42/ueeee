@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { sound } from '@/lib/sound';
 
 export interface SolarSystemOrbitStageProps {
   activePhase: number;
   onSelectPhase: (idx: number) => void;
+  isPlaying?: boolean;
   className?: string;
 }
 
@@ -16,8 +17,48 @@ const BEACONS = [
 export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
   activePhase,
   onSelectPhase,
+  isPlaying = false,
   className = '',
 }) => {
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    let animId: number;
+    const tick = () => {
+      setTime((prev) => prev + 1);
+      animId = requestAnimationFrame(tick);
+    };
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, [isPlaying]);
+
+  const getPlanetPos = (
+    rx: number,
+    ry: number,
+    defaultX: number,
+    defaultY: number,
+    speed: number,
+    initialAngle: number
+  ) => {
+    if (!isPlaying && time === 0) {
+      return { x: defaultX, y: defaultY };
+    }
+    const angle = initialAngle + time * speed;
+    return {
+      x: 70 + rx * Math.cos(angle),
+      y: 250 + ry * Math.sin(angle),
+    };
+  };
+
+  const pMerkurius = getPlanetPos(75, 40, 145, 250, 0.05, 0);
+  const pVenus = getPlanetPos(115, 55, 185, 230, 0.035, -0.36);
+  const pBumi = getPlanetPos(165, 75, 235, 260, 0.024, 0.13);
+  const pMars = getPlanetPos(215, 95, 285, 232, 0.018, -0.19);
+  const pJupiter = getPlanetPos(330, 135, 400, 275, 0.011, 0.18);
+  const pSaturnus = getPlanetPos(440, 165, 510, 210, 0.0075, -0.24);
+  const pUranus = getPlanetPos(545, 195, 615, 290, 0.005, 0.21);
+  const pNeptunus = getPlanetPos(645, 220, 715, 220, 0.0035, -0.14);
   return (
     <div className={`relative w-full h-full select-none overflow-hidden rounded-2xl bg-slate-950 ${className}`}>
       {/* ── VECTOR ORBIT WORLD ────────────────────────────────────── */}
@@ -196,7 +237,10 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
         </g>
 
         {/* ── ASTEROID BELT (Sabuk Asteroid Mars-Jupiter) ── */}
-        <g opacity={activePhase === 1 ? 1 : 0.45}>
+        <g
+          opacity={activePhase === 1 ? 1 : 0.45}
+          transform={isPlaying ? `rotate(${(time * 0.12) % 360}, 70, 250)` : undefined}
+        >
           {/* Background Ribbon Glow for Active Belt */}
           {activePhase === 1 && (
             <ellipse
@@ -252,21 +296,21 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
           opacity={activePhase === 0 ? 1 : 0.75}
         >
           {/* 1. Merkurius */}
-          <g transform="translate(145, 250)">
+          <g transform={`translate(${pMerkurius.x}, ${pMerkurius.y})`}>
             {activePhase === 0 && <circle cx="0" cy="0" r="14" fill="#38bdf8" fillOpacity="0.25" className="anim-halo" />}
             <circle cx="0" cy="0" r="5.5" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1" />
             <text x="0" y="15" textAnchor="middle" fill="#cbd5e1" fontSize="8" fontWeight="bold">Merkurius</text>
           </g>
 
           {/* 2. Venus */}
-          <g transform="translate(185, 230)">
+          <g transform={`translate(${pVenus.x}, ${pVenus.y})`}>
             {activePhase === 0 && <circle cx="0" cy="0" r="16" fill="#fbbf24" fillOpacity="0.25" className="anim-halo" />}
             <circle cx="0" cy="0" r="8.5" fill="#f59e0b" stroke="#fef08a" strokeWidth="1" />
             <text x="0" y="18" textAnchor="middle" fill="#fef08a" fontSize="8" fontWeight="bold">Venus</text>
           </g>
 
           {/* 3. Bumi & Bulan */}
-          <g transform="translate(235, 260)">
+          <g transform={`translate(${pBumi.x}, ${pBumi.y})`}>
             {activePhase === 0 && <circle cx="0" cy="0" r="19" fill="#4ade80" fillOpacity="0.3" className="anim-halo" />}
             <circle cx="0" cy="0" r="11" fill="#3b82f6" stroke="#22c55e" strokeWidth="2" />
             <circle cx="14" cy="-5" r="3" fill="#e2e8f0" />
@@ -274,7 +318,7 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
           </g>
 
           {/* 4. Mars */}
-          <g transform="translate(285, 232)">
+          <g transform={`translate(${pMars.x}, ${pMars.y})`}>
             {activePhase === 0 && <circle cx="0" cy="0" r="15" fill="#f87171" fillOpacity="0.25" className="anim-halo" />}
             <circle cx="0" cy="0" r="7.5" fill="#ef4444" stroke="#fca5a5" strokeWidth="1" />
             <text x="0" y="17" textAnchor="middle" fill="#fca5a5" fontSize="8" fontWeight="bold">Mars</text>
@@ -288,7 +332,7 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
           opacity={activePhase === 2 ? 1 : 0.75}
         >
           {/* 5. Jupiter */}
-          <g transform="translate(400, 275)">
+          <g transform={`translate(${pJupiter.x}, ${pJupiter.y})`}>
             {activePhase === 2 && <circle cx="0" cy="0" r="36" fill="#fb923c" fillOpacity="0.25" className="anim-halo" />}
             <circle cx="0" cy="0" r="26" fill="url(#jupiterBandGrad)" stroke="#fed7aa" strokeWidth="1.5" />
             {/* Great Red Spot */}
@@ -297,7 +341,7 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
           </g>
 
           {/* 6. Saturnus */}
-          <g transform="translate(510, 210) rotate(-16)">
+          <g transform={`translate(${pSaturnus.x}, ${pSaturnus.y}) rotate(-16)`}>
             {activePhase === 2 && <circle cx="0" cy="0" r="38" fill="#fde047" fillOpacity="0.25" className="anim-halo" />}
             {/* Back Ring */}
             <ellipse cx="0" cy="0" rx="38" ry="12" fill="none" stroke="#fde047" strokeWidth="4.5" strokeOpacity="0.5" />
@@ -309,7 +353,7 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
           </g>
 
           {/* 7. Uranus */}
-          <g transform="translate(615, 290)">
+          <g transform={`translate(${pUranus.x}, ${pUranus.y})`}>
             {activePhase === 2 && <circle cx="0" cy="0" r="22" fill="#67e8f9" fillOpacity="0.25" className="anim-halo" />}
             <circle cx="0" cy="0" r="13" fill="#06b6d4" stroke="#a5f3fc" strokeWidth="1" />
             <ellipse cx="0" cy="0" rx="19" ry="3.5" stroke="#a5f3fc" strokeWidth="1.2" fill="none" transform="rotate(75)" opacity="0.8" />
@@ -317,7 +361,7 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
           </g>
 
           {/* 8. Neptunus */}
-          <g transform="translate(715, 220)">
+          <g transform={`translate(${pNeptunus.x}, ${pNeptunus.y})`}>
             {activePhase === 2 && <circle cx="0" cy="0" r="21" fill="#60a5fa" fillOpacity="0.25" className="anim-halo" />}
             <circle cx="0" cy="0" r="12" fill="#2563eb" stroke="#93c5fd" strokeWidth="1" />
             <ellipse cx="0" cy="-3" rx="10" ry="2" fill="#60a5fa" opacity="0.6" />

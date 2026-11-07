@@ -483,11 +483,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
           <span className="font-black text-[12px] sm:text-sm text-white tracking-wide whitespace-nowrap">
             {speakerName}
           </span>
-          {speakerRole && (
-            <span className="hidden sm:inline text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-amber-200 bg-black/35 px-2 py-0.5 rounded-md border border-amber-400/30 whitespace-nowrap">
-              {speakerRole}
-            </span>
-          )}
         </div>
       );
     }
@@ -548,7 +543,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
 
   const questTagClass = isDirgantara ? 'text-cyan-300/95' : isDrMaya ? 'text-teal-300/95' : 'text-amber-300/90';
   const questIconClass = isDirgantara ? 'text-cyan-300' : isDrMaya ? 'text-teal-300' : 'text-amber-300';
-  const skipPromptClass = isDirgantara ? 'text-cyan-300/90' : isDrMaya ? 'text-teal-300/90' : 'text-amber-300/90';
   const cursorBlinkClass = isDirgantara ? 'bg-cyan-400' : isDrMaya ? 'bg-teal-400' : 'bg-amber-400';
 
   return (
@@ -647,16 +641,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
                 />
               )}
             </p>
-
-            {/* Bouncing next prompt indicator when dialogue finishes streaming */}
-            {!isTyping && (
-              <div className="flex justify-end -mt-1 sm:mt-0 select-none">
-                <span className={`inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold ${skipPromptClass} animate-bounce`}>
-                  <span>Lanjut petualangan</span>
-                  <span className="text-xs">▼</span>
-                </span>
-              </div>
-            )}
 
             {/* Quest objective card */}
             {slide.missionObjective && (

@@ -220,9 +220,12 @@ class ProgressService {
       const payload = this.pendingPayloads.get(key);
       if (payload) {
         try {
-          await apiSaveGameProgress(payload);
+          const timeoutPromise = new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('Sync timeout')), 1200)
+          );
+          await Promise.race([apiSaveGameProgress(payload), timeoutPromise]);
         } catch {
-          // Suppress
+          // Suppress offline / network sync errors gracefully
         }
       }
     }
