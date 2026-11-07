@@ -256,7 +256,7 @@ export const GAMES_CATALOG: GameItem[] = [
     playsCount: 1810,
     hasStoryPresentation: true,
     presentationDeckId: 'ular-tangga-tatasurya',
-    slideCount: 8,
+    slideCount: 7,
     mentorName: 'Kapten Dirgantara',
     tags: [
       'tata surya', 'tatasurya', 'gravitasi', 'planet', 'astronomi', 'antariksa', 
@@ -264,7 +264,7 @@ export const GAMES_CATALOG: GameItem[] = [
       'gerhana', 'kapten dirgantara', 'ekspedisi orbit'
     ],
     prolog: {
-      story: 'Bersama Kapten Dirgantara (Astro-Komandan Misi Dirgantara), kamu memimpin peluncuran wahana riset Garuda Orbital menjelajahi batas tata surya. Dari orbit terdekat Merkurius yang membara, menerobos sabuk batuan asteroid, menembus cincin es Saturnus, hingga mendarat di Stasiun Antariksa Sabuk Kuiper. Misimu adalah menghitung orbit presisi 8 planet, mengidentifikasi karakteristik benda langit, dan memecahkan geometri gerhana matahari!',
+      story: 'Bersama Kapten Dirgantara, kamu memimpin peluncuran wahana riset Garuda Orbital menjelajahi batas tata surya. Dari orbit terdekat Merkurius yang membara, menerobos sabuk batuan asteroid, menembus cincin es Saturnus, hingga mendarat di Stasiun Antariksa Sabuk Kuiper. Misimu adalah menghitung orbit presisi 8 planet, mengidentifikasi karakteristik benda langit, dan memecahkan geometri gerhana matahari!',
       learningGoals: [
         'Memahami pembagian dan urutan 8 planet tata surya (Planet Dalam & Luar) dari Merkurius hingga Neptunus.',
         'Menganalisis peran Matahari sebagai pusat gravitasi yang mengikat pergerakan revolusi seluruh tata surya.',
@@ -282,7 +282,7 @@ export const GAMES_CATALOG: GameItem[] = [
         'Pada tantangan urutan orbit planet dan geometri gerhana, geser kartu hingga urutan posisi 100% presisi.',
         'Pada tantangan menjodohkan karakteristik antariksa, klik kartu di Kolom A lalu hubungkan dengan pasangannya di Kolom B.',
         'Gunakan tombol Mode Layar Penuh (Fullscreen) untuk kenyamanan pandangan proyektor kelas atau tablet.',
-        'Tuntaskan seluruh 8 slide ekspedisi hingga Garuda Orbital sukses mendarat di Stasiun Sabuk Kuiper!'
+        'Tuntaskan seluruh 7 slide ekspedisi hingga Garuda Orbital sukses mendarat di Stasiun Sabuk Kuiper!'
       ]
     }
   },

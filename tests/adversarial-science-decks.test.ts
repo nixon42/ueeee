@@ -815,25 +815,34 @@ describe('Adversarial Stress Testing: Science Presentation Decks (Milestone 2)',
         const miniGameCount = types.filter(t => t.startsWith('mini-game-')).length;
         expect(miniGameCount).toBeGreaterThanOrEqual(2);
 
-        // Phase 4: Story resolution as penultimate slide
-        expect(types[types.length - 2]).toBe('story-resolution');
+        if (deck.gameId === 'ular-tangga-tatasurya') {
+          // Tata Surya unified 7th slide combines story resolution and HOTS sparks
+          expect(types[types.length - 1]).toBe('story-resolution');
+        } else {
+          // Phase 4: Story resolution as penultimate slide
+          expect(types[types.length - 2]).toBe('story-resolution');
 
-        // Phase 5: Reflection spark as final slide
-        expect(types[types.length - 1]).toBe('reflection-spark');
+          // Phase 5: Reflection spark as final slide
+          expect(types[types.length - 1]).toBe('reflection-spark');
+        }
       }
     });
 
     test('Every Science deck includes exactly 3 HOTS teacher reflection questions numbered 1, 2, 3', () => {
       for (const deck of ALL_SCIENCE_DECKS) {
-        const reflectionSlide = deck.slides[deck.slides.length - 1] as any;
-        expect(reflectionSlide.type).toBe('reflection-spark');
-        expect(reflectionSlide.sparkCards).toBeDefined();
-        expect(reflectionSlide.sparkCards.length).toBe(3);
+        const lastSlide = deck.slides[deck.slides.length - 1] as any;
+        if (deck.gameId === 'ular-tangga-tatasurya') {
+          expect(lastSlide.type).toBe('story-resolution');
+        } else {
+          expect(lastSlide.type).toBe('reflection-spark');
+        }
+        expect(lastSlide.sparkCards).toBeDefined();
+        expect(lastSlide.sparkCards.length).toBe(3);
 
-        const cardNumbers = reflectionSlide.sparkCards.map((c: any) => c.number);
+        const cardNumbers = lastSlide.sparkCards.map((c: any) => c.number);
         expect(cardNumbers).toEqual([1, 2, 3]);
 
-        for (const card of reflectionSlide.sparkCards) {
+        for (const card of lastSlide.sparkCards) {
           expect(card.title.trim().length).toBeGreaterThanOrEqual(5);
           expect(card.question.trim().length).toBeGreaterThanOrEqual(20);
           expect(card.badgeColor).toBeDefined();

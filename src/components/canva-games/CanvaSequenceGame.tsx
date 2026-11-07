@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, CheckCircle2, Compass, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { sound } from '@/lib/sound';
-import { KakGalihAvatar } from './characters/KakGalihAvatar';
 import { DrMayaAvatar } from './characters/DrMayaAvatar';
 import { TgcSequenceCard } from './TgcSequenceCard';
 
@@ -277,7 +276,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
-            {!isPurple && chapterBadge && (
+            {!isPurple && !isWaterCycle && chapterBadge && (
               <span className="px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase bg-amber-400 text-emerald-950">
                 {chapterBadge}
               </span>
@@ -330,13 +329,15 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
         <div
           className={`grid ${
             isPurple && currentOrder.length === 8
-              ? 'grid-cols-2 sm:grid-cols-4 grid-rows-2 max-w-5xl'
+              ? 'grid-cols-2 sm:grid-cols-4 grid-rows-2 max-w-5xl h-full'
+              : currentOrder.length === 3
+              ? 'grid-cols-1 sm:grid-cols-3 max-w-4xl sm:max-w-5xl mx-auto max-h-[220px] sm:max-h-[235px] h-full my-auto'
               : currentOrder.length <= 4
-              ? 'grid-cols-2 sm:grid-cols-4'
+              ? 'grid-cols-2 sm:grid-cols-4 h-full'
               : currentOrder.length <= 6
-              ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
-              : 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8'
-          } gap-2.5 sm:gap-3 w-full max-w-5xl h-full items-stretch relative`}
+              ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6 h-full'
+              : 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 h-full'
+          } gap-2.5 sm:gap-3 w-full max-w-5xl items-stretch relative`}
         >
           {currentOrder.map((item, index) => {
             const isBeingDragged = draggingIdx === index;
@@ -368,14 +369,18 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
                 className="relative w-full h-full flex flex-col items-center justify-between min-h-0"
               >
                 {/* Target Slot Plaque Header */}
-                {(!isPurple || currentOrder.length === 8) && (
+                {!isWaterCycle && !(isPurple && currentOrder.length === 3) && (
                   <div className="w-full flex items-center justify-between px-2 py-0.5 mb-1 pointer-events-none shrink-0">
                     <span
                       className={`text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider ${
                         isPurple ? 'text-cyan-300/80' : 'text-amber-300/80'
                       }`}
                     >
-                      {isPurple ? `Planet ${index + 1}` : `Tahap ${index + 1}`}
+                      {isPurple
+                        ? currentOrder.length === 8
+                          ? `Planet ${index + 1}`
+                          : `Posisi ${index + 1}`
+                        : `Tahap ${index + 1}`}
                     </span>
                     <span
                       className={`w-1.5 h-1.5 rounded-full ${
@@ -491,8 +496,8 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
             <span>Periksa Urutan</span>
           </button>
 
-          {/* Tombol Toggle Penjelasan Kak Galih / Dr. Maya */}
-          {(isWaterCycle || isScientificMethod) && (
+          {/* Tombol Toggle Penjelasan Dr. Maya (Khusus Lab Forensik) */}
+          {isScientificMethod && (
             <button
               type="button"
               onClick={() => {
@@ -503,11 +508,7 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
             >
               <Compass size={15} className="text-amber-300" />
               <span className="hidden sm:inline">
-                {showExplanation
-                  ? 'Tutup Catatan'
-                  : isScientificMethod
-                  ? 'Protokol Dr. Maya'
-                  : 'Catatan Kak Galih'}
+                {showExplanation ? 'Tutup Catatan' : 'Protokol Dr. Maya'}
               </span>
               <span className="sm:hidden">Catatan</span>
               {showExplanation ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
@@ -604,93 +605,6 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
             <span className="text-base shrink-0">🔬</span>
             <div className="truncate">
               <strong>Pesan Dr. Maya:</strong> Jangan pernah menarik kesimpulan hanya dari asumsi! Setiap temuan wajib didukung data eksperimental terverifikasi.
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── PANEL PENJELASAN KAK GALIH (DARK RPG CODEX OVERLAY) ─── */}
-      {showExplanation && isWaterCycle && (
-        <div className="absolute inset-2 sm:inset-3 z-50 bg-slate-950/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border-2 border-amber-400/60 p-3.5 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
-          {/* Header Penjelasan dengan Avatar Kak Galih & Tombol Tutup */}
-          <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-amber-400/30 shrink-0">
-            <div className="flex items-center gap-3">
-              <KakGalihAvatar size="sm" mood="explaining" />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-amber-400">
-                    CODEX KUNCI SAINS
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-400/40 text-[9.5px] font-extrabold">
-                    Catatan Ekspedisi
-                  </span>
-                </div>
-                <h4 className="text-xs sm:text-base font-black text-white mt-0.5">
-                  Misteri Daur Air Lembah Cendrawasih Terpecahkan!
-                </h4>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowExplanation(false)}
-              className="py-1 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-200 border border-amber-400/40 font-bold text-xs flex items-center gap-1 cursor-pointer transition shrink-0 active:scale-95 shadow-sm"
-            >
-              <span>✕ Tutup</span>
-            </button>
-          </div>
-
-          {/* 4 Kolom Penjelasan Detail: Evaporasi, Kondensasi, Presipitasi, Infiltrasi */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 flex-1 min-h-0 py-2 overflow-hidden content-center">
-            {/* 1. EVAPORASI */}
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-amber-400/30 flex flex-col justify-between overflow-hidden">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-base select-none">☀️</span>
-                <h5 className="font-extrabold text-xs text-amber-300">1. Evaporasi (Penguapan)</h5>
-              </div>
-              <p className="text-[10.5px] sm:text-[11.5px] text-amber-50/90 leading-relaxed font-medium">
-                <strong>Mekanisme:</strong> Kalor surya menguapkan air laut, danau, dan sungai ke atmosfer. Tumbuhan juga melepas uap air lewat stomata (<em>transpirasi</em>).
-              </p>
-            </div>
-
-            {/* 2. KONDENSASI */}
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-sky-400/30 flex flex-col justify-between overflow-hidden">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-base select-none">☁️</span>
-                <h5 className="font-extrabold text-xs text-sky-300">2. Kondensasi (Pengembunan)</h5>
-              </div>
-              <p className="text-[10.5px] sm:text-[11.5px] text-amber-50/90 leading-relaxed font-medium">
-                <strong>Mekanisme:</strong> Uap air naik ke atmosfer dingin, suhunya turun hingga memadat menjadi kristal cair pembentuk awan tebal.
-              </p>
-            </div>
-
-            {/* 3. PRESIPITASI */}
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-blue-400/30 flex flex-col justify-between overflow-hidden">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-base select-none">🌧️</span>
-                <h5 className="font-extrabold text-xs text-blue-300">3. Presipitasi (Hujan)</h5>
-              </div>
-              <p className="text-[10.5px] sm:text-[11.5px] text-amber-50/90 leading-relaxed font-medium">
-                <strong>Mekanisme:</strong> Massa air di awan melampaui daya apung udara. Gravitasi menarik butiran air jatuh membasahi daratan.
-              </p>
-            </div>
-
-            {/* 4. INFILTRASI */}
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-emerald-400/30 flex flex-col justify-between overflow-hidden">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-base select-none">🌱</span>
-                <h5 className="font-extrabold text-xs text-emerald-300">4. Infiltrasi (Resapan)</h5>
-              </div>
-              <p className="text-[10.5px] sm:text-[11.5px] text-amber-50/90 leading-relaxed font-medium">
-                <strong>Mekanisme:</strong> Air hujan diserap pori-pori tanah berkat akar hutan tropis, tersaring alami mengisi cadangan akuifer air tanah.
-              </p>
-            </div>
-          </div>
-
-          {/* Catatan Konservasi Kak Galih */}
-          <div className="p-2 bg-emerald-950/80 border border-emerald-400/40 rounded-xl flex items-center gap-2 text-[10.5px] sm:text-xs text-emerald-200 font-semibold shrink-0">
-            <span className="text-base shrink-0">💡</span>
-            <div className="truncate">
-              <strong>Prinsip Lapangan:</strong> Hutan bertindak sebagai spons raksasa alami penahan banjir dan penyedia air bersih abadi.
             </div>
           </div>
         </div>

@@ -62,6 +62,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   const displayInstructions =
     instructions || subtitle || 'Klik satu terminal di Kolom A, lalu klik pasangannya di Kolom B untuk menyambungkan laser energi.';
   const isPurple = theme === 'purple' || gameId === 'ular-tangga-tatasurya';
+  const isWaterCycle = !isPurple && (gameId === 'ular-tangga-sains' || title.toLowerCase().includes('transformasi energi') || title.toLowerCase().includes('siklus'));
 
   // Kolom kiri urutan tetap, kolom kanan diacak
   const [leftItems, setLeftItems] = useState<MatchPairItem[]>(pairs);
@@ -248,50 +249,108 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
         </div>
       )}
 
-      {/* ── BIO-ENERGY NATURE CANVAS SCENE (For science & ecology deck) ── */}
+      {/* ── BIO-ENERGY NATURE CANVAS SCENE (Rich Rainforest Ecology) ── */}
       {!isPurple && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* Luminous Bio-Energy Radial Flares */}
-          <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-emerald-500/20 blur-3xl" />
-          <div className="absolute -bottom-24 -right-24 w-[420px] h-[420px] rounded-full bg-teal-500/20 blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[340px] rounded-full bg-amber-500/10 blur-3xl" />
+          <div className="absolute -top-24 -left-24 w-[450px] h-[450px] rounded-full bg-emerald-500/25 blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-[450px] h-[450px] rounded-full bg-teal-500/25 blur-3xl" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[360px] rounded-full bg-amber-500/15 blur-3xl" />
 
-          {/* Diegetic Energy Flux & Biosphere Conduits SVG */}
-          <svg className="w-full h-full opacity-40" viewBox="0 0 1000 600" preserveAspectRatio="none">
+          {/* Diegetic Rainforest Ecosystem & Energy Biosphere SVG */}
+          <svg className="w-full h-full" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none">
             <defs>
-              <linearGradient id="bioGridGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#34d399" stopOpacity="0.3" />
-                <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#2dd4bf" stopOpacity="0.3" />
+              <linearGradient id="forestSkyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#042f2e" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#064e3b" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#022c22" />
               </linearGradient>
+              <linearGradient id="sunbeamGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#fef08a" stopOpacity="0.16" />
+                <stop offset="60%" stopColor="#86efac" stopOpacity="0.07" />
+                <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="riverGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#0284c7" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#0d9488" stopOpacity="0.4" />
+              </linearGradient>
+              <linearGradient id="bioStreamA" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#34d399" stopOpacity="0.6" />
+                <stop offset="50%" stopColor="#facc15" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.6" />
+              </linearGradient>
+              <filter id="forestGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
             </defs>
 
-            {/* Hexagonal Bio-Energy Flow Conduits */}
-            <g stroke="url(#bioGridGrad)" strokeWidth="1.2" fill="none" opacity="0.6">
-              <path d="M 50 150 L 150 100 L 250 100 L 300 150 L 250 200 L 150 200 Z" />
-              <path d="M 700 150 L 800 100 L 900 100 L 950 150 L 900 200 L 800 200 Z" />
-              <path d="M 50 450 L 150 400 L 250 400 L 300 450 L 250 500 L 150 500 Z" />
-              <path d="M 700 450 L 800 400 L 900 400 L 950 450 L 900 500 L 800 500 Z" />
-              {/* Organic Flow Streamlines */}
-              <path d="M 0 300 Q 250 200 500 300 T 1000 300" stroke="#34d399" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" />
-              <path d="M 0 320 Q 250 420 500 320 T 1000 320" stroke="#facc15" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.4" />
+            {/* Crepuscular Sun Rays filtering from canopy top */}
+            <g fill="url(#sunbeamGrad)">
+              <polygon points="200,0 350,0 520,700 320,700" />
+              <polygon points="500,0 680,0 880,700 660,700" />
+              <polygon points="800,0 950,0 1150,700 980,700" />
             </g>
 
-            {/* Floating Energy Photons & Bio-luminescent Spores */}
-            <g fill="#4ade80">
-              <circle cx="120" cy="80" r="2.5" opacity="0.75" />
-              <circle cx="220" cy="240" r="2" opacity="0.6" />
-              <circle cx="310" cy="90" r="1.8" opacity="0.7" />
-              <circle cx="480" cy="110" r="2.8" opacity="0.85" />
-              <circle cx="680" cy="70" r="2.2" opacity="0.8" />
-              <circle cx="820" cy="260" r="2.5" opacity="0.7" />
-              <circle cx="890" cy="110" r="2" opacity="0.65" />
+            {/* Distant Mountain Ridges & Mist */}
+            <path
+              d="M0 480 Q250 390 500 450 T1000 410 T1200 460 L1200 700 L0 700 Z"
+              fill="#064e3b"
+              opacity="0.35"
+            />
+            <path
+              d="M0 520 Q300 460 650 510 T1200 490 L1200 700 L0 700 Z"
+              fill="#047857"
+              opacity="0.4"
+            />
+
+            {/* Winding Forest River (Hydrological cycle grounding) */}
+            <path
+              d="M150 700 C300 620 450 640 600 580 C750 530 850 550 950 510 L1050 520 C920 570 800 560 650 620 C500 670 350 660 200 700 Z"
+              fill="url(#riverGrad)"
+              opacity="0.7"
+            />
+
+            {/* Silhouette of Ancient Papuan Canopy Trees (Left & Right Flanks) */}
+            {/* Left Giant Banyan / Dipterocarp Tree */}
+            <g fill="#022c22" opacity="0.65">
+              <path d="M-40 700 C20 620 40 450 30 320 C20 220 0 150 -50 100 L-60 700 Z" />
+              <path d="M10 550 C60 630 110 680 160 700 L120 700 C70 670 30 620 -10 570 Z" />
+              <ellipse cx="60" cy="180" rx="160" ry="90" />
+              <ellipse cx="140" cy="240" rx="120" ry="70" />
+              <ellipse cx="20" cy="300" rx="100" ry="60" />
             </g>
-            <g fill="#facc15">
-              <circle cx="180" cy="480" r="2.2" opacity="0.7" />
-              <circle cx="380" cy="520" r="2.8" opacity="0.8" />
-              <circle cx="620" cy="490" r="2.2" opacity="0.7" />
-              <circle cx="840" cy="510" r="2.5" opacity="0.75" />
+            {/* Right Giant Tropical Tree Flank */}
+            <g fill="#022c22" opacity="0.65">
+              <path d="M1240 700 C1180 620 1160 450 1170 320 C1180 220 1200 150 1250 100 L1260 700 Z" />
+              <path d="M1190 550 C1140 630 1090 680 1040 700 L1080 700 C1130 670 1170 620 1210 570 Z" />
+              <ellipse cx="1140" cy="180" rx="160" ry="90" />
+              <ellipse cx="1060" cy="240" rx="120" ry="70" />
+              <ellipse cx="1180" cy="300" rx="100" ry="60" />
+            </g>
+
+            {/* Energy Streamlines (Solar Radiation -> Chemical Biomass -> Kinetic Flow) */}
+            <g stroke="url(#bioStreamA)" strokeWidth="2" strokeDasharray="8 6" opacity="0.45" fill="none">
+              <path d="M 100 200 C 300 280, 450 180, 600 240 S 900 320, 1100 220" />
+              <path d="M 80 420 C 350 350, 500 460, 750 380 S 1000 480, 1150 400" />
+            </g>
+
+            {/* Floating Bioluminescent Spores / Fireflies */}
+            <g fill="#4ade80" filter="url(#forestGlow)">
+              <circle cx="180" cy="140" r="3" opacity="0.85" />
+              <circle cx="280" cy="280" r="2.5" opacity="0.75" />
+              <circle cx="420" cy="180" r="3.5" opacity="0.9" />
+              <circle cx="580" cy="120" r="2.5" opacity="0.7" />
+              <circle cx="760" cy="190" r="3" opacity="0.85" />
+              <circle cx="920" cy="290" r="2.5" opacity="0.75" />
+              <circle cx="1020" cy="150" r="3.5" opacity="0.9" />
+            </g>
+            <g fill="#fde047" filter="url(#forestGlow)">
+              <circle cx="240" cy="460" r="2.5" opacity="0.8" />
+              <circle cx="480" cy="510" r="3" opacity="0.85" />
+              <circle cx="680" cy="470" r="2.5" opacity="0.75" />
+              <circle cx="880" cy="530" r="3" opacity="0.85" />
             </g>
           </svg>
         </div>
@@ -307,7 +366,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
-            {!isPurple && chapterBadge && (
+            {!isPurple && !isWaterCycle && chapterBadge && (
               <span className="px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase bg-amber-400 text-emerald-950">
                 {chapterBadge}
               </span>
@@ -328,34 +387,36 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
         </div>
 
         {/* Dynamic Connection Status Indicator */}
-        <div className="shrink-0 flex items-center gap-2">
-          <div
-            className={`px-3 py-1.5 rounded-xl border backdrop-blur-sm text-xs font-black flex items-center gap-1.5 shadow-md ${
-              checkedState
-                ? isSuccess
-                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
-                  : 'bg-rose-500/20 border-rose-400 text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.3)]'
-                : connectedCount === totalCount
-                ? 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.3)]'
-                : isPurple
-                ? 'bg-purple-900/60 border-purple-500/40 text-cyan-200'
-                : 'bg-emerald-900/60 border-emerald-500/40 text-amber-200'
-            }`}
-          >
-            {checkedState ? (
-              isSuccess ? <CheckCircle2 size={13} className="text-emerald-400" /> : <AlertCircle size={13} className="text-rose-400" />
-            ) : (
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            )}
-            <span>
-              {checkedState
-                ? isSuccess
-                  ? 'Koneksi Tepat!'
-                  : 'Periksa Kembali'
-                : `${connectedCount}/${totalCount} Terhubung`}
-            </span>
+        {!isWaterCycle && !isPurple && (
+          <div className="shrink-0 flex items-center gap-2">
+            <div
+              className={`px-3 py-1.5 rounded-xl border backdrop-blur-sm text-xs font-black flex items-center gap-1.5 shadow-md ${
+                checkedState
+                  ? isSuccess
+                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                    : 'bg-rose-500/20 border-rose-400 text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.3)]'
+                  : connectedCount === totalCount
+                  ? 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.3)]'
+                  : isPurple
+                  ? 'bg-purple-900/60 border-purple-500/40 text-cyan-200'
+                  : 'bg-emerald-900/60 border-emerald-500/40 text-amber-200'
+              }`}
+            >
+              {checkedState ? (
+                isSuccess ? <CheckCircle2 size={13} className="text-emerald-400" /> : <AlertCircle size={13} className="text-rose-400" />
+              ) : (
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              )}
+              <span>
+                {checkedState
+                  ? isSuccess
+                    ? 'Koneksi Tepat!'
+                    : 'Periksa Kembali'
+                  : `${connectedCount}/${totalCount} Terhubung`}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* ── LASER CONDUIT SVG ENGINE LAYER ────────────────── */}

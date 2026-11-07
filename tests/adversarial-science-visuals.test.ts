@@ -244,30 +244,30 @@ describe('Tier 5 Adversarial Hardening: Science Visual SVGs & Presentation Resil
   // SUITE 2: DYNAMIC SLIDE BOUNDARY NAVIGATION (7 & 8 SLIDES)
   // =========================================================================
   describe('Suite 2: Dynamic Slide Length Boundary Navigation & Clamping', () => {
-    test('2.1 Real 7-slide decks (ular-tangga-sains, presentasi-ekosistem-hutan) slide counts', () => {
+    test('2.1 Real 7-slide decks (ular-tangga-sains, presentasi-ekosistem-hutan, ular-tangga-tatasurya) slide counts', () => {
       const deck7_1 = ULAR_TANGGA_SAINS_DECK;
       const deck7_2 = PRESENTASI_EKOSISTEM_HUTAN_DECK;
+      const deck7_3 = ULAR_TANGGA_TATASURYA_DECK;
 
       expect(deck7_1.slides.length).toBe(7);
       expect(deck7_1.totalSlides).toBe(7);
 
       expect(deck7_2.slides.length).toBe(7);
       expect(deck7_2.totalSlides).toBe(7);
+
+      expect(deck7_3.slides.length).toBe(7);
+      expect(deck7_3.totalSlides).toBe(7);
     });
 
-    test('2.2 Real 8-slide decks (point-click-lab, point-click-hutan, ular-tangga-tatasurya) slide counts', () => {
+    test('2.2 Real 8-slide decks (point-click-lab, point-click-hutan) slide counts', () => {
       const deck8_1 = POINT_CLICK_LAB_DECK;
       const deck8_2 = POINT_CLICK_HUTAN_DECK;
-      const deck8_3 = ULAR_TANGGA_TATASURYA_DECK;
 
       expect(deck8_1.slides.length).toBe(8);
       expect(deck8_1.totalSlides).toBe(8);
 
       expect(deck8_2.slides.length).toBe(8);
       expect(deck8_2.totalSlides).toBe(8);
-
-      expect(deck8_3.slides.length).toBe(8);
-      expect(deck8_3.totalSlides).toBe(8);
     });
 
     test('2.3 Lower boundary clamping: handlePrevSlide at Slide 1 never goes below 1', () => {

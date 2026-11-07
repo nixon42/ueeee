@@ -501,7 +501,7 @@ describe('Adversarial Verification: Humanities Visual SVGs & Deck Navigation Res
       expect(uniqueKeys.size).toBe(10);
     });
 
-    test('3.2 Every slide ID across all 10 decks (all 75 slides) is strictly unique', () => {
+    test('3.2 Every slide ID across all 10 decks (all 74 slides) is strictly unique', () => {
       const allSlideEntries: Array<{ deckId: string; slideId: string; slideIndex: number }> = [];
 
       for (const [deckId, deck] of Object.entries(ALL_PRESENTATION_DECKS)) {
@@ -514,7 +514,7 @@ describe('Adversarial Verification: Humanities Visual SVGs & Deck Navigation Res
         });
       }
 
-      expect(allSlideEntries.length).toBe(75);
+      expect(allSlideEntries.length).toBe(74);
 
       const seenSlideIds = new Map<string, string>();
       const duplicates: string[] = [];
@@ -530,7 +530,7 @@ describe('Adversarial Verification: Humanities Visual SVGs & Deck Navigation Res
       }
 
       expect(duplicates).toEqual([]);
-      expect(seenSlideIds.size).toBe(75);
+      expect(seenSlideIds.size).toBe(74);
     });
 
     test('3.3 No namespace collision between Science (uts-) and History (utsj-) slide IDs', () => {

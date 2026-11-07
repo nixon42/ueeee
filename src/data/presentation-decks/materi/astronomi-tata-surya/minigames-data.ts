@@ -88,21 +88,21 @@ export const ECLIPSE_GEOMETRY_SEQUENCE: SequenceGameItem[] = [
   {
     "id": "gm1",
     "order": 1,
-    "label": "1. Matahari (Sumber Cahaya)",
+    "label": "Matahari",
     "iconEmoji": "☀️",
     "description": "Bintang pusat tata surya yang memancarkan berkas foton sinar sejajar ke seluruh antariksa."
   },
   {
     "id": "gm2",
     "order": 2,
-    "label": "2. Bulan (Penghalang Cahaya)",
+    "label": "Bulan",
     "iconEmoji": "🌑",
     "description": "Satelit alami yang berada tepat di tengah melintasi garis lurus ekliptika menutupi piringan surya."
   },
   {
     "id": "gm3",
     "order": 3,
-    "label": "3. Bumi (Daerah Umbra)",
+    "label": "Bumi (Zona Umbra)",
     "iconEmoji": "🌍",
     "description": "Permukaan tempat jatuhnya kerucut bayangan inti umbra, tempat pengamat menyaksikan gerhana matahari total."
   }

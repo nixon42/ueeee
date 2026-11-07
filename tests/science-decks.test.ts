@@ -90,8 +90,8 @@ describe('Milestone 2: Science & Lab Curriculum Presentation Decks Verification'
       expect(POINT_CLICK_HUTAN_DECK.slides.length).toBe(8);
       expect(POINT_CLICK_HUTAN_DECK.totalSlides).toBe(8);
 
-      expect(ULAR_TANGGA_TATASURYA_DECK.slides.length).toBe(8);
-      expect(ULAR_TANGGA_TATASURYA_DECK.totalSlides).toBe(8);
+      expect(ULAR_TANGGA_TATASURYA_DECK.slides.length).toBe(7);
+      expect(ULAR_TANGGA_TATASURYA_DECK.totalSlides).toBe(7);
 
       expect(PRESENTASI_EKOSISTEM_HUTAN_DECK.slides.length).toBe(7);
       expect(PRESENTASI_EKOSISTEM_HUTAN_DECK.totalSlides).toBe(7);
@@ -155,26 +155,41 @@ describe('Milestone 2: Science & Lab Curriculum Presentation Decks Verification'
           expect(firstSlide.actionButtonText.length).toBeGreaterThan(3);
         }
 
-        // Penultimate Slide: Story Resolution
-        const penultimateSlide = deck.slides[deck.slides.length - 2];
-        expect(penultimateSlide.type).toBe('story-resolution');
-        if (penultimateSlide.type === 'story-resolution') {
-          expect(penultimateSlide.resolutionStory.length).toBeGreaterThan(50);
-          expect(penultimateSlide.achievementBadges.length).toBeGreaterThanOrEqual(2);
-          expect(penultimateSlide.actionButtonText.length).toBeGreaterThan(3);
-        }
+        if (deck.gameId === 'ular-tangga-tatasurya') {
+          // Slide 7: Unified Story Resolution & HOTS Reflection
+          const finalSlide = deck.slides[deck.slides.length - 1];
+          expect(finalSlide.type).toBe('story-resolution');
+          if (finalSlide.type === 'story-resolution') {
+            expect(finalSlide.resolutionStory.length).toBeGreaterThan(50);
+            expect((finalSlide as any).sparkCards?.length).toBe(3);
+            (finalSlide as any).sparkCards?.forEach((card: any, idx: number) => {
+              expect(card.number).toBe(idx + 1);
+              expect(card.title.length).toBeGreaterThan(3);
+              expect(card.question.length).toBeGreaterThan(15);
+            });
+          }
+        } else {
+          // Penultimate Slide: Story Resolution
+          const penultimateSlide = deck.slides[deck.slides.length - 2];
+          expect(penultimateSlide.type).toBe('story-resolution');
+          if (penultimateSlide.type === 'story-resolution') {
+            expect(penultimateSlide.resolutionStory.length).toBeGreaterThan(50);
+            expect(penultimateSlide.achievementBadges.length).toBeGreaterThanOrEqual(2);
+            expect(penultimateSlide.actionButtonText.length).toBeGreaterThan(3);
+          }
 
-        // Final Slide: Reflection Spark
-        const finalSlide = deck.slides[deck.slides.length - 1];
-        expect(finalSlide.type).toBe('reflection-spark');
-        if (finalSlide.type === 'reflection-spark') {
-          expect(finalSlide.sparkCards.length).toBe(3);
-          expect(finalSlide.victoryButtonText.length).toBeGreaterThan(3);
-          finalSlide.sparkCards.forEach((card, idx) => {
-            expect(card.number).toBe(idx + 1);
-            expect(card.title.length).toBeGreaterThan(3);
-            expect(card.question.length).toBeGreaterThan(15);
-          });
+          // Final Slide: Reflection Spark
+          const finalSlide = deck.slides[deck.slides.length - 1];
+          expect(finalSlide.type).toBe('reflection-spark');
+          if (finalSlide.type === 'reflection-spark') {
+            expect(finalSlide.sparkCards.length).toBe(3);
+            expect(finalSlide.victoryButtonText.length).toBeGreaterThan(3);
+            finalSlide.sparkCards.forEach((card, idx) => {
+              expect(card.number).toBe(idx + 1);
+              expect(card.title.length).toBeGreaterThan(3);
+              expect(card.question.length).toBeGreaterThan(15);
+            });
+          }
         }
 
         // All slides have valid chapterBadges and recognized slide types

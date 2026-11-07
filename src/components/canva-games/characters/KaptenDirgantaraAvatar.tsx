@@ -26,9 +26,9 @@ export const KaptenDirgantaraAvatar: React.FC<KaptenDirgantaraAvatarProps> = ({
   mood = 'speaking',
   showSpeechBubble = false,
   speechText,
-  dialogueTitle = 'Kapten Dirgantara • Astro-Komandan Misi Dirgantara',
+  dialogueTitle = 'Kapten Dirgantara',
   speakerName = 'Kapten Dirgantara',
-  speakerRole = 'Astro-Komandan Misi Dirgantara',
+  speakerRole: _speakerRole = 'Kapten Misi Antariksa',
   missionObjective,
   className = '',
 }) => {
@@ -259,9 +259,6 @@ export const KaptenDirgantaraAvatar: React.FC<KaptenDirgantaraAvatarProps> = ({
             <span className="text-sm sm:text-base">🚀</span>
             <span className="font-black text-xs sm:text-sm tracking-wide">
               {speakerName || dialogueTitle.split('•')[0]?.trim() || 'Kapten Dirgantara'}
-            </span>
-            <span className="text-[10px] sm:text-xs font-bold text-purple-100 bg-black/25 px-2 py-0.5 rounded-lg border border-white/20">
-              {speakerRole || dialogueTitle.split('•')[1]?.trim() || 'Astro-Komandan Misi Dirgantara'}
             </span>
           </div>
 
