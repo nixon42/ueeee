@@ -28,7 +28,7 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
   speechText,
   dialogueTitle = 'Kak Galih • Penjelajah Rimba Lembah Cendrawasih',
   speakerName,
-  speakerRole,
+  speakerRole: _speakerRole,
   missionObjective,
   className = '',
 }) => {
@@ -233,9 +233,6 @@ export const KakGalihAvatar: React.FC<KakGalihAvatarProps> = ({
             <span className="text-sm sm:text-base">🧭</span>
             <span className="font-black text-xs sm:text-sm tracking-wide">
               {speakerName || dialogueTitle.split('•')[0]?.trim() || 'Kak Galih'}
-            </span>
-            <span className="text-[10px] sm:text-xs font-bold text-emerald-100 bg-black/20 px-2 py-0.5 rounded-lg border border-white/20">
-              {speakerRole || dialogueTitle.split('•')[1]?.trim() || 'Penjelajah Rimba'}
             </span>
           </div>
 

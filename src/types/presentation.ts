@@ -262,6 +262,9 @@ export interface StoryResolutionSlide {
     icon?: string;
   }>;
   actionButtonText?: string; // e.g. "Buka Lembar Diskusi Guru & Refleksi"
+  sparkCards?: DiscussionSparkCard[];
+  mentorPrompt?: string;
+  victoryButtonText?: string;
 }
 
 /**

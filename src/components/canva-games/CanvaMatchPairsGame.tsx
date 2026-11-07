@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { RotateCcw, CheckCircle2, AlertCircle, Zap } from 'lucide-react';
+import { RotateCcw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 export interface MatchPairItem {
@@ -222,6 +222,81 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
           : 'border-emerald-950/40 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)]'
       } select-none animate-in fade-in duration-300 ${className}`}
     >
+      {/* ── COSMIC BACKGROUND SCENE (For astronomy deck) ── */}
+      {isPurple && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Deep Nebula Clouds */}
+          <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full bg-purple-600/15 blur-3xl" />
+          <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-cyan-600/15 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-indigo-600/10 blur-3xl" />
+
+          {/* Twinkling Starfield SVG */}
+          <svg className="w-full h-full opacity-60" viewBox="0 0 1000 600" preserveAspectRatio="none">
+            <g fill="#ffffff">
+              <circle cx="80" cy="90" r="1.2" opacity="0.8" />
+              <circle cx="160" cy="220" r="1.5" opacity="0.6" />
+              <circle cx="280" cy="70" r="1" opacity="0.7" />
+              <circle cx="340" cy="480" r="1.4" opacity="0.5" />
+              <circle cx="450" cy="120" r="1.8" opacity="0.9" />
+              <circle cx="580" cy="520" r="1" opacity="0.7" />
+              <circle cx="670" cy="80" r="1.6" opacity="0.8" />
+              <circle cx="780" cy="280" r="1.2" opacity="0.6" />
+              <circle cx="890" cy="140" r="1.4" opacity="0.7" />
+              <circle cx="920" cy="460" r="1.7" opacity="0.85" />
+            </g>
+          </svg>
+        </div>
+      )}
+
+      {/* ── BIO-ENERGY NATURE CANVAS SCENE (For science & ecology deck) ── */}
+      {!isPurple && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Luminous Bio-Energy Radial Flares */}
+          <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-emerald-500/20 blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 w-[420px] h-[420px] rounded-full bg-teal-500/20 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[340px] rounded-full bg-amber-500/10 blur-3xl" />
+
+          {/* Diegetic Energy Flux & Biosphere Conduits SVG */}
+          <svg className="w-full h-full opacity-40" viewBox="0 0 1000 600" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="bioGridGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#34d399" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#2dd4bf" stopOpacity="0.3" />
+              </linearGradient>
+            </defs>
+
+            {/* Hexagonal Bio-Energy Flow Conduits */}
+            <g stroke="url(#bioGridGrad)" strokeWidth="1.2" fill="none" opacity="0.6">
+              <path d="M 50 150 L 150 100 L 250 100 L 300 150 L 250 200 L 150 200 Z" />
+              <path d="M 700 150 L 800 100 L 900 100 L 950 150 L 900 200 L 800 200 Z" />
+              <path d="M 50 450 L 150 400 L 250 400 L 300 450 L 250 500 L 150 500 Z" />
+              <path d="M 700 450 L 800 400 L 900 400 L 950 450 L 900 500 L 800 500 Z" />
+              {/* Organic Flow Streamlines */}
+              <path d="M 0 300 Q 250 200 500 300 T 1000 300" stroke="#34d399" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.5" />
+              <path d="M 0 320 Q 250 420 500 320 T 1000 320" stroke="#facc15" strokeWidth="1.5" strokeDasharray="4 4" opacity="0.4" />
+            </g>
+
+            {/* Floating Energy Photons & Bio-luminescent Spores */}
+            <g fill="#4ade80">
+              <circle cx="120" cy="80" r="2.5" opacity="0.75" />
+              <circle cx="220" cy="240" r="2" opacity="0.6" />
+              <circle cx="310" cy="90" r="1.8" opacity="0.7" />
+              <circle cx="480" cy="110" r="2.8" opacity="0.85" />
+              <circle cx="680" cy="70" r="2.2" opacity="0.8" />
+              <circle cx="820" cy="260" r="2.5" opacity="0.7" />
+              <circle cx="890" cy="110" r="2" opacity="0.65" />
+            </g>
+            <g fill="#facc15">
+              <circle cx="180" cy="480" r="2.2" opacity="0.7" />
+              <circle cx="380" cy="520" r="2.8" opacity="0.8" />
+              <circle cx="620" cy="490" r="2.2" opacity="0.7" />
+              <circle cx="840" cy="510" r="2.5" opacity="0.75" />
+            </g>
+          </svg>
+        </div>
+      )}
+
       {/* ── COCKPIT HUD TOP BAR ───────────────────────────── */}
       <div className="relative z-30 px-3 sm:px-5 pt-2.5 sm:pt-3.5 pb-1 shrink-0 flex items-center justify-between gap-2.5">
         <div
@@ -232,13 +307,11 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
-            <span
-              className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
-                isPurple ? 'bg-cyan-400 text-slate-950' : 'bg-amber-400 text-emerald-950'
-              }`}
-            >
-              {chapterBadge || 'TANTANGAN KONEKSI'}
-            </span>
+            {!isPurple && chapterBadge && (
+              <span className="px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase bg-amber-400 text-emerald-950">
+                {chapterBadge}
+              </span>
+            )}
             <h2 className="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight drop-shadow truncate">
               {title}
             </h2>
@@ -269,24 +342,17 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
                 : 'bg-emerald-900/60 border-emerald-500/40 text-amber-200'
             }`}
           >
-            <Zap
-              size={13}
-              className={
-                isSuccess
-                  ? 'text-emerald-400 fill-emerald-400'
-                  : connectedCount === totalCount
-                  ? 'text-amber-400 fill-amber-400'
-                  : isPurple
-                  ? 'text-cyan-400'
-                  : 'text-amber-400'
-              }
-            />
+            {checkedState ? (
+              isSuccess ? <CheckCircle2 size={13} className="text-emerald-400" /> : <AlertCircle size={13} className="text-rose-400" />
+            ) : (
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            )}
             <span>
               {checkedState
                 ? isSuccess
-                  ? 'Sirkuit 100% Sempurna!'
-                  : 'Ada Sambungan Keliru'
-                : `${connectedCount} / ${totalCount} Jalur Terhubung`}
+                  ? 'Koneksi Tepat!'
+                  : 'Periksa Kembali'
+                : `${connectedCount}/${totalCount} Terhubung`}
             </span>
           </div>
         </div>
@@ -356,7 +422,84 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
 
       {/* ── DUAL CONDUIT TERMINAL TOUCHPADS (MAIN ARENA) ─── */}
       <div className="relative z-10 flex-1 min-h-0 px-3 sm:px-6 py-2 flex items-center justify-center my-auto">
-        <div className="w-full max-w-4xl grid grid-cols-2 gap-4 sm:gap-8 md:gap-14 items-center">
+        <div className="relative w-full max-w-4xl grid grid-cols-2 gap-4 sm:gap-8 md:gap-14 items-center">
+          {/* Central Holographic Relay Station Illustration for Astronomy Deck */}
+          {isPurple && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 hidden sm:flex flex-col items-center opacity-85">
+              <svg viewBox="0 0 180 180" className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_0_20px_rgba(56,189,248,0.4)]">
+                <defs>
+                  <linearGradient id="relayDishGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#38bdf8" />
+                    <stop offset="100%" stopColor="#7c3aed" />
+                  </linearGradient>
+                </defs>
+                {/* Orbital radar rings */}
+                <circle cx="90" cy="90" r="70" fill="none" stroke="#38bdf8" strokeWidth="1" strokeDasharray="4 4" opacity="0.3" className="animate-spin" style={{ animationDuration: '30s' }} />
+                <circle cx="90" cy="90" r="50" fill="none" stroke="#a855f7" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.4" />
+                <circle cx="90" cy="90" r="32" fill="#0f172a" stroke="#38bdf8" strokeWidth="2" opacity="0.9" />
+
+                {/* Crosshairs & Solar wings */}
+                <line x1="20" y1="90" x2="58" y2="90" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <line x1="122" y1="90" x2="160" y2="90" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+                <rect x="22" y="80" width="32" height="20" rx="3" fill="#1e1b4b" stroke="#38bdf8" strokeWidth="1" />
+                <rect x="126" y="80" width="32" height="20" rx="3" fill="#1e1b4b" stroke="#38bdf8" strokeWidth="1" />
+
+                {/* Station Satellite Core */}
+                <circle cx="90" cy="90" r="16" fill="url(#relayDishGrad)" />
+                <circle cx="90" cy="90" r="6" fill="#ffffff" className="animate-pulse" />
+
+                {/* Signal Pulses */}
+                <circle cx="90" cy="90" r="24" fill="none" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6" />
+              </svg>
+              <div className="mt-1 px-2.5 py-0.5 rounded-full bg-slate-950/80 border border-cyan-400/40 text-[9px] font-black uppercase tracking-wider text-cyan-300">
+                Stasiun Relai Kosmis 🛰️
+              </div>
+            </div>
+          )}
+
+          {/* Central Bio-Energy Nexus Reactor for Science & Ecology Deck */}
+          {!isPurple && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 hidden sm:flex flex-col items-center opacity-85">
+              <svg viewBox="0 0 180 180" className="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_0_20px_rgba(52,211,153,0.4)]">
+                <defs>
+                  <linearGradient id="bioNexusGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#34d399" />
+                    <stop offset="50%" stopColor="#10b981" />
+                    <stop offset="100%" stopColor="#059669" />
+                  </linearGradient>
+                  <radialGradient id="bioCoreGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#fef08a" />
+                    <stop offset="50%" stopColor="#10b981" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#064e3b" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                {/* Outer magnetic flux rings */}
+                <circle cx="90" cy="90" r="72" fill="none" stroke="#34d399" strokeWidth="1" strokeDasharray="5 5" opacity="0.35" className="animate-spin" style={{ animationDuration: '36s' }} />
+                <circle cx="90" cy="90" r="54" fill="none" stroke="#fbbf24" strokeWidth="1.2" strokeDasharray="4 4" opacity="0.45" className="animate-spin" style={{ animationDuration: '24s', animationDirection: 'reverse' }} />
+                <circle cx="90" cy="90" r="36" fill="#022c22" stroke="#34d399" strokeWidth="2" opacity="0.95" />
+
+                {/* Horizontal conduit connectors */}
+                <line x1="16" y1="90" x2="54" y2="90" stroke="#34d399" strokeWidth="2.5" strokeDasharray="3 3" />
+                <line x1="126" y1="90" x2="164" y2="90" stroke="#34d399" strokeWidth="2.5" strokeDasharray="3 3" />
+                <circle cx="20" cy="90" r="4" fill="#fbbf24" />
+                <circle cx="160" cy="90" r="4" fill="#fbbf24" />
+
+                {/* Core glow aura */}
+                <circle cx="90" cy="90" r="30" fill="url(#bioCoreGlow)" />
+                {/* Reactor central vessel */}
+                <circle cx="90" cy="90" r="18" fill="url(#bioNexusGrad)" stroke="#a7f3d0" strokeWidth="1.5" />
+                <circle cx="90" cy="90" r="7" fill="#ffffff" className="animate-ping" style={{ animationDuration: '3s' }} />
+
+                {/* Central Leaf Icon */}
+                <text x="90" y="95" textAnchor="middle" fontSize="14" fill="#ffffff" className="select-none">
+                  🌱
+                </text>
+              </svg>
+              <div className="mt-1 px-2.5 py-0.5 rounded-full bg-slate-950/85 border border-emerald-400/50 text-[9px] font-black uppercase tracking-wider text-emerald-300 shadow-md">
+                Nexus Aliran Energi ⚡
+              </div>
+            </div>
+          )}
           {/* KOLOM KIRI: Terminal Sumber Energi */}
           <div className="flex flex-col gap-2 sm:gap-2.5">
             <div className="flex items-center gap-2 px-1 mb-0.5">

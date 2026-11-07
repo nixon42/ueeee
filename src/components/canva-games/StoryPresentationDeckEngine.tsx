@@ -240,6 +240,7 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
             themeColor={deck.themeColor}
             challengesState={challengesState}
             onNext={handleNextSlide}
+            onVictory={() => setIsVictoryOpen(true)}
           />
         );
 

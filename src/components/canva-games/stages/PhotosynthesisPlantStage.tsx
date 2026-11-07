@@ -147,9 +147,30 @@ export const PhotosynthesisPlantStage: React.FC<PhotosynthesisPlantStageProps> =
             <ellipse cx="-10" cy="56" rx="8" ry="5" fill={activePhase === 0 ? '#4ade80' : '#16a34a'} />
             <ellipse cx="10" cy="56" rx="8" ry="5" fill={activePhase === 0 ? '#4ade80' : '#16a34a'} />
             <ellipse cx="0" cy="56" rx="4" ry="2" fill="#052e16" />
-            <text x="0" y="72" textAnchor="middle" fill="#86efac" fontSize="9" fontWeight="900">
-              STOMATA (PORI DAUN)
-            </text>
+            {/* High-contrast badge container for Stomata label */}
+            <g transform="translate(0, 72)">
+              <rect
+                x="-66"
+                y="-10"
+                width="132"
+                height="20"
+                rx="10"
+                fill="#022c22"
+                stroke="#4ade80"
+                strokeWidth="2"
+              />
+              <text
+                x="0"
+                y="4"
+                textAnchor="middle"
+                fill="#ffffff"
+                fontSize="9.5"
+                fontWeight="900"
+                letterSpacing="0.05em"
+              >
+                STOMATA (PORI DAUN)
+              </text>
+            </g>
           </g>
 
           {/* ── GAS INFLOW / OUTFLOW CALLOUTS ───────── */}

@@ -274,7 +274,30 @@ export const FotosintesisDaurAirIllustration: React.FC<ScienceSvgProps> = ({
             <ellipse cx="-7" cy="44" rx="6" ry="4" fill="#16a34a" />
             <ellipse cx="7" cy="44" rx="6" ry="4" fill="#16a34a" />
             <ellipse cx="0" cy="44" rx="3" ry="1.5" fill="#052e16" />
-            <text x="0" y="58" textAnchor="middle" fill="#047857" fontSize="7" fontWeight="black">STOMATA (PORI DAUN)</text>
+            {/* High-contrast badge container for Stomata label */}
+            <g transform="translate(0, 58)">
+              <rect
+                x="-52"
+                y="-9"
+                width="104"
+                height="18"
+                rx="9"
+                fill="#022c22"
+                stroke="#4ade80"
+                strokeWidth="1.5"
+              />
+              <text
+                x="0"
+                y="3"
+                textAnchor="middle"
+                fill="#ffffff"
+                fontSize="7.5"
+                fontWeight="900"
+                letterSpacing="0.04em"
+              >
+                STOMATA (PORI DAUN)
+              </text>
+            </g>
           </g>
 
           {/* Gas Inflow / Outflow Callouts with Looping Breath */}

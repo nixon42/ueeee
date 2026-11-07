@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { sound } from '@/lib/sound';
 
 export interface EclipseMechanicsStageProps {
   activePhase: number;
   onSelectPhase: (idx: number) => void;
+  isPlaying?: boolean;
   className?: string;
 }
 
@@ -16,8 +17,26 @@ const BEACONS = [
 export const EclipseMechanicsStage: React.FC<EclipseMechanicsStageProps> = ({
   activePhase,
   onSelectPhase,
+  isPlaying = false,
   className = '',
 }) => {
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    let animId: number;
+    const tick = () => {
+      setTime((prev) => prev + 1);
+      animId = requestAnimationFrame(tick);
+    };
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, [isPlaying]);
+
+  // Dynamic Moon position during eclipse transit animation
+  const moonX = isPlaying ? 470 + 20 * Math.cos(time * 0.03) : 470;
+  const moonY = isPlaying ? 250 + 40 * Math.sin(time * 0.03) : 250;
+  const umbraApexY = 250 + (moonY - 250) * 1.6;
   return (
     <div className={`relative w-full h-full select-none overflow-hidden rounded-2xl bg-slate-950 ${className}`}>
       {/* ── VECTOR ECLIPSE WORLD ────────────────────────────────────── */}
@@ -121,31 +140,31 @@ export const EclipseMechanicsStage: React.FC<EclipseMechanicsStageProps> = ({
         <g opacity={activePhase === 1 || activePhase === 2 ? 1 : 0.4}>
           {/* Top Penumbra Divergent Cone */}
           <polygon
-            points="100,175 470,240 680,185 680,225"
+            points={`100,175 ${moonX},${moonY - 10} 680,${umbraApexY - 65} 680,${umbraApexY - 25}`}
             fill="url(#penumbraConeGrad)"
           />
           {/* Bottom Penumbra Divergent Cone */}
           <polygon
-            points="100,325 470,260 680,315 680,275"
+            points={`100,325 ${moonX},${moonY + 10} 680,${umbraApexY + 65} 680,${umbraApexY + 25}`}
             fill="url(#penumbraConeGrad)"
           />
 
           {/* Central Convergent Umbra Cone (Total Darkness Shadow) */}
           <polygon
-            points="100,175 470,238 680,246 680,254 470,262 100,325"
+            points={`100,175 ${moonX},${moonY - 12} 680,${umbraApexY - 4} 680,${umbraApexY + 4} ${moonX},${moonY + 12} 100,325`}
             fill="url(#umbraConeGrad)"
           />
 
           {/* Ray Guidance Boundary Lines */}
           <g stroke="#fef08a" strokeWidth="1" strokeDasharray="6 4" opacity="0.45" className="anim-light-ray">
             {/* Top Outer Ray to Penumbra */}
-            <line x1="100" y1="175" x2="680" y2="185" />
+            <line x1="100" y1="175" x2="680" y2={umbraApexY - 65} />
             {/* Cross Ray to Umbra Apex */}
-            <line x1="100" y1="175" x2="680" y2="254" />
+            <line x1="100" y1="175" x2="680" y2={umbraApexY + 4} />
             {/* Bottom Outer Ray to Penumbra */}
-            <line x1="100" y1="325" x2="680" y2="315" />
+            <line x1="100" y1="325" x2="680" y2={umbraApexY + 65} />
             {/* Bottom Cross Ray to Umbra Apex */}
-            <line x1="100" y1="325" x2="680" y2="246" />
+            <line x1="100" y1="325" x2="680" y2={umbraApexY - 4} />
           </g>
         </g>
 
@@ -166,7 +185,7 @@ export const EclipseMechanicsStage: React.FC<EclipseMechanicsStageProps> = ({
 
         {/* ── BULAN (PENGHALANG CAHAYA) ── */}
         <g
-          transform="translate(470, 250)"
+          transform={`translate(${moonX}, ${moonY})`}
           className="cursor-pointer"
           onClick={() => { sound.playClick(); onSelectPhase(1); }}
         >
@@ -203,9 +222,9 @@ export const EclipseMechanicsStage: React.FC<EclipseMechanicsStageProps> = ({
           <path d="M-15 15 Q10 10 25 22" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
 
           {/* Umbra Totality Impact Point on Earth Surface */}
-          <ellipse cx="-38" cy="0" rx="4" ry="7" fill="#000000" stroke="#ef4444" strokeWidth="1" />
+          <ellipse cx="-38" cy={umbraApexY - 250} rx="4" ry="7" fill="#000000" stroke="#ef4444" strokeWidth="1.2" />
           {/* Totality Zone Callout Pulse */}
-          <circle cx="-38" cy="0" r="8" fill="none" stroke="#f87171" strokeWidth="1.2" opacity="0.8" />
+          <circle cx="-38" cy={umbraApexY - 250} r="8" fill="none" stroke="#f87171" strokeWidth="1.2" opacity="0.8" />
 
           <text x="0" y="52" textAnchor="middle" fill="#93c5fd" fontSize="10" fontWeight="900">
             Bumi
@@ -216,54 +235,86 @@ export const EclipseMechanicsStage: React.FC<EclipseMechanicsStageProps> = ({
         {activePhase === 1 && (
           <g>
             {/* Umbra Tag */}
-            <g transform="translate(565, 235)">
-              <rect x="0" y="0" width="75" height="20" rx="5" fill="#020617" stroke="#c084fc" strokeWidth="1.2" />
-              <text x="37" y="13" textAnchor="middle" fill="#e9d5ff" fontSize="8.5" fontWeight="black">
+            <g transform={`translate(555, ${Math.min(310, Math.max(190, umbraApexY - 15))})`}>
+              <rect x="0" y="0" width="85" height="22" rx="6" fill="#020617" stroke="#c084fc" strokeWidth="1.4" />
+              <text x="42" y="14" textAnchor="middle" fill="#e9d5ff" fontSize="9" fontWeight="black">
                 Kerucut Umbra
               </text>
-              <line x1="37" y1="20" x2="37" y2="250" stroke="#c084fc" strokeWidth="1" strokeDasharray="2 2" />
             </g>
             {/* Penumbra Tag Top */}
-            <g transform="translate(565, 170)">
-              <rect x="0" y="0" width="85" height="19" rx="5" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1" />
-              <text x="42" y="12" textAnchor="middle" fill="#c7d2fe" fontSize="8" fontWeight="bold">
+            <g transform="translate(555, 160)">
+              <rect x="0" y="0" width="90" height="21" rx="6" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.2" />
+              <text x="45" y="14" textAnchor="middle" fill="#c7d2fe" fontSize="8.5" fontWeight="bold">
                 Zona Penumbra
               </text>
             </g>
           </g>
         )}
 
-        {/* ── PHASE 2: SYZYGY ALIGNMENT & TOTAL ECLIPSE INSET ── */}
+        {/* ── PHASE 2: SYZYGY ALIGNMENT & SCI-FI TOTAL ECLIPSE OBSERVATORY VIEWPORT ── */}
         {activePhase === 2 && (
           <g>
             {/* Central Syzygy Axis Line */}
             <line x1="100" y1="250" x2="680" y2="250" stroke="#38bdf8" strokeWidth="1.8" strokeDasharray="5 3" opacity="0.8" />
 
-            {/* Total Solar Eclipse Observer View Inset (Top Right) */}
-            <g transform="translate(490, 320)">
-              <rect width="270" height="95" rx="12" fill="#030712" stroke="#38bdf8" strokeWidth="2" shadow-xl />
-              {/* Corona Glow Ring */}
-              <circle cx="55" cy="48" r="28" fill="none" stroke="#fef08a" strokeWidth="4" opacity="0.75" />
-              <circle cx="55" cy="48" r="25" fill="#020617" stroke="#ffffff" strokeWidth="1.5" />
-              {/* Baily's Beads / Diamond Ring Flash */}
-              <g className="anim-diamond-glint" transform="translate(73, 30)">
-                <circle cx="0" cy="0" r="4.5" fill="#ffffff" />
-                <line x1="-10" y1="0" x2="10" y2="0" stroke="#fef08a" strokeWidth="2" />
-                <line x1="0" y1="-10" x2="0" y2="10" stroke="#fef08a" strokeWidth="2" />
+            {/* Total Solar Eclipse Observer View Inset (Top-Right High-Tech Viewfinder HUD) */}
+            <g transform="translate(460, 305)">
+              {/* Outer HUD Shell */}
+              <rect width="310" height="115" rx="16" fill="#030712" stroke="#38bdf8" strokeWidth="2" opacity="0.95" />
+              <rect x="2" y="2" width="306" height="24" rx="14" fill="#0f172a" />
+              
+              {/* Scope Top Header Status */}
+              <circle cx="16" cy="14" r="4" fill="#22c55e" className="animate-pulse" />
+              <text x="26" y="17" fill="#38bdf8" fontSize="9" fontWeight="900" letterSpacing="0.08em" fontFamily="monospace">
+                TELESKOP OPTIK: GERHANA MATAHARI TOTAL
+              </text>
+
+              {/* Viewfinder Circular Reticle (Left Side) */}
+              <g transform="translate(62, 68)">
+                {/* Outer Coordinate Degree Ring */}
+                <circle cx="0" cy="0" r="36" fill="#020617" stroke="#0284c7" strokeWidth="1.5" />
+                <circle cx="0" cy="0" r="32" fill="none" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="2 3" opacity="0.6" />
+                
+                {/* Reticle Crosshairs */}
+                <line x1="-34" y1="0" x2="-22" y2="0" stroke="#38bdf8" strokeWidth="1.5" />
+                <line x1="22" y1="0" x2="34" y2="0" stroke="#38bdf8" strokeWidth="1.5" />
+                <line x1="0" y1="-34" x2="0" y2="-22" stroke="#38bdf8" strokeWidth="1.5" />
+                <line x1="0" y1="22" x2="0" y2="34" stroke="#38bdf8" strokeWidth="1.5" />
+
+                {/* Radiant Solar Corona Rim */}
+                <circle cx="0" cy="0" r="23" fill="none" stroke="#fef08a" strokeWidth="5" opacity="0.85" filter="drop-shadow(0 0 6px #f59e0b)" />
+                {/* Moon Silhouette Disking Out Sun */}
+                <circle cx="0" cy="0" r="21" fill="#020617" stroke="#ffffff" strokeWidth="1" />
+
+                {/* Diamond Ring Glint Flare */}
+                <g className="anim-diamond-glint" transform="translate(15, -15)">
+                  <circle cx="0" cy="0" r="4.5" fill="#ffffff" />
+                  <line x1="-12" y1="0" x2="12" y2="0" stroke="#fef08a" strokeWidth="2.5" />
+                  <line x1="0" y1="-12" x2="0" y2="12" stroke="#fef08a" strokeWidth="2.5" />
+                  <circle cx="0" cy="0" r="8" fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.6" />
+                </g>
               </g>
-              {/* Inset Text */}
-              <text x="100" y="32" fill="#38bdf8" fontSize="10" fontWeight="black">
-                PANDANGAN GERHANA TOTAL
-              </text>
-              <text x="100" y="50" fill="#f1f5f9" fontSize="8.5" fontWeight="bold">
-                Cincin Berlian (Diamond Ring)
-              </text>
-              <text x="100" y="66" fill="#94a3b8" fontSize="7.5">
-                Piringan Bulan tepat menutupi Matahari.
-              </text>
-              <text x="100" y="78" fill="#facc15" fontSize="7.5" fontWeight="bold">
-                Hanya korona surya putih yang tampak!
-              </text>
+
+              {/* Telemetry Explanatory Typography (Right Side) */}
+              <g transform="translate(118, 42)">
+                <text x="0" y="8" fill="#facc15" fontSize="10.5" fontWeight="900">
+                  Cincin Berlian (Diamond Ring)
+                </text>
+                <text x="0" y="24" fill="#e2e8f0" fontSize="8.5" fontWeight="medium">
+                  Siluet Bulan tepat mengunci piringan surya.
+                </text>
+                <text x="0" y="38" fill="#93c5fd" fontSize="8.5" fontWeight="bold">
+                  Hanya korona gas putih membara yang berpendar!
+                </text>
+                
+                {/* HUD Live Telemetry Reading */}
+                <g transform="translate(0, 48)">
+                  <rect width="180" height="16" rx="4" fill="#1e1b4b" stroke="#6366f1" strokeWidth="0.8" />
+                  <text x="8" y="11.5" fill="#a5f3fc" fontSize="7.5" fontWeight="bold" fontFamily="monospace">
+                    FASE: C2 KONTAK • CAHAYA: KORONA SAJA
+                  </text>
+                </g>
+              </g>
             </g>
           </g>
         )}

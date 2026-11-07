@@ -245,7 +245,9 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
 
     if (allCorrect) {
       sound.playCorrect();
-      setShowExplanation(true);
+      if (isWaterCycle || isScientificMethod) {
+        setShowExplanation(true);
+      }
     } else {
       sound.playWrong();
     }
@@ -275,13 +277,11 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
-            <span
-              className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
-                isPurple ? 'bg-cyan-400 text-slate-950' : 'bg-amber-400 text-emerald-950'
-              }`}
-            >
-              {chapterBadge || 'TANTANGAN URUTAN'}
-            </span>
+            {!isPurple && chapterBadge && (
+              <span className="px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase bg-amber-400 text-emerald-950">
+                {chapterBadge}
+              </span>
+            )}
             <h2 className="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight drop-shadow truncate">
               {title}
             </h2>
@@ -297,29 +297,25 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
           )}
         </div>
 
-        {/* Status Badge Counter on Right */}
-        <div className="shrink-0 flex items-center gap-2">
-          <div
-            className={`px-3 py-1.5 rounded-xl border backdrop-blur-sm text-xs font-black flex items-center gap-1.5 shadow-md ${
-              checkedState
-                ? isSuccess
+        {/* Status Badge Counter on Right (Only shown after checking order) */}
+        {checkedState && (
+          <div className="shrink-0 flex items-center gap-2">
+            <div
+              className={`px-3 py-1.5 rounded-xl border backdrop-blur-sm text-xs font-black flex items-center gap-1.5 shadow-md ${
+                isSuccess
                   ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
                   : 'bg-rose-500/20 border-rose-400 text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.3)]'
-                : isPurple
-                ? 'bg-purple-900/60 border-purple-500/40 text-cyan-200'
-                : 'bg-emerald-900/60 border-emerald-500/40 text-amber-200'
-            }`}
-          >
-            <Sparkles size={13} className={isSuccess ? 'text-emerald-400' : isPurple ? 'text-cyan-400' : 'text-amber-400'} />
-            <span>
-              {checkedState
-                ? isSuccess
+              }`}
+            >
+              <Sparkles size={13} className={isSuccess ? 'text-emerald-400' : 'text-rose-400'} />
+              <span>
+                {isSuccess
                   ? 'Urutan 100% Sempurna!'
-                  : 'Perlu Penyesuaian'
-                : `${currentOrder.length} Tahap Siklus`}
-            </span>
+                  : 'Perlu Penyesuaian'}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* ── MAIN DRAG ARENA (STRICT BOUNDARY CLAMPING) ─────── */}
@@ -333,12 +329,14 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
         {/* Horizontal Card Slots Grid */}
         <div
           className={`grid ${
-            currentOrder.length <= 4
+            isPurple && currentOrder.length === 8
+              ? 'grid-cols-2 sm:grid-cols-4 grid-rows-2 max-w-5xl'
+              : currentOrder.length <= 4
               ? 'grid-cols-2 sm:grid-cols-4'
               : currentOrder.length <= 6
               ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
               : 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-8'
-          } gap-2.5 sm:gap-3.5 w-full max-w-5xl h-full items-stretch relative`}
+          } gap-2.5 sm:gap-3 w-full max-w-5xl h-full items-stretch relative`}
         >
           {currentOrder.map((item, index) => {
             const isBeingDragged = draggingIdx === index;
@@ -370,20 +368,22 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
                 className="relative w-full h-full flex flex-col items-center justify-between min-h-0"
               >
                 {/* Target Slot Plaque Header */}
-                <div className="w-full flex items-center justify-between px-2 py-0.5 mb-1 pointer-events-none shrink-0">
-                  <span
-                    className={`text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider ${
-                      isPurple ? 'text-cyan-300/80' : 'text-amber-300/80'
-                    }`}
-                  >
-                    Tahap {index + 1}
-                  </span>
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      isPurple ? 'bg-cyan-400/60' : 'bg-amber-400/60'
-                    }`}
-                  />
-                </div>
+                {(!isPurple || currentOrder.length === 8) && (
+                  <div className="w-full flex items-center justify-between px-2 py-0.5 mb-1 pointer-events-none shrink-0">
+                    <span
+                      className={`text-[9.5px] sm:text-[10px] font-black uppercase tracking-wider ${
+                        isPurple ? 'text-cyan-300/80' : 'text-amber-300/80'
+                      }`}
+                    >
+                      {isPurple ? `Planet ${index + 1}` : `Tahap ${index + 1}`}
+                    </span>
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        isPurple ? 'bg-cyan-400/60' : 'bg-amber-400/60'
+                      }`}
+                    />
+                  </div>
+                )}
 
                 {/* Preview Ghost Slot: Appears at hover target slot showing where card will land */}
                 {draggingIdx !== null && hoverSlotIndex === index && (
