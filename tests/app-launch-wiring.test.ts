@@ -90,20 +90,28 @@ describe('Milestone 4: App Launch Wiring, Catalog Integration & Dry Quiz Depreca
         expect(secondSlide.cards.length).toBeLessThanOrEqual(4);
       }
 
-      // 3. Penultimate slide must be story resolution with real-world impact
-      const penultimateSlide = deck.slides[deck.slides.length - 2];
-      expect(penultimateSlide.type).toBe('story-resolution');
-      if (penultimateSlide.type === 'story-resolution') {
-        expect(penultimateSlide.resolutionStory.length).toBeGreaterThan(20);
-        expect(penultimateSlide.title.length).toBeGreaterThan(5);
-      }
+      if (deck.gameId === 'ular-tangga-tatasurya') {
+        // Tata Surya has unified final 7th slide for story-resolution + reflection
+        const finalSlide = deck.slides[deck.slides.length - 1];
+        expect(finalSlide.type).toBe('story-resolution');
+        expect((finalSlide as any).resolutionStory?.length).toBeGreaterThan(20);
+        expect((finalSlide as any).sparkCards?.length).toBeGreaterThanOrEqual(2);
+      } else {
+        // 3. Penultimate slide must be story resolution with real-world impact
+        const penultimateSlide = deck.slides[deck.slides.length - 2];
+        expect(penultimateSlide.type).toBe('story-resolution');
+        if (penultimateSlide.type === 'story-resolution') {
+          expect(penultimateSlide.resolutionStory.length).toBeGreaterThan(20);
+          expect(penultimateSlide.title.length).toBeGreaterThan(5);
+        }
 
-      // 4. Final slide must be reflection spark with HOTS classroom discussion prompts
-      const finalSlide = deck.slides[deck.slides.length - 1];
-      expect(finalSlide.type).toBe('reflection-spark');
-      if (finalSlide.type === 'reflection-spark') {
-        expect(finalSlide.sparkCards.length).toBeGreaterThanOrEqual(2);
-        expect(finalSlide.title.length).toBeGreaterThan(5);
+        // 4. Final slide must be reflection spark with HOTS classroom discussion prompts
+        const finalSlide = deck.slides[deck.slides.length - 1];
+        expect(finalSlide.type).toBe('reflection-spark');
+        if (finalSlide.type === 'reflection-spark') {
+          expect(finalSlide.sparkCards.length).toBeGreaterThanOrEqual(2);
+          expect(finalSlide.title.length).toBeGreaterThan(5);
+        }
       }
     }
   });

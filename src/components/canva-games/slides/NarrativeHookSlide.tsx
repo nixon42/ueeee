@@ -447,11 +447,6 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
           <span className="font-black text-[12px] sm:text-sm text-white tracking-wide whitespace-nowrap">
             {speakerName}
           </span>
-          {speakerRole && (
-            <span className="hidden sm:inline text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-cyan-200 bg-black/35 px-2 py-0.5 rounded-md border border-cyan-400/30 whitespace-nowrap">
-              {speakerRole}
-            </span>
-          )}
         </div>
       );
     }

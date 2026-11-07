@@ -31,7 +31,7 @@ The comprehensive, opaque-box E2E test suite for all 10 educational games on the
 | 3 | `ular-tangga-matematika` | Matematika | SD 4-6 | Kak Arya | 7 Slides | Match Pairs (Pecahan Senilai), Sequence (Balok Fraksi) | 3 HOTS | Verified ✅ |
 | 4 | `point-click-candi` | Sejarah | SMP 7-8 | Paman Dewa | 8 Slides | Sequence (Strata Kosmologi), Match Pairs (Relief Maritim), Flashcards (Dinasti) | 3 HOTS | Verified ✅ |
 | 5 | `point-click-hutan` | Sains | SD 4-6 & SMP 7 | Ranger Banyu | 8 Slides | Match Pairs (Fauna Wallacea), Sequence (Strata Hutan), Flashcards (Adaptasi Satwa) | 3 HOTS | Verified ✅ |
-| 6 | `ular-tangga-tatasurya` | Sains | SD 6 & SMP 7 | Kapten Dirgantara | 8 Slides | Sequence (8 Planet), Match Pairs (Objek Antariksa), Sequence (Gerhana) | 3 HOTS | Verified ✅ |
+| 6 | `ular-tangga-tatasurya` | Sains | SD 6 & SMP 7 | Kapten Dirgantara | 7 Slides | Sequence (8 Planet), Match Pairs (Objek Antariksa), Sequence (Gerhana) | 3 HOTS | Verified ✅ |
 | 7 | `teka-teki-kata` | Bahasa | SD 5-6 & SMP 7-9 | Ibu Kartika | 7 Slides | Match Pairs (Kata Baku KBBI), Sequence (Bait Pantun) | 3 HOTS | Verified ✅ |
 | 8 | `ular-tangga-sejarah` | Sejarah | SD 5-6 & SMP 7-9 | Kak Satria | 8 Slides | Sequence (Linimasa Proklamasi), Match Pairs (Tokoh Pahlawan), Flashcards (Naskah Klad) | 3 HOTS | Verified ✅ |
 | 9 | `catur-taktik-logika` | Logika | SD 4-6 & SMP 7-9 | Master Utut | 7 Slides | Match Pairs (Motif Taktik), Sequence (Algoritma Skakmat) | 3 HOTS | Verified ✅ |

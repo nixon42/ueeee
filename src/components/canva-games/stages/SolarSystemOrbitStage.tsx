@@ -23,7 +23,10 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying) {
+      setTime(0);
+      return;
+    }
     let animId: number;
     const tick = () => {
       setTime((prev) => prev + 1);
@@ -37,12 +40,12 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
     rx: number,
     ry: number,
     defaultX: number,
-    defaultY: number,
+    _defaultY: number,
     speed: number,
     initialAngle: number
   ) => {
-    if (!isPlaying && time === 0) {
-      return { x: defaultX, y: defaultY };
+    if (!isPlaying || time === 0) {
+      return { x: defaultX, y: 250 };
     }
     const angle = initialAngle + time * speed;
     return {
@@ -52,13 +55,13 @@ export const SolarSystemOrbitStage: React.FC<SolarSystemOrbitStageProps> = ({
   };
 
   const pMerkurius = getPlanetPos(75, 40, 145, 250, 0.05, 0);
-  const pVenus = getPlanetPos(115, 55, 185, 230, 0.035, -0.36);
-  const pBumi = getPlanetPos(165, 75, 235, 260, 0.024, 0.13);
-  const pMars = getPlanetPos(215, 95, 285, 232, 0.018, -0.19);
-  const pJupiter = getPlanetPos(330, 135, 400, 275, 0.011, 0.18);
-  const pSaturnus = getPlanetPos(440, 165, 510, 210, 0.0075, -0.24);
-  const pUranus = getPlanetPos(545, 195, 615, 290, 0.005, 0.21);
-  const pNeptunus = getPlanetPos(645, 220, 715, 220, 0.0035, -0.14);
+  const pVenus = getPlanetPos(115, 55, 185, 250, 0.035, -0.36);
+  const pBumi = getPlanetPos(165, 75, 235, 250, 0.024, 0.13);
+  const pMars = getPlanetPos(215, 95, 285, 250, 0.018, -0.19);
+  const pJupiter = getPlanetPos(330, 135, 400, 250, 0.011, 0.18);
+  const pSaturnus = getPlanetPos(440, 165, 510, 250, 0.0075, -0.24);
+  const pUranus = getPlanetPos(545, 195, 615, 250, 0.005, 0.21);
+  const pNeptunus = getPlanetPos(645, 220, 715, 250, 0.0035, -0.14);
   return (
     <div className={`relative w-full h-full select-none overflow-hidden rounded-2xl bg-slate-950 ${className}`}>
       {/* ── VECTOR ORBIT WORLD ────────────────────────────────────── */}

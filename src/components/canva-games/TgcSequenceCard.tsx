@@ -605,25 +605,47 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
 
   // ── GERHANA MATAHARI SEQUENCE ARTWORK ───────────────────────
 
-  // Matahari (gm1)
+  // Matahari (gm1) - Sumber Foton Cahaya Semesta
   if (id === 'gm1' || label.includes('matahari')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
-        <rect width="200" height="130" fill="#080310" />
+        <rect width="200" height="130" fill="#03040c" />
         <defs>
-          <radialGradient id="solCorona" cx="50%" cy="50%" r="50%">
+          <radialGradient id="solCoreGlow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="35%" stopColor="#fef08a" />
-            <stop offset="70%" stopColor="#f59e0b" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+            <stop offset="25%" stopColor="#fef08a" />
+            <stop offset="55%" stopColor="#f59e0b" />
+            <stop offset="80%" stopColor="#ea580c" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#7c2d12" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="solOuterCorona" cx="50%" cy="50%" r="50%">
+            <stop offset="40%" stopColor="#fbbf24" stopOpacity="0.4" />
+            <stop offset="75%" stopColor="#ea580c" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#451a03" stopOpacity="0" />
           </radialGradient>
         </defs>
-        {/* Outer Radiant Flare Corona */}
-        <circle cx="100" cy="65" r="54" fill="url(#solCorona)" opacity="0.9" />
-        {/* Blazing Center Sphere */}
-        <circle cx="100" cy="65" r="28" fill="#fef08a" stroke="#ffffff" strokeWidth="2" />
-        {/* Solar Flare Rays */}
-        <g stroke="#fde047" strokeWidth="2" strokeLinecap="round" opacity="0.85">
+        {/* Background Cosmic Stars */}
+        <circle cx="25" cy="20" r="0.8" fill="#ffffff" opacity="0.6" />
+        <circle cx="175" cy="25" r="1.2" fill="#ffffff" opacity="0.7" />
+        <circle cx="185" cy="105" r="0.9" fill="#93c5fd" opacity="0.6" />
+        <circle cx="15" cy="110" r="1" fill="#fef08a" opacity="0.5" />
+        <circle cx="45" cy="70" r="0.7" fill="#ffffff" opacity="0.4" />
+
+        {/* Extended Outer Corona Glow */}
+        <circle cx="100" cy="65" r="62" fill="url(#solOuterCorona)" />
+        <circle cx="100" cy="65" r="48" fill="url(#solCoreGlow)" />
+
+        {/* Dynamic Prominence Loops */}
+        <path d="M100 24 Q108 12 116 26" stroke="#f97316" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.9" />
+        <path d="M62 65 Q50 56 64 48" stroke="#f97316" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.85" />
+        <path d="M138 65 Q150 74 136 82" stroke="#ea580c" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.85" />
+
+        {/* Blazing Photosphere Center */}
+        <circle cx="100" cy="65" r="28" fill="#facc15" stroke="#fffbeb" strokeWidth="2" />
+        <circle cx="100" cy="65" r="22" fill="#fef08a" />
+
+        {/* Directed Light Beams */}
+        <g stroke="#fef08a" strokeWidth="1.8" strokeLinecap="round" opacity="0.8">
           <line x1="100" y1="20" x2="100" y2="8" />
           <line x1="100" y1="110" x2="100" y2="122" />
           <line x1="55" y1="65" x2="43" y2="65" />
@@ -637,50 +659,103 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
     );
   }
 
-  // Bulan (gm2)
+  // Bulan (gm2) - Penghalang Bayangan Inti Umbra
   if (id === 'gm2' || label.includes('bulan')) {
-    return (
-      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
-        <rect width="200" height="130" fill="#04040d" />
-        <defs>
-          <radialGradient id="moonGrad" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#f1f5f9" />
-            <stop offset="60%" stopColor="#cbd5e1" />
-            <stop offset="85%" stopColor="#64748b" />
-            <stop offset="100%" stopColor="#1e293b" />
-          </radialGradient>
-        </defs>
-        {/* Moon Globe with Craters */}
-        <circle cx="100" cy="65" r="32" fill="url(#moonGrad)" stroke="#e2e8f0" strokeWidth="1" />
-        <circle cx="92" cy="56" r="6" fill="#475569" opacity="0.5" />
-        <circle cx="112" cy="70" r="7" fill="#475569" opacity="0.6" />
-        <circle cx="96" cy="76" r="4" fill="#475569" opacity="0.5" />
-        <circle cx="110" cy="52" r="3.5" fill="#475569" opacity="0.4" />
-        {/* Projecting Shadow Cone */}
-        <polygon points="132,65 200,45 200,85" fill="#0f172a" opacity="0.75" />
-      </svg>
-    );
-  }
-
-  // Bumi / Umbra (gm3)
-  if (id === 'gm3' || label.includes('umbra') || label.includes('bumi (daerah umbra)')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <rect width="200" height="130" fill="#020308" />
         <defs>
-          <radialGradient id="diamondRing" cx="50%" cy="50%" r="50%">
+          <radialGradient id="moonShading" cx="28%" cy="40%" r="65%">
+            <stop offset="0%" stopColor="#f8fafc" />
+            <stop offset="45%" stopColor="#cbd5e1" />
+            <stop offset="75%" stopColor="#475569" />
+            <stop offset="100%" stopColor="#0f172a" />
+          </radialGradient>
+          <linearGradient id="umbraConeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#0f172a" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#020617" stopOpacity="0.2" />
+          </linearGradient>
+        </defs>
+        {/* Starfield */}
+        <circle cx="20" cy="30" r="0.9" fill="#ffffff" opacity="0.7" />
+        <circle cx="180" cy="20" r="1.1" fill="#ffffff" opacity="0.8" />
+        <circle cx="35" cy="100" r="0.8" fill="#38bdf8" opacity="0.6" />
+        <circle cx="160" cy="115" r="1" fill="#e2e8f0" opacity="0.5" />
+
+        {/* Projecting Umbra Shadow Cone Tapering into Deep Space */}
+        <polygon points="100,34 195,50 195,80 100,96" fill="url(#umbraConeGrad)" />
+        <polygon points="100,45 195,60 195,70 100,85" fill="#020617" opacity="0.9" />
+
+        {/* Moonlight Specular Rim */}
+        <circle cx="100" cy="65" r="33" fill="#38bdf8" opacity="0.15" />
+
+        {/* Moon Spherical Body */}
+        <circle cx="100" cy="65" r="31" fill="url(#moonShading)" stroke="#e2e8f0" strokeWidth="1" />
+
+        {/* Realistic Moon Basalt Craters (Mare Serenitatis & Tranquillitatis) */}
+        <circle cx="92" cy="56" r="5" fill="#334155" opacity="0.65" />
+        <circle cx="112" cy="68" r="6.5" fill="#334155" opacity="0.75" />
+        <circle cx="97" cy="76" r="3.5" fill="#334155" opacity="0.6" />
+        <circle cx="108" cy="50" r="3" fill="#334155" opacity="0.5" />
+        <circle cx="86" cy="70" r="2.5" fill="#334155" opacity="0.55" />
+      </svg>
+    );
+  }
+
+  // Bumi / Umbra (gm3) - Zona Gerhana Total & Diamond Ring
+  if (id === 'gm3' || label.includes('umbra') || label.includes('bumi (daerah umbra)')) {
+    return (
+      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
+        <rect width="200" height="130" fill="#010206" />
+        <defs>
+          <radialGradient id="totalityCorona" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#0284c7" stopOpacity="0" />
+            <stop offset="35%" stopColor="#e0f2fe" stopOpacity="0.9" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.5" />
+            <stop offset="90%" stopColor="#1e3a8a" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#020617" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="earthAtmosphere" cx="50%" cy="130%" r="90%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.7" />
+            <stop offset="30%" stopColor="#0284c7" stopOpacity="0.5" />
+            <stop offset="65%" stopColor="#0369a1" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#020617" stopOpacity="0" />
           </radialGradient>
         </defs>
-        {/* Solar Corona Glowing Behind Moon */}
-        <circle cx="100" cy="65" r="48" fill="url(#diamondRing)" />
-        {/* Pitch Black Moon Disk Covering Sun */}
-        <circle cx="100" cy="65" r="32" fill="#020617" stroke="#38bdf8" strokeWidth="1.5" />
-        {/* Diamond Ring Flare Flash */}
-        <circle cx="124" cy="46" r="7" fill="#ffffff" />
-        <path d="M124 34 L124 58 M112 46 L136 46" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+
+        {/* Background Starfield */}
+        <circle cx="30" cy="25" r="0.8" fill="#ffffff" opacity="0.8" />
+        <circle cx="170" cy="30" r="1.1" fill="#ffffff" opacity="0.9" />
+        <circle cx="185" cy="85" r="0.7" fill="#67e8f9" opacity="0.7" />
+        <circle cx="20" cy="85" r="0.9" fill="#fef08a" opacity="0.6" />
+
+        {/* Ethereal Solar Corona Streaming Behind Moon */}
+        <circle cx="100" cy="58" r="50" fill="url(#totalityCorona)" />
+
+        {/* Jet Streams of Coronal Plasma */}
+        <g stroke="#e0f2fe" strokeWidth="1.2" strokeLinecap="round" opacity="0.65">
+          <line x1="100" y1="8" x2="100" y2="24" />
+          <line x1="60" y1="20" x2="72" y2="34" />
+          <line x1="140" y1="20" x2="128" y2="34" />
+          <line x1="50" y1="58" x2="68" y2="58" />
+          <line x1="150" y1="58" x2="132" y2="58" />
+        </g>
+
+        {/* Pitch Black Moon Silhouette Blocking Photosphere */}
+        <circle cx="100" cy="58" r="30" fill="#020617" stroke="#38bdf8" strokeWidth="1.2" />
+
+        {/* Diamond Ring Specular Glint */}
+        <circle cx="122" cy="40" r="5" fill="#ffffff" />
+        <circle cx="122" cy="40" r="9" fill="#ffffff" opacity="0.45" />
+        <path d="M122 26 L122 54 M108 40 L136 40" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
+
+        {/* Earth's Blue Horizon Arc in Foreground with Shadow Zone */}
+        <ellipse cx="100" cy="140" rx="110" ry="40" fill="#0f172a" stroke="#0284c7" strokeWidth="2" />
+        <ellipse cx="100" cy="140" rx="120" ry="48" fill="url(#earthAtmosphere)" />
+        {/* Umbra Spot on Earth */}
+        <ellipse cx="100" cy="104" rx="22" ry="7" fill="#020617" opacity="0.95" />
+        <ellipse cx="100" cy="104" rx="35" ry="12" fill="#1e1b4b" opacity="0.4" />
       </svg>
     );
   }
@@ -740,6 +815,7 @@ export const TgcSequenceCard: React.FC<TgcSequenceCardProps> = ({
   onClick,
 }) => {
   const isPurple = theme === 'purple';
+  const displayLabel = item.label.replace(/^\d+\.\s*/, '');
 
   return (
     <div
@@ -777,7 +853,7 @@ export const TgcSequenceCard: React.FC<TgcSequenceCardProps> = ({
               isPurple ? 'text-cyan-200' : 'text-amber-200'
             }`}
           >
-            {item.label}
+            {displayLabel}
           </h4>
         </div>
 

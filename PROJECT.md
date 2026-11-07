@@ -40,7 +40,7 @@ Every feature identified during Survey phase is assigned to a specific milestone
 | 7 | Science Deck 1: `ular-tangga-sains` | Fotosintesis & Daur Hidrologi deck (7 slides, Kak Galih, Sequence & Match Pairs) | M2 | survey_2 |
 | 8 | Science Deck 2: `point-click-lab` | Lab Forensik K3 & Asam Basa pH deck (8 slides, Dr. Maya, Match Pairs & 3D Flashcards) | M2 | survey_2 |
 | 9 | Science Deck 3: `point-click-hutan` | Satwa Endemik & Garis Wallace deck (8 slides, Ranger Banyu, Match Pairs & Sequence) | M2 | survey_2 |
-| 10 | Science Deck 4: `ular-tangga-tatasurya` | Orbit 8 Planet & Gravitasi deck (8 slides, Kapten Dirgantara, Sequence & Match Pairs) | M2 | survey_2 |
+| 10 | Science Deck 4: `ular-tangga-tatasurya` | Orbit 8 Planet & Gravitasi deck (7 slides, Kapten Dirgantara, Sequence & Match Pairs) | M2 | survey_2 |
 | 11 | Science Deck 5: `presentasi-ekosistem-hutan` | Tingkat Trofik & Aliran Energi deck refresh (7 slides, Prof. Maya, Sequence & Match Pairs) | M2 | survey_1, survey_2 |
 | 12 | Science Visual SVGs | Distinct custom inline SVGs for Science & Lab concepts (chloroplast, glassware, orbits) | M2 | survey_3 |
 | 13 | Humanities Deck 1: `ular-tangga-matematika` | Pecahan, Desimal & Geometri Bangun Datar deck (7 slides, Kak Arya, Match & Sequence) | M3 | survey_2 |

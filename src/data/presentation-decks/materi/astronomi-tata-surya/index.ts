@@ -16,24 +16,23 @@ import { slide6GeometriPosisiGerhanaMataha } from './slides/slide-6-geometri-pos
 export { slide6GeometriPosisiGerhanaMataha } from './slides/slide-6-geometri-posisi-gerhana-mataha';
 import { slide7GarudaOrbitalMendaratDiSta } from './slides/slide-7-garuda-orbital-mendarat-di-sta';
 export { slide7GarudaOrbitalMendaratDiSta } from './slides/slide-7-garuda-orbital-mendarat-di-sta';
-import { slide8PertanyaanPemantikHotsAstro } from './slides/slide-8-pertanyaan-pemantik-hots-astro';
 export { slide8PertanyaanPemantikHotsAstro } from './slides/slide-8-pertanyaan-pemantik-hots-astro';
 
 export const ULAR_TANGGA_TATASURYA_DECK: PresentationDeckData = {
-  "gameId": "ular-tangga-tatasurya",
-  "title": "Petualangan Sains: Tata Surya & Gravitasi",
-  "subtitle": "Ekspedisi Orbit 8 Planet, Sabuk Asteroid, & Mekanika Gerhana",
-  "themeColor": "purple",
-  "icon": "🚀",
-  "category": "sains",
-  "gradeLevel": "SD Kelas 4-6",
-  "subjectDetail": "Tata Surya, Planet & Bintang (SD Kelas 6)",
-  "mentor": {
-    "name": "Kapten Dirgantara",
-    "role": "Astro-Komandan Misi Dirgantara",
-    "avatarEmoji": "🚀"
+  gameId: 'ular-tangga-tatasurya',
+  title: 'Petualangan Sains: Tata Surya & Gravitasi',
+  subtitle: 'Ekspedisi Orbit 8 Planet, Sabuk Asteroid, & Mekanika Gerhana',
+  themeColor: 'purple',
+  icon: '🚀',
+  category: 'sains',
+  gradeLevel: 'SD Kelas 4-6',
+  subjectDetail: 'Tata Surya, Planet & Bintang (SD Kelas 6)',
+  mentor: {
+    name: 'Kapten Dirgantara',
+    role: 'Kapten Misi Antariksa',
+    avatarEmoji: '🚀',
   },
-  "totalSlides": 8,
+  totalSlides: 7,
   slides: [
     slide1PeluncuranWahanaGarudaOrbit,
     slide28PlanetTataSuryaPembagia,
@@ -42,6 +41,5 @@ export const ULAR_TANGGA_TATASURYA_DECK: PresentationDeckData = {
     slide5KarakteristikJulukanUnikB,
     slide6GeometriPosisiGerhanaMataha,
     slide7GarudaOrbitalMendaratDiSta,
-    slide8PertanyaanPemantikHotsAstro,
   ],
 };
