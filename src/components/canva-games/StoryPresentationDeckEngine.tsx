@@ -25,6 +25,7 @@ import {
   ReflectionSparkSlide 
 } from './slides';
 import { EcosystemCanvasBackground } from './backgrounds/EcosystemCanvasBackground';
+import { SpaceCanvasBackground } from './backgrounds/SpaceCanvasBackground';
 import { progressService } from '@/business';
 
 export interface StoryPresentationDeckEngineProps {
@@ -64,10 +65,19 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
 
   const themeTokens = PRESENTATION_THEMES[deck.themeColor] || PRESENTATION_THEMES.emerald;
 
-  // Slide scene (narasi, infografis, resolusi, refleksi) mengisi seluruh kanvas sebagai scene game.
+  const isSpaceDeck =
+    deck.gameId === 'ular-tangga-tatasurya' ||
+    deck.themeColor === 'purple' ||
+    deck.mentor?.name?.toLowerCase().includes('dirgantara');
+
+  // Seluruh slide game (narasi, infografis simulator, sequence, match, flashcard, resolusi, refleksi)
+  // mengisi seluruh kanvas secara zero-scroll sebagai viewport game terpadu.
   const isSceneSlide =
     activeSlide?.type === 'narrative-intro' ||
     activeSlide?.type === 'concept-infographic' ||
+    activeSlide?.type === 'mini-game-sequence' ||
+    activeSlide?.type === 'mini-game-match' ||
+    activeSlide?.type === 'mini-game-flashcard' ||
     activeSlide?.type === 'story-resolution' ||
     activeSlide?.type === 'reflection-spark';
 
@@ -157,43 +167,41 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
 
       case 'mini-game-sequence':
         return (
-          <div className="w-full h-full flex flex-col justify-center max-w-4xl mx-auto my-auto animate-in fade-in duration-300">
-            <CanvaSequenceGame
-              items={activeSlide.items}
-              title={activeSlide.title}
-              subtitle={activeSlide.subtitle}
-              instructions={activeSlide.instruction}
-              theme={deck.themeColor as any}
-              onComplete={(isSuccess) => {
-                const key = activeSlide.challengeKey || activeSlide.id;
-                recordChallenge(key, isSuccess);
-              }}
-            />
-          </div>
+          <CanvaSequenceGame
+            items={activeSlide.items}
+            title={activeSlide.title}
+            subtitle={activeSlide.subtitle}
+            instructions={activeSlide.instruction}
+            theme={deck.themeColor as any}
+            gameId={deck.gameId}
+            onComplete={(isSuccess) => {
+              const key = activeSlide.challengeKey || activeSlide.id;
+              recordChallenge(key, isSuccess);
+            }}
+          />
         );
 
       case 'mini-game-match':
         return (
-          <div className="w-full h-full flex flex-col justify-center max-w-4xl mx-auto my-auto animate-in fade-in duration-300">
-            <CanvaMatchPairsGame
-              pairs={activeSlide.pairs}
-              title={activeSlide.title}
-              subtitle={activeSlide.subtitle}
-              instructions={activeSlide.instruction}
-              leftColumnHeader={activeSlide.columnALabel}
-              rightColumnHeader={activeSlide.columnBLabel}
-              theme={deck.themeColor as any}
-              onComplete={(isSuccess) => {
-                const key = activeSlide.challengeKey || activeSlide.id;
-                recordChallenge(key, isSuccess);
-              }}
-            />
-          </div>
+          <CanvaMatchPairsGame
+            pairs={activeSlide.pairs}
+            title={activeSlide.title}
+            subtitle={activeSlide.subtitle}
+            instructions={activeSlide.instruction}
+            leftColumnHeader={activeSlide.columnALabel}
+            rightColumnHeader={activeSlide.columnBLabel}
+            theme={deck.themeColor as any}
+            gameId={deck.gameId}
+            onComplete={(isSuccess) => {
+              const key = activeSlide.challengeKey || activeSlide.id;
+              recordChallenge(key, isSuccess);
+            }}
+          />
         );
 
       case 'mini-game-flashcard':
         return (
-          <div className="w-full h-full flex flex-col justify-center max-w-4xl mx-auto my-auto animate-in fade-in duration-300">
+          <div className="w-full h-full flex flex-col justify-center max-w-5xl mx-auto my-auto animate-in fade-in duration-300">
             <InteractiveFlashcards
               cards={activeSlide.cards}
               title={activeSlide.title}
@@ -265,13 +273,21 @@ export const StoryPresentationDeckEngine: React.FC<StoryPresentationDeckEnginePr
       resetTooltip="Mulai Ulang dari Slide 1"
       contentClassName="flex-1 min-h-0 p-2 sm:p-4 flex flex-col justify-between overflow-hidden relative"
     >
-      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS WITH ECOSYSTEM ART (STRICT NO-SCROLL NO-OVERFLOW) */}
+      {/* ARENA SLIDE PRESENTASI DINAMIS: SINGLE UNIFIED CANVAS (STRICT NO-SCROLL NO-OVERFLOW) */}
       <div
-        className={`flex-1 min-h-0 bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md flex flex-col overflow-hidden relative ${
+        className={`flex-1 min-h-0 ${
+          isSpaceDeck
+            ? 'bg-gradient-to-b from-slate-950 via-indigo-950/80 to-purple-950/90 border-purple-500/30 shadow-2xl'
+            : 'bg-gradient-to-b from-sky-50/50 via-emerald-50/30 to-slate-50/60 border-slate-200/90 shadow-md'
+        } rounded-2xl sm:rounded-3xl border flex flex-col overflow-hidden relative ${
           isSceneSlide ? 'p-1.5 sm:p-2' : 'p-3 sm:p-4 md:p-6'
         }`}
       >
-        {!isSceneSlide && <EcosystemCanvasBackground theme={deck.themeColor} />}
+        {isSpaceDeck ? (
+          <SpaceCanvasBackground />
+        ) : (
+          !isSceneSlide && <EcosystemCanvasBackground theme={deck.themeColor} />
+        )}
         <div className="relative z-10 w-full flex-1 min-h-0 flex flex-col overflow-hidden">
           {renderSlideContent()}
         </div>
