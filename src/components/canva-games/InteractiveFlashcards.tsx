@@ -120,6 +120,45 @@ const FLASHCARD_THEME_STYLES: Record<FlashcardTheme, {
  * Komponen Game Interaktif Flashcards 3D: Active Recall & Concept Mastery
  * Pure CSS 3D transform dengan perspective 1200px dan preserve-3d.
  */
+const renderLitmusSimulation = (card: FlashcardItem, isFlipped: boolean) => {
+  const textToCheck = `${card.category || ''} ${card.backTitle || ''} ${card.frontPrompt || ''}`.toLowerCase();
+  const isAcid = textToCheck.includes('asam');
+  const isBase = textToCheck.includes('basa');
+  const isNeutral = textToCheck.includes('netral') || textToCheck.includes('7');
+
+  if (!isAcid && !isBase && !isNeutral) return null;
+
+  return (
+    <div className="flex items-center justify-center gap-3 py-1.5 px-3 rounded-2xl bg-slate-900/5 border border-slate-200/80 my-1">
+      {/* Lakmus Merah */}
+      <div className="flex flex-col items-center gap-0.5">
+        <span className="text-[9px] font-black uppercase text-slate-500">Lakmus Merah</span>
+        <div
+          className="w-16 h-5 rounded-md shadow-inner border border-black/10 flex items-center justify-center text-[9px] font-black text-white transition-colors duration-500"
+          style={{
+            backgroundColor: isFlipped && isBase ? '#2563eb' : '#dc2626'
+          }}
+        >
+          {isFlipped && isBase ? '➔ BIRU' : 'MERAH'}
+        </div>
+      </div>
+
+      {/* Lakmus Biru */}
+      <div className="flex flex-col items-center gap-0.5">
+        <span className="text-[9px] font-black uppercase text-slate-500">Lakmus Biru</span>
+        <div
+          className="w-16 h-5 rounded-md shadow-inner border border-black/10 flex items-center justify-center text-[9px] font-black text-white transition-colors duration-500"
+          style={{
+            backgroundColor: isFlipped && isAcid ? '#dc2626' : '#2563eb'
+          }}
+        >
+          {isFlipped && isAcid ? '➔ MERAH' : 'BIRU'}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
   title = 'Kartu Pemahaman Konsep',
   instructions,
@@ -171,6 +210,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
     } else {
       setIsFinished(true);
       const masteredCount = Object.values(nextRatings).filter(r => r === 'mastered').length;
+      sound.playCelebration();
       if (onComplete) {
         onComplete(masteredCount, cards.length);
       }
@@ -229,7 +269,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
       <div className="w-full max-w-lg my-auto" style={{ perspective: '1200px' }}>
         {!isFinished && currentCard ? (
           <div
-            className="relative w-full h-80 sm:h-96 transition-transform duration-500 ease-out cursor-pointer select-none"
+            className="relative w-full h-72 sm:h-84 transition-transform duration-500 ease-out cursor-pointer select-none"
             style={{
               transformStyle: 'preserve-3d',
               transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
@@ -238,42 +278,43 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
           >
             {/* SISI DEPAN (FRONT FACE) */}
             <div
-              className={`absolute inset-0 w-full h-full p-6 sm:p-7 rounded-3xl bg-gradient-to-br ${themeStyle.frontBg} border-2 ${themeStyle.frontBorder} shadow-lg flex flex-col justify-between`}
+              className={`absolute inset-0 w-full h-full p-4 sm:p-6 rounded-3xl bg-gradient-to-br ${themeStyle.frontBg} border-3 sm:border-4 ${themeStyle.frontBorder} border-b-6 sm:border-b-8 shadow-xl flex flex-col justify-between backdrop-blur-xs`}
               style={{
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
               }}
             >
               <div className="flex items-center justify-between">
-                <span className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl border ${themeStyle.frontCategory}`}>
+                <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-xl border-2 shadow-2xs ${themeStyle.frontCategory}`}>
                   {currentCard.category || 'Tantangan Konsep'}
                 </span>
-                <span className="text-xs font-bold text-slate-400">
+                <span className="text-xs font-black text-slate-400">
                   {currentIndex + 1} / {cards.length}
                 </span>
               </div>
 
-              <div className="flex flex-col items-center text-center my-auto space-y-3">
+              <div className="flex flex-col items-center text-center my-auto space-y-2">
                 {(currentCard.frontEmoji || currentCard.iconEmoji) && (
-                  <span className="text-5xl drop-shadow-sm select-none">
+                  <span className="text-4xl sm:text-5xl drop-shadow-sm select-none">
                     {currentCard.frontEmoji || currentCard.iconEmoji}
                   </span>
                 )}
-                <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug">
+                <h3 className="text-sm sm:text-lg font-black text-slate-900 leading-snug">
                   {currentCard.frontPrompt}
                 </h3>
+                {renderLitmusSimulation(currentCard, false)}
                 {currentCard.frontHint && (
-                  <p className="text-xs text-slate-500 italic">
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-semibold italic">
                     💡 Petunjuk: {currentCard.frontHint}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500">
+              <div className="pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] sm:text-xs text-slate-500 font-semibold">
                 <span className="flex items-center gap-1">
                   <HelpCircle size={14} /> Pikirkan jawabanmu
                 </span>
-                <span className={`font-bold ${themeStyle.frontFlipText} flex items-center gap-1`}>
+                <span className={`font-black ${themeStyle.frontFlipText} flex items-center gap-1`}>
                   <RotateCw size={14} /> Klik untuk Balik Kartu
                 </span>
               </div>
@@ -281,7 +322,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
 
             {/* SISI BELAKANG (BACK FACE) */}
             <div
-              className={`absolute inset-0 w-full h-full p-6 sm:p-7 rounded-3xl bg-gradient-to-br ${themeStyle.backBg} border-2 ${themeStyle.backBorder} shadow-xl flex flex-col justify-between`}
+              className={`absolute inset-0 w-full h-full p-4 sm:p-6 rounded-3xl bg-gradient-to-br ${themeStyle.backBg} border-3 sm:border-4 ${themeStyle.backBorder} border-b-6 sm:border-b-8 shadow-xl flex flex-col justify-between backdrop-blur-xs`}
               style={{
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
@@ -289,7 +330,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-xl border border-emerald-200 flex items-center gap-1">
+                <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-xl border-2 border-emerald-300 flex items-center gap-1 shadow-2xs">
                   <CheckCircle2 size={13} /> Kunci Konsep & Faktual
                 </span>
                 <button
@@ -305,42 +346,43 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
                 </button>
               </div>
 
-              <div className="my-auto space-y-2.5 text-left">
+              <div className="my-auto space-y-2 text-left">
                 {currentCard.backTitle && (
-                  <h4 className="font-black text-xs text-emerald-950 uppercase tracking-wider">
+                  <h4 className="font-black text-[11px] sm:text-xs text-emerald-950 uppercase tracking-wider">
                     {currentCard.backTitle}
                   </h4>
                 )}
-                <p className="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed">
+                <p className="text-xs sm:text-sm md:text-base font-black text-slate-900 leading-snug">
                   {currentCard.backAnswer}
                 </p>
+                {renderLitmusSimulation(currentCard, true)}
                 {currentCard.backExplanation && (
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium bg-white/80 p-2.5 rounded-xl border border-emerald-100">
+                  <p className="text-[11px] sm:text-xs text-slate-700 leading-relaxed font-semibold bg-white/80 p-2 sm:p-2.5 rounded-xl border border-emerald-100">
                     {currentCard.backExplanation}
                   </p>
                 )}
                 {currentCard.backCurriculumFact && (
-                  <p className="text-[11px] text-teal-800 font-semibold italic bg-teal-50/60 p-2 rounded-lg border border-teal-200/50">
+                  <p className="text-[10px] sm:text-[11px] text-teal-800 font-bold italic bg-teal-50/60 p-1.5 sm:p-2 rounded-lg border border-teal-200/50">
                     📌 {currentCard.backCurriculumFact}
                   </p>
                 )}
               </div>
 
-              <div className="pt-2.5 border-t border-emerald-100 flex items-center justify-between text-xs text-slate-500">
+              <div className="pt-2 border-t border-emerald-100 flex items-center justify-between text-[11px] text-slate-500 font-bold">
                 <span>Evaluasi penguasaanmu di bawah ini:</span>
               </div>
             </div>
           </div>
         ) : (
           /* RINGKASAN SETELAH SELESAI */
-          <div className="w-full p-6 sm:p-8 rounded-3xl bg-white border-2 border-emerald-300 shadow-xl flex flex-col items-center text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-3xl shadow-inner">
-              <Award size={36} className="text-emerald-600" />
+          <div className="w-full p-5 sm:p-7 rounded-3xl bg-white border-3 border-b-6 border-emerald-400 shadow-xl flex flex-col items-center text-center space-y-3">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-3xl shadow-inner border border-emerald-200">
+              <Award size={34} className="text-emerald-600" />
             </div>
-            <h3 className="text-xl font-black text-slate-900">
+            <h3 className="text-lg sm:text-xl font-black text-slate-900">
               Evaluasi Flashcard Selesai!
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 max-w-sm">
+            <p className="text-xs sm:text-sm text-slate-600 max-w-sm font-medium">
               Kamu telah menguasai{' '}
               <strong className="text-emerald-700 font-black">{masteredCount}</strong> dari{' '}
               <strong>{cards.length}</strong> konsep kunci.
@@ -349,7 +391,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
             <button
               type="button"
               onClick={handleResetCards}
-              className="py-2.5 px-6 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer transition shadow-sm"
+              className="py-2.5 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-b-4 border-slate-300 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer transition-all shadow-sm"
             >
               <RotateCcw size={15} />
               <span>Ulas Kembali Semua Kartu</span>
@@ -360,11 +402,11 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
 
       {/* Rating Buttons (Muncul saat kartu terbalik untuk evaluasi aktif) */}
       {!isFinished && isFlipped && (
-        <div className="flex items-center gap-3 mt-4 w-full max-w-md justify-center animate-in fade-in duration-200">
+        <div className="flex items-center gap-3 mt-3 w-full max-w-md justify-center animate-in fade-in duration-200">
           <button
             type="button"
             onClick={() => handleRate('review')}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border-2 border-rose-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition"
+            className="flex-1 py-2.5 sm:py-3 px-3 rounded-2xl bg-white hover:bg-rose-50 text-rose-700 border-2 border-b-4 border-rose-300 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all"
           >
             <span>🔴 Perlu Diulas Lagi</span>
           </button>
@@ -372,7 +414,7 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
           <button
             type="button"
             onClick={() => handleRate('mastered')}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition"
+            className="flex-1 py-2.5 sm:py-3 px-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-b-4 border-emerald-800 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition-all"
           >
             <CheckCircle2 size={16} />
             <span>🟢 Sudah Paham!</span>
@@ -382,11 +424,11 @@ export const InteractiveFlashcards: React.FC<InteractiveFlashcardsProps> = ({
 
       {/* Tombol Balik Manual jika belum dibalik */}
       {!isFinished && !isFlipped && (
-        <div className="flex items-center gap-2 mt-4">
+        <div className="flex items-center gap-2 mt-3">
           <button
             type="button"
             onClick={handleFlip}
-            className="py-2.5 px-5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-sm cursor-pointer transition"
+            className="py-2.5 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 border-2 border-b-4 border-slate-300 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-sm cursor-pointer transition-all"
           >
             <RotateCw size={15} />
             <span>Balik Kartu (Lihat Jawaban)</span>

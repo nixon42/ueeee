@@ -51,49 +51,48 @@ export const GAMES_CATALOG: GameItem[] = [
   },
   {
     id: 'point-click-lab',
-    title: 'Point & Click: Misteri Lab Sains Maya',
-    subtitle: 'Temukan alat-alat lab tersembunyi dan pecahkan teka-teki reaksi kimia!',
-    description: 'Petualangan interaktif di dalam laboratorium sains virtual. Klik berbagai tabung reaksi kimia, mikroskop elektron, klorofil fotosintesis daun, dan jurnal riset untuk meracik formula netral.',
+    title: 'Petualangan Sains: Investigasi Forensik Lab Kimia',
+    subtitle: 'Pecahkan anomali reaktor, kuasai protokol K3, uji lakmus pH, & terapkan metode ilmiah!',
+    description: 'Petualangan sains forensik interaktif bersama Dr. Maya Arisandi, M.Sc.! Selidiki anomali kebocoran reaktor Unit 04, kuasai regulasi keselamatan K3, kalibrasi derajat keasaman pH 0-14, dan buktikan hipotesis lewat titrasi netralisasi.',
     type: 'point-and-click',
     category: 'sains',
     gradeLevel: 'SMP',
-    badge: 'Eksplorasi Interaktif',
-    badgeColor: 'bg-teal-100 text-teal-800 border-teal-300',
     accentColor: '#0d9488',
     gradient: 'from-teal-500 via-emerald-500 to-cyan-500',
     iconName: 'FlaskConical',
-    playTimeMinutes: 8,
+    playTimeMinutes: 10,
     featured: true,
-    subjectDetail: 'Kimia & Biologi Eksperimental',
+    subjectDetail: 'IPA Kimia & Biologi Eksperimental (SMP Kelas 7)',
     rating: 4.9,
-    playsCount: 1940,
+    playsCount: 2180,
     hasStoryPresentation: true,
     presentationDeckId: 'point-click-lab',
     slideCount: 8,
     mentorName: 'Dr. Maya Arisandi, M.Sc.',
     tags: [
-      'lab sains', 'sains', 'kimia', 'biologi', 'fotosintesis', 
-      'eksperimen', 'mikroskop', 'larutan', 'point and click'
+      'lab sains', 'sains', 'kimia', 'forensik', 'k3', 'asam basa',
+      'derajat ph', 'metode ilmiah', 'dr maya', 'eksperimen', 'titrasi'
     ],
     prolog: {
-      story: 'Profesor Maya mengundangmu ke laboratorium riset canggih Unit 04. Namun formula netralisasi kimia penting hilang tercampur di meja uji coba. Tugasmu adalah mengobservasi instrumen lab, menganalisis sampel preparat, dan melengkapi buku jurnal penelitian!',
+      story: 'Sirine darurat berbunyi di Laboratorium Forensik Kimia-Biologi Unit 04! Reaktor utama mendeteksi anomali larutan kimia misterius dengan lonjakan keasaman ekstrem yang berisiko merusak instrumen analitis. Bersama Dr. Maya Arisandi, M.Sc., kamu dipanggil sebagai peneliti forensik muda untuk mengamankan laboratorium. Sebelum menetralkan tangki reaktor, kamu harus menguasai standar keselamatan K3, memahami skala derajat pH 0-14, dan menerapkan 5 langkah metode ilmiah secara presisi!',
       learningGoals: [
-        'Menerapkan tahapan metode ilmiah: Observasi, Hipotesis, Eksperimen, dan Kesimpulan.',
-        'Mengenal fungsi instrumen laboratorium (Mikroskop elektron, Tabung reaksi, Kristalisasi mineral).',
-        'Memahami sifat keasaman zat (pH netral, asam, basa) dan reaksi larutan.',
-        'Mempelajari jaringan sel tumbuhan dan klorofil di bawah mikroskop.'
+        'Menerapkan 5 tahapan metode ilmiah secara sistematis (Observasi, Rumusan Masalah, Hipotesis, Eksperimen Terkontrol, dan Kesimpulan).',
+        'Mengidentifikasi standar keselamatan kerja K3 laboratorium serta arti piktogram bahaya GHS (Korosif, Toksik, Mudah Menyala, dan Eksplosif).',
+        'Menganalisis sifat larutan berdasarkan skala derajat keasaman (pH 0-14), dari asam kuat, titik netral pH 7.00, hingga basa kuat.',
+        'Menguasai prinsip pengujian larutan menggunakan indikator kertas lakmus merah dan biru serta reaksi titrasi netralisasi asam-basa.'
       ],
       howToPlay: [
-        'Amati ruangan laboratorium virtual dan cari objek yang memancarkan pendar berkilau.',
-        'Klik objek untuk membuka panel dialog mentor dan tantangan analisis ilmiah.',
-        'Pilih opsi jawaban yang paling akurat untuk mengoleksi item ke dalam Tas Ekspedisi Siswa.',
-        'Gunakan tombol "Lihat Diagram Ilmiah" untuk membaca peta konsep dan skema visual mendalam.'
+        'Simak arahan misi darurat dari Dr. Maya Arisandi pada slide pembuka presentasi interaktif.',
+        'Pelajari infografis keselamatan K3, alat pelindung diri (APD), dan skala derajat pH keasaman larutan.',
+        'Selesaikan mini-game menjodohkan simbol bahaya K3, susun urutan 5 langkah metode ilmiah, dan balik kartu uji indikator lakmus.',
+        'Diskusikan pertanyaan pemantik HOTS seputar hujan asam, etika data ilmiah, dan indikator alami bersama guru dan teman sekelas.'
       ],
       rules: [
-        'Terdapat 4 target eksplorasi ilmiah yang wajib ditemukan di laboratorium.',
-        'Setiap analisis yang dijawab benar akan langsung mengamankan artefak ke dalam tasmu.',
-        'Jika jawaban kurang tepat, mentor sains akan memberikan petunjuk konseptual tanpa penalti skor.',
-        'Misi laboratorium dinyatakan sukses saat keempat instrumen berhasil diidentifikasi.'
+        'Ikuti alur slide investigasi secara bertahap atau navigasikan langsung via titik indikator di bagian bawah.',
+        'Pada tantangan simbol K3, pasangkan 4 piktogram bahaya dengan karakteristik resiko yang tepat.',
+        'Pada tantangan metode ilmiah, seret dan posisikan kartu hingga urutan tahapan penalaran ilmiah 100% tepat.',
+        'Pada tantangan indikator lakmus, balik kartu untuk menguji daya ingat aktif analisis asam-basa.',
+        'Reaktor Unit 04 berhasil dinetralkan saat pH 7.00 tercapai dan seluruh 8 babak investigasi forensik selesai!'
       ]
     }
   },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lightbulb, Play, Pause, Sparkles } from 'lucide-react';
+import { Lightbulb, Play, Pause, Sparkles, FlaskConical } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
 import { PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
@@ -11,7 +11,7 @@ import { EclipseMechanicsStage } from '../stages/EclipseMechanicsStage';
 
 export interface ConceptInfographicSlideProps {
   slide: ConceptSlideData;
-  themeColor: PresentationThemeKey;
+  themeColor?: PresentationThemeKey;
   gameId?: string;
   onNext?: () => void;
 }
@@ -57,6 +57,24 @@ const PHASE_THEMES: Record<
   },
 };
 
+const PH_SCALE_CHIPS = [
+  { ph: 0, label: 'Asam Kuat Ekstrem', color: '#ef4444', type: 'asam' },
+  { ph: 1, label: 'Asam Lambung', color: '#f87171', type: 'asam' },
+  { ph: 2, label: 'Jus Lemon', color: '#fb923c', type: 'asam' },
+  { ph: 3, label: 'Cuka Dapur', color: '#f59e0b', type: 'asam' },
+  { ph: 4, label: 'Jus Tomat', color: '#fbbf24', type: 'asam' },
+  { ph: 5, label: 'Kopi Hitam', color: '#facc15', type: 'asam' },
+  { ph: 6, label: 'Susu Murni', color: '#a3e635', type: 'asam' },
+  { ph: 7, label: 'Air Murni (Netral)', color: '#4ade80', type: 'netral' },
+  { ph: 8, label: 'Air Laut / Telur', color: '#2dd4bf', type: 'basa' },
+  { ph: 9, label: 'Baking Soda', color: '#38bdf8', type: 'basa' },
+  { ph: 10, label: 'Obat Maag', color: '#60a5fa', type: 'basa' },
+  { ph: 11, label: 'Amonia Pembersih', color: '#818cf8', type: 'basa' },
+  { ph: 12, label: 'Air Sabun', color: '#a78bfa', type: 'basa' },
+  { ph: 13, label: 'Pemutih Pakaian', color: '#c084fc', type: 'basa' },
+  { ph: 14, label: 'Pembersih Saluran', color: '#e879f9', type: 'basa' },
+];
+
 export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = ({
   slide,
   themeColor = 'emerald',
@@ -65,6 +83,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const cards = slide.cards ?? [];
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [selectedPh, setSelectedPh] = useState<number>(7);
 
   // Determine specialized interactive simulation stage
   const slideTitleLower = slide.title.toLowerCase();
@@ -87,6 +106,13 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
     slideTitleLower.includes('gerhana') ||
     slideTitleLower.includes('mekanika orbit');
 
+  const isChemistryLab =
+    gameId === 'point-click-lab' ||
+    themeColor === 'teal' ||
+    slideTitleLower.includes('asam-basa') ||
+    slideTitleLower.includes('reaktor') ||
+    slideTitleLower.includes('kimia');
+
   const FallbackIllustration = gameId ? getDeckIllustration(gameId) : null;
 
   // Auto-cycle timelapse playback
@@ -100,8 +126,11 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
 
   const activeCard = cards[selectedIdx] ?? cards[0];
   const isPurple = themeColor === 'purple' || gameId === 'ular-tangga-tatasurya';
+  const isTeal = themeColor === 'teal' || isChemistryLab;
   const activeTheme =
-    PHASE_THEMES[activeCard?.badgeColor ?? 'amber'] ?? PHASE_THEMES.amber;
+    PHASE_THEMES[activeCard?.badgeColor ?? (isTeal ? 'teal' : 'amber')] ?? PHASE_THEMES.amber;
+
+  const currentPhInfo = PH_SCALE_CHIPS.find((p) => p.ph === selectedPh) || PH_SCALE_CHIPS[7];
 
   const toggleAutoPlay = () => {
     sound.playClick();
@@ -109,6 +138,20 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   };
 
   const getMechanismCallout = (idx: number) => {
+    if (isChemistryLab) {
+      switch (idx) {
+        case 0:
+          return 'Larutan Asam: Menghasilkan ion hidrogen (H+) saat dilarutkan dalam air, pH < 7, mengubah lakmus biru jadi merah.';
+        case 1:
+          return 'Larutan Netral: Konsentrasi H+ seimbang dengan OH-, pH tepat 7, tidak mengubah warna kertas lakmus.';
+        case 2:
+          return 'Larutan Basa: Menghasilkan ion hidroksida (OH-), pH > 7, licin di kulit, mengubah lakmus merah jadi biru.';
+        case 3:
+          return 'Reaksi Netralisasi: Asam bereaksi dengan Basa menghasilkan garam mineral (NaCl) dan molekul air murni (H2O).';
+        default:
+          return 'Spektrum pH 0-14 menentukan tingkat keasaman atau kebasaan analit laboratorium.';
+      }
+    }
     if (isHydrologySlide) {
       switch (idx) {
         case 0:
@@ -167,6 +210,8 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       className={`relative w-full h-full flex flex-col overflow-hidden rounded-3xl border-4 ${
         isPurple
           ? 'border-purple-900/40 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 shadow-[0_18px_40px_-12px_rgba(59,7,100,0.55)]'
+          : isTeal
+          ? 'border-teal-900/40 bg-gradient-to-br from-slate-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(13,148,136,0.55)]'
           : 'border-emerald-950/40 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)]'
       } animate-in fade-in duration-300 select-none`}
     >
@@ -176,13 +221,19 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           className={`inline-block max-w-[75%] sm:max-w-[80%] rounded-2xl ${
             isPurple
               ? 'bg-gradient-to-r from-purple-950/95 via-indigo-900/90 to-slate-950/55 border-l-[6px] border-cyan-400'
+              : isTeal
+              ? 'bg-gradient-to-r from-teal-950/95 via-cyan-950/90 to-slate-950/55 border-l-[6px] border-teal-400'
               : 'bg-gradient-to-r from-emerald-950/95 via-emerald-900/90 to-emerald-900/55 border-l-[6px] border-amber-400'
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
             <span
               className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
-                isPurple ? 'bg-cyan-400 text-slate-950' : 'bg-amber-400 text-emerald-950'
+                isPurple
+                  ? 'bg-cyan-400 text-slate-950'
+                  : isTeal
+                  ? 'bg-teal-400 text-slate-950'
+                  : 'bg-amber-400 text-emerald-950'
               }`}
             >
               SIMULATOR
@@ -194,7 +245,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           {slide.subtitle && (
             <p
               className={`text-[10.5px] sm:text-xs font-bold leading-snug mt-0.5 truncate hidden sm:block ${
-                isPurple ? 'text-cyan-300/95' : 'text-amber-300/95'
+                isPurple ? 'text-cyan-300/95' : isTeal ? 'text-teal-300/95' : 'text-amber-300/95'
               }`}
             >
               {slide.subtitle}
@@ -210,9 +261,13 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             isPlaying
               ? isPurple
                 ? 'bg-cyan-400 text-slate-950 border-cyan-300 shadow-[0_0_16px_rgba(6,182,212,0.6)] animate-pulse'
+                : isTeal
+                ? 'bg-teal-400 text-slate-950 border-teal-300 shadow-[0_0_16px_rgba(45,212,191,0.6)] animate-pulse'
                 : 'bg-amber-400 text-slate-950 border-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.6)] animate-pulse'
               : isPurple
               ? 'bg-purple-900/80 hover:bg-purple-800 text-cyan-200 border-cyan-400/50 backdrop-blur-sm'
+              : isTeal
+              ? 'bg-teal-900/80 hover:bg-teal-800 text-teal-200 border-teal-400/50 backdrop-blur-sm'
               : 'bg-emerald-900/80 hover:bg-emerald-800 text-amber-200 border-amber-400/50 backdrop-blur-sm'
           }`}
         >
@@ -223,9 +278,26 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
             </>
           ) : (
             <>
-              <Play size={15} className={`${isPurple ? 'text-cyan-300 fill-cyan-300' : 'text-amber-300 fill-amber-300'}`} />
+              <Play
+                size={15}
+                className={
+                  isPurple
+                    ? 'text-cyan-300 fill-cyan-300'
+                    : isTeal
+                    ? 'text-teal-300 fill-teal-300'
+                    : 'text-amber-300 fill-amber-300'
+                }
+              />
               <span className="hidden sm:inline">
-                {isHydrologySlide ? 'Putar Siklus' : isSolarOrbitSlide ? 'Putar Orbit' : isEclipseSlide ? 'Simulasi Gerhana' : 'Putar Simulasi'}
+                {isChemistryLab
+                  ? 'Putar Titrasi'
+                  : isHydrologySlide
+                  ? 'Putar Siklus'
+                  : isSolarOrbitSlide
+                  ? 'Putar Orbit'
+                  : isEclipseSlide
+                  ? 'Simulasi Gerhana'
+                  : 'Putar Simulasi'}
               </span>
               <span className="sm:hidden">Putar</span>
             </>
@@ -236,7 +308,15 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
       {/* ── MAIN COCKPIT BODY (LANDSCAPE GAME ARENA) ──────── */}
       <div className="relative z-20 flex-1 min-h-0 flex flex-col md:flex-row gap-2.5 sm:gap-3.5 px-3 sm:px-5 py-2 sm:py-2.5 overflow-hidden">
         {/* ── LEFT: INTERACTIVE WORLD STAGE VIEWPORT ───────── */}
-        <div className={`flex-1 min-h-0 relative rounded-2xl overflow-hidden border-2 ${isPurple ? 'border-purple-400/40' : 'border-emerald-400/40'} bg-slate-950/70 shadow-inner flex items-center justify-center`}>
+        <div
+          className={`flex-1 min-h-0 relative rounded-2xl overflow-hidden border-2 ${
+            isPurple
+              ? 'border-purple-400/40'
+              : isTeal
+              ? 'border-teal-400/40'
+              : 'border-emerald-400/40'
+          } bg-slate-950/70 shadow-inner flex items-center justify-center`}
+        >
           {isHydrologySlide ? (
             <HydrologyCycleStage
               activePhase={selectedIdx}
@@ -269,6 +349,99 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                 setSelectedIdx(idx);
               }}
             />
+          ) : isChemistryLab ? (
+            /* Interactive Universal pH 0-14 Reactor Console for Dr. Maya */
+            <div className="w-full h-full flex flex-col justify-between p-3 sm:p-4 bg-gradient-to-b from-slate-950 via-teal-950/30 to-slate-950 relative overflow-hidden">
+              <div className="flex items-center justify-between z-10">
+                <div className="flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center justify-center font-bold">
+                    <FlaskConical size={16} />
+                  </span>
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-black text-white">
+                      Spektrum Reaktor pH Universal
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] text-teal-300/80 font-medium">
+                      Pilih nilai pH di bawah untuk mengamati perubahan warna indikator analit
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="px-2.5 py-0.5 rounded-lg text-[11px] font-black uppercase tracking-wider border shadow-sm"
+                  style={{
+                    backgroundColor: `${currentPhInfo.color}25`,
+                    borderColor: currentPhInfo.color,
+                    color: currentPhInfo.color,
+                  }}
+                >
+                  pH {currentPhInfo.ph} : {currentPhInfo.type.toUpperCase()}
+                </div>
+              </div>
+
+              {/* Dynamic Flask Display */}
+              <div className="flex-1 flex flex-col items-center justify-center py-2 z-10">
+                <div
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center transition-all duration-300 border-4 shadow-lg"
+                  style={{
+                    borderColor: currentPhInfo.color,
+                    backgroundColor: `${currentPhInfo.color}30`,
+                    boxShadow: `0 0 35px ${currentPhInfo.color}55`,
+                  }}
+                >
+                  <FlaskConical
+                    size={46}
+                    style={{ color: currentPhInfo.color }}
+                    className="transition-transform duration-300 hover:scale-110 drop-shadow"
+                  />
+                </div>
+                <div className="mt-2 text-center">
+                  <div className="text-sm sm:text-base font-black text-white">
+                    {currentPhInfo.label}
+                  </div>
+                  <div className="text-[10.5px] sm:text-xs text-slate-300">
+                    {currentPhInfo.type === 'asam'
+                      ? 'Kaya ion H⁺ • Lakmus Biru ➔ Merah'
+                      : currentPhInfo.type === 'basa'
+                      ? 'Kaya ion OH⁻ • Lakmus Merah ➔ Biru'
+                      : 'H⁺ = OH⁻ • Titik Ekuivalen Netral'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Universal Scale Bar Dock */}
+              <div className="bg-slate-900/90 border border-teal-500/30 rounded-xl p-1.5 sm:p-2 z-10">
+                <div className="flex items-center justify-between text-[9px] font-extrabold uppercase tracking-wider mb-1 px-1">
+                  <span className="text-rose-400">◀ Asam (0)</span>
+                  <span className="text-emerald-400">Netral (7)</span>
+                  <span className="text-purple-400">Basa (14) ▶</span>
+                </div>
+                <div className="grid grid-cols-15 gap-1">
+                  {PH_SCALE_CHIPS.map((p) => {
+                    const isSelected = selectedPh === p.ph;
+                    return (
+                      <button
+                        key={p.ph}
+                        type="button"
+                        onClick={() => {
+                          sound.playClick();
+                          setSelectedPh(p.ph);
+                        }}
+                        style={{ backgroundColor: p.color }}
+                        className={`h-7 sm:h-8 rounded flex items-center justify-center text-[10px] font-black text-slate-950 transition-all ${
+                          isSelected
+                            ? 'ring-2 ring-white scale-110 z-20 shadow-[0_0_10px_white]'
+                            : 'opacity-85 hover:opacity-100 hover:scale-105'
+                        }`}
+                        title={`pH ${p.ph}: ${p.label}`}
+                      >
+                        {p.ph}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           ) : FallbackIllustration ? (
             <div className="w-full h-full p-2 flex items-center justify-center">
               <FallbackIllustration className="w-full h-full object-contain" />
@@ -288,12 +461,18 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
               className={`flex-1 min-h-0 rounded-2xl sm:rounded-3xl ${
                 isPurple
                   ? 'bg-gradient-to-br from-purple-950/95 via-indigo-950/95 to-slate-950/95'
+                  : isTeal
+                  ? 'bg-gradient-to-br from-teal-950/95 via-cyan-950/95 to-slate-950/95'
                   : 'bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95'
               } border-2 ${activeTheme.glow} p-3.5 sm:p-4 flex flex-col justify-between overflow-hidden backdrop-blur-md transition-all duration-200`}
             >
               <div>
                 {/* Header: Phase badge & Progress dots */}
-                <div className="flex items-center justify-between gap-2 pb-2 border-b border-emerald-800/40">
+                <div
+                  className={`flex items-center justify-between gap-2 pb-2 border-b ${
+                    isTeal ? 'border-teal-800/40' : 'border-emerald-800/40'
+                  }`}
+                >
                   <span
                     className={`px-2.5 py-0.5 rounded-md font-black text-[10px] sm:text-[11px] uppercase tracking-wider ${activeTheme.badge}`}
                   >
@@ -306,7 +485,7 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                         className={`w-2 h-2 rounded-full transition-all duration-200 ${
                           selectedIdx === i
                             ? 'bg-amber-400 w-4 ring-2 ring-amber-300/80'
-                            : 'bg-emerald-950/90 border border-emerald-600/50'
+                            : 'bg-slate-950/90 border border-slate-600/50'
                         }`}
                       />
                     ))}
@@ -316,35 +495,44 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                 {/* Title & Emoji */}
                 <div className="flex items-center gap-2.5 mt-2 sm:mt-2.5">
                   <span className="text-3xl sm:text-4xl filter drop-shadow select-none shrink-0">
-                    {activeCard.iconEmoji || '💧'}
+                    {activeCard.iconEmoji || (isTeal ? '⚗️' : '💧')}
                   </span>
-                  <h3 className="text-base sm:text-lg font-black text-amber-50 leading-tight">
+                  <h3 className="text-base sm:text-lg font-black text-white leading-tight">
                     {activeCard.title}
                   </h3>
                 </div>
 
                 {/* Narrative Description */}
-                <p className="text-[12px] sm:text-[13.5px] font-medium leading-relaxed text-amber-50/90 mt-2 tracking-tight">
+                <p className="text-[12px] sm:text-[13.5px] font-medium leading-relaxed text-slate-100 mt-2 tracking-tight">
                   {activeCard.description}
                 </p>
               </div>
 
               {/* Scientific Mechanism Callout Inset */}
-              <div className="mt-2 rounded-xl bg-amber-400/10 border border-amber-300/40 p-2 sm:p-2.5 flex items-start gap-2">
-                <Sparkles size={16} className="text-amber-300 shrink-0 mt-0.5" />
-                <p className="text-[10.5px] sm:text-[11.5px] text-amber-100 font-semibold leading-snug">
+              <div
+                className={`mt-2 rounded-xl border p-2 sm:p-2.5 flex items-start gap-2 ${
+                  isTeal
+                    ? 'bg-teal-400/10 border-teal-300/40 text-teal-100'
+                    : 'bg-amber-400/10 border-amber-300/40 text-amber-100'
+                }`}
+              >
+                <Sparkles
+                  size={16}
+                  className={`shrink-0 mt-0.5 ${isTeal ? 'text-teal-300' : 'text-amber-300'}`}
+                />
+                <p className="text-[10.5px] sm:text-[11.5px] font-semibold leading-snug">
                   {getMechanismCallout(selectedIdx)}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Chunky Arcade Selector Dock (48-52px fat buttons) */}
+          {/* Chunky Arcade Selector Dock */}
           <div className="shrink-0 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 gap-1.5 sm:gap-2">
             {cards.map((card, idx) => {
               const isSelected = selectedIdx === idx;
               const theme =
-                PHASE_THEMES[card.badgeColor ?? 'amber'] ?? PHASE_THEMES.amber;
+                PHASE_THEMES[card.badgeColor ?? (isTeal ? 'teal' : 'amber')] ?? PHASE_THEMES.amber;
               return (
                 <button
                   key={card.id || `card-${idx}`}
@@ -357,10 +545,14 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                   className={`min-h-[48px] sm:min-h-[52px] px-2.5 py-1.5 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-150 cursor-pointer border-2 flex items-center gap-2 active:scale-95 shadow-md ${
                     isSelected
                       ? `${theme.solid} shadow-[0_4px_0_rgba(0,0,0,0.4)] ring-2 ${theme.ring} -translate-y-0.5`
+                      : isTeal
+                      ? 'bg-teal-950/70 hover:bg-teal-900/80 text-teal-100 border-teal-800/60 shadow-[0_3px_0_rgba(0,0,0,0.3)]'
                       : 'bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-100 border-emerald-800/60 shadow-[0_3px_0_rgba(0,0,0,0.3)]'
                   }`}
                 >
-                  <span className="text-xl select-none shrink-0">{card.iconEmoji || '💧'}</span>
+                  <span className="text-xl select-none shrink-0">
+                    {card.iconEmoji || (isTeal ? '⚗️' : '💧')}
+                  </span>
                   <div className="min-w-0 text-left leading-tight">
                     <div className="text-[9px] uppercase tracking-wider opacity-80">
                       {card.levelBadge || `Tahap ${idx + 1}`}
@@ -373,12 +565,23 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
           </div>
 
           {/* Teacher Guide Inset */}
-          <div className="shrink-0 bg-emerald-950/90 border border-amber-400/30 px-3 py-1.5 rounded-xl flex items-center gap-2 text-[10.5px] sm:text-[11.5px] text-amber-100/90 shadow-sm">
-            <Lightbulb className="text-amber-400 shrink-0" size={14} />
+          <div
+            className={`shrink-0 border px-3 py-1.5 rounded-xl flex items-center gap-2 text-[10.5px] sm:text-[11.5px] shadow-sm ${
+              isTeal
+                ? 'bg-teal-950/90 border-teal-400/30 text-teal-100/90'
+                : 'bg-emerald-950/90 border-amber-400/30 text-amber-100/90'
+            }`}
+          >
+            <Lightbulb
+              className={`shrink-0 ${isTeal ? 'text-teal-400' : 'text-amber-400'}`}
+              size={14}
+            />
             <span className="truncate">
               <strong>Panduan Guru:</strong>{' '}
               {slide.teacherNotes ||
-                (isPhotosynthesisSlide
+                (isChemistryLab
+                  ? 'Ajak siswa menganalisis indikator asam-basa dan mengapa reaktor kimia memerlukan titik netralisasi yang stabil.'
+                  : isPhotosynthesisSlide
                   ? 'Ajak siswa menganalisis bagaimana energi cahaya matahari diikat menjadi molekul gula glukosa di daun.'
                   : 'Ajak siswa mengamati animasi pergerakan molekul air dari penguapan surya hingga infiltrasi akuifer tanah.')}
             </span>

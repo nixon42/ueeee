@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RotateCcw, CheckCircle2, Compass, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { sound } from '@/lib/sound';
 import { KakGalihAvatar } from './characters/KakGalihAvatar';
+import { DrMayaAvatar } from './characters/DrMayaAvatar';
 import { TgcSequenceCard } from './TgcSequenceCard';
 
 export interface SequenceItem {
@@ -76,6 +77,13 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
     item.id?.toLowerCase().includes('evaporasi')
   );
 
+  const isScientificMethod = initialItems?.some(item =>
+    item.label?.toLowerCase().includes('observasi') ||
+    item.id?.toLowerCase().includes('observasi') ||
+    item.label?.toLowerCase().includes('hipotesis') ||
+    item.id?.toLowerCase().includes('metode')
+  );
+
   // Sinkronisasi bila props items berganti dinamis dari slide deck
   useEffect(() => {
     setCurrentOrder([...initialItems].sort(() => Math.random() - 0.5));
@@ -90,34 +98,32 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
     if (e.button !== 0) return; // Only primary button
     if (!arenaRef.current) return;
 
-    const targetCard = cardRefs.current[index];
-    if (!targetCard) return;
-
-    // Capture pointer on arena container so drag flows continuously even with fast sweeps
-    try {
-      arenaRef.current.setPointerCapture(e.pointerId);
-    } catch {}
+    // Tap-to-Swap Mode check: if clicked without dragging far
+    dragStartPointerPosRef.current = { x: e.clientX, y: e.clientY };
 
     const arenaRect = arenaRef.current.getBoundingClientRect();
-    const cardRect = targetCard.getBoundingClientRect();
+    const cardEl = cardRefs.current[index];
+    if (cardEl) {
+      const cardRect = cardEl.getBoundingClientRect();
+      cardSizeRef.current = { width: cardRect.width, height: cardRect.height };
+      dragPointerOffsetRef.current = {
+        x: e.clientX - cardRect.left,
+        y: e.clientY - cardRect.top,
+      };
 
-    dragPointerOffsetRef.current = {
-      x: e.clientX - cardRect.left,
-      y: e.clientY - cardRect.top,
-    };
-
-    const initialX = cardRect.left - arenaRect.left;
-    const initialY = cardRect.top - arenaRect.top;
-
-    dragStartPointerPosRef.current = { x: e.clientX, y: e.clientY };
-    cardSizeRef.current = { width: cardRect.width, height: cardRect.height };
+      setDragPos({
+        x: cardRect.left - arenaRect.left,
+        y: cardRect.top - arenaRect.top,
+      });
+    }
 
     setDraggingIdx(index);
     setHoverSlotIndex(index);
-    setDragPos({ x: initialX, y: initialY });
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    sound.playClick();
   };
 
-  // Pointer Move Handler with STRICT CANVAS CLAMPING
+  // Pointer Move Handler (Strict Clamping Inside Arena)
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (draggingIdx === null || !arenaRef.current) return;
 
@@ -125,109 +131,103 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
     const cardWidth = cardSizeRef.current.width;
     const cardHeight = cardSizeRef.current.height;
 
-    // Unclamped new coordinates in arena space
+    // Strict boundary clamping
     const rawX = e.clientX - arenaRect.left - dragPointerOffsetRef.current.x;
     const rawY = e.clientY - arenaRect.top - dragPointerOffsetRef.current.y;
-
-    // HARD BOUNDARY CLAMPING: Card CANNOT be dragged outside arena canvas!
-    const minX = 0;
-    const maxX = Math.max(0, arenaRect.width - cardWidth);
-    const minY = 0;
-    const maxY = Math.max(0, arenaRect.height - cardHeight);
-
-    const clampedX = Math.max(minX, Math.min(maxX, rawX));
-    const clampedY = Math.max(minY, Math.min(maxY, rawY));
+    const clampedX = Math.max(0, Math.min(arenaRect.width - cardWidth, rawX));
+    const clampedY = Math.max(0, Math.min(arenaRect.height - cardHeight, rawY));
 
     setDragPos({ x: clampedX, y: clampedY });
 
-    // Detect which slot the dragged card's horizontal center is closest to
-    const draggedCenterX = clampedX + cardWidth / 2;
-    let closestSlot = 0;
+    // Hitung slot hover berdasarkan koordinat kursor pointer
+    let closestIndex = draggingIdx;
     let minDistance = Infinity;
 
-    slotRefs.current.forEach((slotEl, sIdx) => {
+    slotRefs.current.forEach((slotEl, idx) => {
       if (!slotEl) return;
       const slotRect = slotEl.getBoundingClientRect();
-      const slotCenterX = slotRect.left - arenaRect.left + slotRect.width / 2;
-      const dist = Math.abs(draggedCenterX - slotCenterX);
+      const slotCenterX = slotRect.left + slotRect.width / 2;
+      const slotCenterY = slotRect.top + slotRect.height / 2;
+
+      const dist = Math.hypot(e.clientX - slotCenterX, e.clientY - slotCenterY);
       if (dist < minDistance) {
         minDistance = dist;
-        closestSlot = sIdx;
+        closestIndex = idx;
       }
     });
 
-    if (closestSlot !== hoverSlotIndex) {
-      sound.playClick();
-      setHoverSlotIndex(closestSlot);
+    if (closestIndex !== hoverSlotIndex) {
+      setHoverSlotIndex(closestIndex);
+      sound.playStep();
     }
   };
 
-  // Pointer Up Handler: Drop & Reorder or Tap-to-Swap
+  // Pointer Up Handler (Snap to slot with sound)
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (draggingIdx === null) return;
 
-    try {
-      if (arenaRef.current && arenaRef.current.hasPointerCapture(e.pointerId)) {
-        arenaRef.current.releasePointerCapture(e.pointerId);
-      }
-    } catch {}
+    const movedDist = Math.hypot(
+      e.clientX - dragStartPointerPosRef.current.x,
+      e.clientY - dragStartPointerPosRef.current.y
+    );
 
-    const dx = Math.abs(e.clientX - dragStartPointerPosRef.current.x);
-    const dy = Math.abs(e.clientY - dragStartPointerPosRef.current.y);
-    const isClick = dx < 6 && dy < 6;
-
-    if (isClick) {
-      // Tap-to-Swap Mode (Alternative for accessibility & smartboards)
+    // If barely moved (< 8px), treat as a Tap-to-Swap selection
+    if (movedDist < 8) {
       if (selectedIdx === null) {
         setSelectedIdx(draggingIdx);
         sound.playClick();
       } else if (selectedIdx === draggingIdx) {
-        setSelectedIdx(null);
+        setSelectedIdx(null); // Deselect
+        sound.playClick();
       } else {
         // Swap selectedIdx and draggingIdx
-        sound.playClick();
-        setCurrentOrder((prev) => {
-          const next = [...prev];
-          const temp = next[selectedIdx];
-          next[selectedIdx] = next[draggingIdx];
-          next[draggingIdx] = temp;
-          return next;
-        });
+        const updated = [...currentOrder];
+        const temp = updated[selectedIdx];
+        updated[selectedIdx] = updated[draggingIdx];
+        updated[draggingIdx] = temp;
+        setCurrentOrder(updated);
         setSelectedIdx(null);
         setCheckedState(false);
+        sound.playChessSuccess();
       }
+      setDraggingIdx(null);
+      setHoverSlotIndex(null);
+      return;
+    }
+
+    // Drag release to reorder
+    if (hoverSlotIndex !== null && hoverSlotIndex !== draggingIdx) {
+      const updated = [...currentOrder];
+      const [removed] = updated.splice(draggingIdx, 1);
+      updated.splice(hoverSlotIndex, 0, removed);
+      setCurrentOrder(updated);
+      setCheckedState(false);
+      sound.playChessSuccess();
     } else {
-      // Genuine Drag-and-Drop Drop Trigger
-      if (hoverSlotIndex !== null && hoverSlotIndex !== draggingIdx) {
-        sound.playClick();
-        setCurrentOrder((prev) => {
-          const next = [...prev];
-          const [moved] = next.splice(draggingIdx, 1);
-          next.splice(hoverSlotIndex, 0, moved);
-          return next;
-        });
-        setCheckedState(false);
-      }
+      sound.playChessMove();
     }
 
     setDraggingIdx(null);
     setHoverSlotIndex(null);
   };
 
-  // Helper to compute slot shift distance
+  // Hitung perkiraan jarak antar slot untuk animasi pergeseran merapat
   const getSlotStep = () => {
-    if (slotRefs.current[1] && slotRefs.current[0]) {
-      return slotRefs.current[1].offsetLeft - slotRefs.current[0].offsetLeft;
+    if (slotRefs.current[0] && slotRefs.current[1]) {
+      const rect0 = slotRefs.current[0].getBoundingClientRect();
+      const rect1 = slotRefs.current[1].getBoundingClientRect();
+      return Math.abs(rect1.left - rect0.left);
     }
-    return (arenaRef.current?.offsetWidth || 800) / currentOrder.length;
+    return 210;
   };
 
-  // Acak ulang (Shuffle)
+  // Tombol acak ulang (Shuffle)
   const handleShuffle = () => {
     sound.playClick();
-    setCurrentOrder([...initialItems].sort(() => Math.random() - 0.5));
+    setCurrentOrder([...currentOrder].sort(() => Math.random() - 0.5));
     setCheckedState(false);
     setIsSuccess(false);
+    setShowExplanation(false);
     setSelectedIdx(null);
   };
 
@@ -491,8 +491,8 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
             <span>Periksa Urutan</span>
           </button>
 
-          {/* Tombol Toggle Penjelasan Kak Galih */}
-          {isWaterCycle && (
+          {/* Tombol Toggle Penjelasan Kak Galih / Dr. Maya */}
+          {(isWaterCycle || isScientificMethod) && (
             <button
               type="button"
               onClick={() => {
@@ -502,13 +502,112 @@ export const CanvaSequenceGame: React.FC<CanvaSequenceGameProps> = ({
               className="min-h-[46px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-2xl bg-emerald-900/90 hover:bg-emerald-800 text-emerald-100 border-2 border-emerald-400/50 shadow-[0_3px_0_rgba(0,0,0,0.4)] active:scale-95 active:translate-y-0.5 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer transition-all"
             >
               <Compass size={15} className="text-amber-300" />
-              <span className="hidden sm:inline">{showExplanation ? 'Tutup Catatan' : 'Catatan Kak Galih'}</span>
+              <span className="hidden sm:inline">
+                {showExplanation
+                  ? 'Tutup Catatan'
+                  : isScientificMethod
+                  ? 'Protokol Dr. Maya'
+                  : 'Catatan Kak Galih'}
+              </span>
               <span className="sm:hidden">Catatan</span>
               {showExplanation ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
             </button>
           )}
         </div>
       </div>
+
+      {/* ── PANEL PENJELASAN DR. MAYA: 5 LANGKAH METODE ILMIAH ─── */}
+      {showExplanation && isScientificMethod && (
+        <div className="absolute inset-2 sm:inset-3 z-50 bg-slate-950/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border-2 border-teal-400/60 p-3.5 sm:p-5 shadow-2xl flex flex-col justify-between overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-left">
+          {/* Header Penjelasan dengan Avatar Dr. Maya & Tombol Tutup */}
+          <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-teal-400/30 shrink-0">
+            <div className="flex items-center gap-3">
+              <DrMayaAvatar size="sm" mood="explaining" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-teal-400">
+                    Protokol Investigasi Forensik
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-teal-400/20 text-teal-200 border border-teal-400/40 text-[9.5px] font-extrabold">
+                    Arahan Dr. Maya Arisandi
+                  </span>
+                </div>
+                <h4 className="text-xs sm:text-base font-black text-white mt-0.5">
+                  5 Siklus Baku Metode Ilmiah Pemecahan Kasus Reaktor
+                </h4>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowExplanation(false)}
+              className="py-1 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-teal-200 border border-teal-400/40 font-bold text-xs flex items-center gap-1 cursor-pointer transition shrink-0 active:scale-95 shadow-sm"
+            >
+              <span>✕ Tutup</span>
+            </button>
+          </div>
+
+          {/* 5 Kolom Ringkas Metode Ilmiah */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 flex-1 min-h-0 py-2 my-auto overflow-hidden">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-teal-400/30 flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base select-none">🔍</span>
+                <h5 className="font-extrabold text-xs text-teal-300">1. Observasi</h5>
+              </div>
+              <p className="text-[10.5px] sm:text-[11.5px] text-teal-50/90 leading-relaxed font-medium">
+                Mencatat fakta empiris anomali reaktor: perubahan warna, bau uap, dan suhu cairan.
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-amber-400/30 flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base select-none">❓</span>
+                <h5 className="font-extrabold text-xs text-amber-300">2. Masalah</h5>
+              </div>
+              <p className="text-[10.5px] sm:text-[11.5px] text-amber-50/90 leading-relaxed font-medium">
+                Merumuskan pertanyaan spesifik: apa zat pemicu lonjakan asam drastis pada Unit 04?
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-purple-400/30 flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base select-none">💡</span>
+                <h5 className="font-extrabold text-xs text-purple-300">3. Hipotesis</h5>
+              </div>
+              <p className="text-[10.5px] sm:text-[11.5px] text-purple-50/90 leading-relaxed font-medium">
+                Dugaan ilmiah sementara yang dapat diuji: kebocoran katalis asam memicu reaksi eksotermik.
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-rose-400/30 flex flex-col justify-between overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base select-none">🧪</span>
+                <h5 className="font-extrabold text-xs text-rose-300">4. Eksperimen</h5>
+              </div>
+              <p className="text-[10.5px] sm:text-[11.5px] text-rose-50/90 leading-relaxed font-medium">
+                Menguji hipotesis dengan variabel terkontrol, lakmus, dan titrasi penetralan terukur.
+              </p>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-sky-400/30 flex flex-col justify-between overflow-hidden col-span-2 sm:col-span-1">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-base select-none">📊</span>
+                <h5 className="font-extrabold text-xs text-sky-300">5. Kesimpulan</h5>
+              </div>
+              <p className="text-[10.5px] sm:text-[11.5px] text-sky-50/90 leading-relaxed font-medium">
+                Menarik konklusi objektif: hipotesis terbukti benar, data siap dilaporkan ke dewan lab.
+              </p>
+            </div>
+          </div>
+
+          {/* Catatan Forensik Dr. Maya */}
+          <div className="p-2 bg-teal-950/80 border border-teal-400/40 rounded-xl flex items-center gap-2 text-[10.5px] sm:text-xs text-teal-200 font-semibold shrink-0">
+            <span className="text-base shrink-0">🔬</span>
+            <div className="truncate">
+              <strong>Pesan Dr. Maya:</strong> Jangan pernah menarik kesimpulan hanya dari asumsi! Setiap temuan wajib didukung data eksperimental terverifikasi.
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── PANEL PENJELASAN KAK GALIH (DARK RPG CODEX OVERLAY) ─── */}
       {showExplanation && isWaterCycle && (

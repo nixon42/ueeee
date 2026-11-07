@@ -188,6 +188,195 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
     );
   }
 
+  // 5. Metode Ilmiah - 1. Observasi Fenomena
+  if (id.includes('m1') || id.includes('observasi') || label.includes('observasi')) {
+    return (
+      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
+        <defs>
+          <linearGradient id="obsBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#042f2e" />
+            <stop offset="60%" stopColor="#115e59" />
+            <stop offset="100%" stopColor="#0f172a" />
+          </linearGradient>
+          <radialGradient id="lensGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#2dd4bf" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#0d9488" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="200" height="130" fill="url(#obsBg)" />
+        {/* Holographic Tactical Grid */}
+        <path d="M0 65 L200 65 M100 0 L100 130" stroke="#14b8a6" strokeWidth="0.6" strokeDasharray="4 2" opacity="0.3" />
+        <circle cx="100" cy="65" r="45" stroke="#14b8a6" strokeWidth="0.8" strokeDasharray="3 3" opacity="0.4" />
+        {/* Glowing Conical Flask in Background */}
+        <path d="M92 40 L92 50 L75 85 C73 90 77 94 82 94 L118 94 C123 94 127 90 125 85 L108 50 L108 40 Z" fill="#0f766e" stroke="#2dd4bf" strokeWidth="1.5" opacity="0.6" />
+        <path d="M78 82 L122 82 L118 94 L82 94 Z" fill="#2dd4bf" opacity="0.7" />
+        {/* Forensic Magnifying Lens Reticle */}
+        <circle cx="95" cy="62" r="34" fill="url(#lensGlow)" stroke="#5eead4" strokeWidth="2.5" />
+        <circle cx="95" cy="62" r="28" stroke="#ffffff" strokeWidth="1" strokeDasharray="4 2" opacity="0.6" />
+        {/* Reticle Crosshairs */}
+        <line x1="95" y1="32" x2="95" y2="40" stroke="#5eead4" strokeWidth="2" />
+        <line x1="95" y1="84" x2="95" y2="92" stroke="#5eead4" strokeWidth="2" />
+        <line x1="65" y1="62" x2="73" y2="62" stroke="#5eead4" strokeWidth="2" />
+        <line x1="117" y1="62" x2="125" y2="62" stroke="#5eead4" strokeWidth="2" />
+        {/* Magnifier Handle */}
+        <line x1="120" y1="86" x2="152" y2="116" stroke="#94a3b8" strokeWidth="5.5" strokeLinecap="round" />
+        <line x1="120" y1="86" x2="152" y2="116" stroke="#f8fafc" strokeWidth="2.5" strokeLinecap="round" />
+        {/* Sparkle Data Points */}
+        <circle cx="90" cy="55" r="2" fill="#ffffff" />
+        <circle cx="105" cy="68" r="2.5" fill="#fef08a" />
+      </svg>
+    );
+  }
+
+  // 6. Metode Ilmiah - 2. Perumusan Masalah
+  if (id.includes('m2') || id.includes('masalah') || label.includes('masalah')) {
+    return (
+      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
+        <defs>
+          <linearGradient id="probBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#1e1b4b" />
+            <stop offset="60%" stopColor="#312e81" />
+            <stop offset="100%" stopColor="#0f172a" />
+          </linearGradient>
+          <radialGradient id="probPulse" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#818cf8" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#4338ca" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="200" height="130" fill="url(#probBg)" />
+        {/* Hexagonal Molecular Node Network */}
+        <polygon points="100,25 130,42 130,78 100,95 70,78 70,42" stroke="#6366f1" strokeWidth="1" strokeDasharray="3 2" fill="none" opacity="0.5" />
+        <circle cx="100" cy="60" r="38" fill="url(#probPulse)" />
+        {/* Glowing Tactical Question Symbol */}
+        <text x="100" y="78" textAnchor="middle" fill="#c7d2fe" fontSize="56" fontWeight="900" fontFamily="sans-serif" filter="drop-shadow(0 0 10px #818cf8)">
+          ?
+        </text>
+        {/* Warning Indicator Radar Nodes */}
+        <circle cx="70" cy="42" r="3" fill="#a5b4fc" />
+        <circle cx="130" cy="42" r="3" fill="#a5b4fc" />
+        <circle cx="100" cy="95" r="3" fill="#a5b4fc" />
+        {/* Digital Hazard Alert Chevron */}
+        <path d="M30 105 L45 80 L60 105 Z" stroke="#fbbf24" strokeWidth="1.5" fill="#f59e0b" fillOpacity="0.3" />
+        <text x="45" y="101" textAnchor="middle" fill="#fef08a" fontSize="13" fontWeight="900">!</text>
+      </svg>
+    );
+  }
+
+  // 7. Metode Ilmiah - 3. Pengajuan Hipotesis
+  if (id.includes('m3') || id.includes('hipotesis') || label.includes('hipotesis')) {
+    return (
+      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
+        <defs>
+          <linearGradient id="hypoBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#451a03" />
+            <stop offset="60%" stopColor="#78350f" />
+            <stop offset="100%" stopColor="#1e1b4b" />
+          </linearGradient>
+          <radialGradient id="bulbGlow" cx="50%" cy="45%" r="55%">
+            <stop offset="0%" stopColor="#fef08a" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="200" height="130" fill="url(#hypoBg)" />
+        {/* Big Bright Filament Aura */}
+        <circle cx="100" cy="52" r="42" fill="url(#bulbGlow)" />
+        {/* Incandescent Bulb Silhouette */}
+        <path
+          d="M82 62 C78 52 80 38 90 30 C100 22 112 25 118 34 C124 43 120 54 116 62 L112 75 L88 75 Z"
+          fill="#fef9c3"
+          stroke="#facc15"
+          strokeWidth="2"
+        />
+        {/* Glowing Tungsten Filament */}
+        <path d="M94 58 L98 42 L102 46 L106 42 L110 58" stroke="#ea580c" strokeWidth="2" fill="none" strokeLinecap="round" />
+        {/* Bulb Screw Base */}
+        <path d="M89 75 L111 75 L108 85 L92 85 Z" fill="#94a3b8" stroke="#64748b" strokeWidth="1.2" />
+        <rect x="94" y="85" width="12" height="4" rx="2" fill="#475569" />
+        {/* Orbital Atom Electrons */}
+        <ellipse cx="100" cy="50" rx="46" ry="16" stroke="#fde047" strokeWidth="1" strokeDasharray="3 2" transform="rotate(-20 100 50)" opacity="0.6" />
+        <ellipse cx="100" cy="50" rx="46" ry="16" stroke="#fde047" strokeWidth="1" strokeDasharray="3 2" transform="rotate(35 100 50)" opacity="0.6" />
+        <circle cx="62" cy="40" r="3" fill="#facc15" />
+        <circle cx="138" cy="62" r="3" fill="#facc15" />
+      </svg>
+    );
+  }
+
+  // 8. Metode Ilmiah - 4. Eksperimen Terkontrol
+  if (id.includes('m4') || id.includes('eksperimen') || label.includes('eksperimen')) {
+    return (
+      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
+        <defs>
+          <linearGradient id="expBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#083344" />
+            <stop offset="60%" stopColor="#155e75" />
+            <stop offset="100%" stopColor="#0e7490" />
+          </linearGradient>
+          <linearGradient id="liquidGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+        </defs>
+        <rect width="200" height="130" fill="url(#expBg)" />
+        {/* Lab Stand & Clamp Bar */}
+        <line x1="50" y1="15" x2="50" y2="120" stroke="#94a3b8" strokeWidth="3" />
+        <line x1="30" y1="120" x2="70" y2="120" stroke="#64748b" strokeWidth="4" strokeLinecap="round" />
+        <line x1="50" y1="35" x2="98" y2="35" stroke="#cbd5e1" strokeWidth="2.5" />
+        {/* Precision Titration Burette Tube */}
+        <rect x="94" y="10" width="10" height="55" rx="2" fill="#ffffff" fillOpacity="0.4" stroke="#e2e8f0" strokeWidth="1" />
+        <line x1="97" y1="20" x2="101" y2="20" stroke="#f43f5e" strokeWidth="1" />
+        <line x1="97" y1="30" x2="101" y2="30" stroke="#f43f5e" strokeWidth="1" />
+        <line x1="97" y1="40" x2="101" y2="40" stroke="#f43f5e" strokeWidth="1" />
+        {/* Titration Stopcock Valve & Droplet */}
+        <circle cx="99" cy="65" r="3" fill="#f43f5e" />
+        <path d="M99 72 Q97 76 99 79 Q101 76 99 72 Z" fill="#ec4899" />
+        {/* Erlenmeyer Titration Flask */}
+        <path d="M93 82 L93 88 L70 115 C68 118 72 122 76 122 L122 122 C126 122 130 118 128 115 L105 88 L105 82 Z" fill="#ffffff" fillOpacity="0.3" stroke="#e0f2fe" strokeWidth="1.5" />
+        {/* Reactive Liquid Meniscus with Color Neutralization */}
+        <path d="M72 113 L126 113 L122 122 L76 122 Z" fill="url(#liquidGrad)" opacity="0.85" />
+        {/* Rising Effervescence Bubbles */}
+        <circle cx="88" cy="116" r="2" fill="#ffffff" opacity="0.9" />
+        <circle cx="106" cy="114" r="2.5" fill="#ffffff" opacity="0.9" />
+        <circle cx="98" cy="108" r="1.8" fill="#ffffff" opacity="0.9" />
+      </svg>
+    );
+  }
+
+  // 9. Metode Ilmiah - 5. Analisis & Kesimpulan
+  if (id.includes('m5') || id.includes('kesimpulan') || label.includes('kesimpulan') || label.includes('analisis')) {
+    return (
+      <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
+        <defs>
+          <linearGradient id="anaBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#064e3b" />
+            <stop offset="60%" stopColor="#047857" />
+            <stop offset="100%" stopColor="#022c22" />
+          </linearGradient>
+        </defs>
+        <rect width="200" height="130" fill="url(#anaBg)" />
+        {/* Holographic Tablet Screen Frame */}
+        <rect x="25" y="18" width="150" height="94" rx="8" fill="#0f172a" stroke="#10b981" strokeWidth="2" opacity="0.8" />
+        {/* Analytical Data Grid Lines */}
+        <line x1="40" y1="92" x2="160" y2="92" stroke="#334155" strokeWidth="1" />
+        <line x1="40" y1="72" x2="160" y2="72" stroke="#334155" strokeWidth="0.8" strokeDasharray="3 3" />
+        <line x1="40" y1="52" x2="160" y2="52" stroke="#334155" strokeWidth="0.8" strokeDasharray="3 3" />
+        {/* Glowing Green Bar Graph Columns */}
+        <rect x="52" y="70" width="14" height="22" rx="2" fill="#34d399" opacity="0.75" />
+        <rect x="74" y="55" width="14" height="37" rx="2" fill="#10b981" opacity="0.85" />
+        <rect x="96" y="42" width="14" height="50" rx="2" fill="#059669" opacity="0.9" />
+        <rect x="118" y="32" width="14" height="60" rx="2" fill="#34d399" />
+        {/* Connecting Precision Trendline */}
+        <path d="M59 70 L81 55 L103 42 L125 32" stroke="#facc15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        <circle cx="125" cy="32" r="3.5" fill="#fef08a" stroke="#ca8a04" strokeWidth="1" />
+        {/* Holographic Approved Stamp */}
+        <g transform="translate(142, 38)">
+          <circle cx="0" cy="0" r="14" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
+          <path d="M-6 0 L-2 4 L6 -4" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </g>
+      </svg>
+    );
+  }
+
   // ── ASTRONOMI & TATA SURYA: 8 PLANET CARD ARTWORK ───────────
 
   // Merkurius (p1)
@@ -496,7 +685,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
     );
   }
 
-  // 5. Universal Elemental TCG Artwork Fallback for Other Decks
+  // Universal Elemental TCG Artwork Fallback for Other Decks
   const themeGradients: Record<string, string> = {
     emerald: 'from-emerald-700 via-teal-800 to-slate-900',
     amber: 'from-amber-600 via-orange-700 to-stone-900',

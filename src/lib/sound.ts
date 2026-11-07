@@ -371,11 +371,15 @@ class SoundEffects {
         osc.connect(gain);
         gain.connect(this.ctx!.destination);
         osc.start(now + note.delay);
-        osc.stop(now + note.delay + note.dur);
+        osc.stop(now + note.delay + note.dur + 0.05);
       });
     } catch {
       // Audio fallback
     }
+  }
+
+  public playCelebration() {
+    this.playFanfare();
   }
 
   /**

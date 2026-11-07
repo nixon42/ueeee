@@ -3,6 +3,7 @@ import { Compass, Target, Rocket } from 'lucide-react';
 import { NarrativeIntroSlide, PresentationMentor } from '@/types/presentation';
 import { PRESENTATION_THEMES, PresentationThemeKey } from '@/lib/presentation-themes';
 import { KakGalihAvatar } from '../characters/KakGalihAvatar';
+import { DrMayaAvatar } from '../characters/DrMayaAvatar';
 import { KaptenDirgantaraAvatar } from '../characters/KaptenDirgantaraAvatar';
 
 export interface NarrativeHookSlideProps {
@@ -244,7 +245,6 @@ const SpaceSceneBackdrop: React.FC = () => (
         <circle cx="160" cy="100" r="130" fill="url(#spaceSun)" />
         <circle cx="160" cy="100" r="42" fill="#fef08a" />
         <circle cx="160" cy="100" r="34" fill="#ffffff" />
-        {/* Subtle gravitational rays */}
         <g stroke="#fef08a" strokeWidth="1.2" strokeDasharray="6 8" opacity="0.35">
           <line x1="160" y1="100" x2="310" y2="150" />
           <line x1="160" y1="100" x2="250" y2="220" />
@@ -297,13 +297,10 @@ const SpaceSceneBackdrop: React.FC = () => (
 
       {/* Saturn with tilted ring in midground */}
       <g transform="translate(740, 160) rotate(-16)">
-        {/* Back ring */}
         <ellipse cx="0" cy="0" rx="38" ry="12" fill="none" stroke="#fde047" strokeWidth="4" strokeOpacity="0.4" />
-        {/* Planet body */}
         <circle cx="0" cy="0" r="18" fill="#f59e0b" />
         <line x1="-17" y1="-3" x2="17" y2="-3" stroke="#b45309" strokeWidth="1.5" opacity="0.6" />
         <line x1="-18" y1="3" x2="18" y2="3" stroke="#fef08a" strokeWidth="1.2" opacity="0.7" />
-        {/* Front ring */}
         <path d="M-38 0 C-38 7 38 7 38 0" stroke="#fde047" strokeWidth="4" strokeOpacity="0.85" fill="none" />
       </g>
 
@@ -316,26 +313,20 @@ const SpaceSceneBackdrop: React.FC = () => (
       {/* Wahana Garuda Orbital research satellite in smooth orbital transit */}
       <g className="anim-probe">
         <g transform="translate(560, 130) rotate(12)">
-          {/* Thruster ion plume */}
           <path d="M-45 0 C-30 1.5 -18 1 -10 0" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3 3" opacity="0.75" />
           <circle cx="-10" cy="0" r="3.5" fill="#38bdf8" opacity="0.8" />
-          {/* Body */}
           <rect x="-8" y="-5" width="18" height="10" rx="2" fill="#e2e8f0" stroke="#64748b" strokeWidth="1" />
           <rect x="-5" y="-3" width="12" height="6" rx="1" fill="#7c3aed" />
-          {/* Solar Panels */}
           <rect x="-24" y="-7" width="14" height="14" rx="1.5" fill="#0284c7" stroke="#38bdf8" strokeWidth="0.8" />
           <rect x="12" y="-7" width="14" height="14" rx="1.5" fill="#0284c7" stroke="#38bdf8" strokeWidth="0.8" />
-          {/* Dish */}
           <path d="M3 -11 Q8 -13 9 -7" stroke="#facc15" strokeWidth="2" fill="none" />
-          {/* Indonesian flag */}
           <rect x="-2" y="-2" width="6" height="2" fill="#ef4444" />
           <rect x="-2" y="0" width="6" height="2" fill="#ffffff" />
         </g>
       </g>
 
-      {/* Lunar / Orbital Outpost Ground Horizon for Kapten Dirgantara to stand on */}
+      {/* Lunar / Orbital Outpost Ground Horizon */}
       <path d="M0 540 Q320 515 640 532 Q960 550 1200 530 V640 H0 Z" fill="url(#lunarGround)" />
-      {/* Illuminated horizon rim line */}
       <path d="M0 540 Q320 515 640 532 Q960 550 1200 530" stroke="#a855f7" strokeWidth="2.5" opacity="0.45" fill="none" />
       <path d="M0 541 Q320 516 640 533 Q960 551 1200 531" stroke="#38bdf8" strokeWidth="1" opacity="0.3" fill="none" />
 
@@ -353,6 +344,48 @@ const SpaceSceneBackdrop: React.FC = () => (
   </div>
 );
 
+/**
+ * Cleanroom Chemistry Forensic Lab Scene Backdrop for Dr. Maya Arisandi:
+ * Cleanroom procedural grid, digital holographic chemical hazard overlays,
+ * and reactor conduit perspective lines.
+ */
+const LabSceneBackdrop: React.FC = () => (
+  <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+    <svg viewBox="0 0 1200 640" preserveAspectRatio="xMidYMax slice" className="w-full h-full" fill="none">
+      <defs>
+        <linearGradient id="labNarrBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#042f2e" />
+          <stop offset="35%" stopColor="#0f172a" />
+          <stop offset="75%" stopColor="#115e59" />
+          <stop offset="100%" stopColor="#021c1a" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="640" fill="url(#labNarrBg)" />
+      {/* Tactical Lab Grid */}
+      <path
+        d="M0 160 L1200 160 M0 320 L1200 320 M0 480 L1200 480 M200 0 L200 640 M500 0 L500 640 M800 0 L800 640 M1100 0 L1100 640"
+        stroke="#14b8a6"
+        strokeWidth="0.8"
+        strokeDasharray="6 8"
+        opacity="0.18"
+      />
+      {/* Chemical Glow Orb */}
+      <circle cx="950" cy="200" r="180" fill="#2dd4bf" opacity="0.1" filter="blur(40px)" />
+      <circle cx="250" cy="180" r="120" fill="#06b6d4" opacity="0.08" filter="blur(30px)" />
+      {/* Lab Horizon Floor */}
+      <path d="M0 530 L1200 530" stroke="#2dd4bf" strokeWidth="2" opacity="0.35" />
+      <rect y="530" width="1200" height="110" fill="#021c1a" opacity="0.8" />
+      {/* Floor reflection grid */}
+      <line x1="200" y1="530" x2="100" y2="640" stroke="#0d9488" strokeWidth="1" opacity="0.3" />
+      <line x1="500" y1="530" x2="450" y2="640" stroke="#0d9488" strokeWidth="1" opacity="0.3" />
+      <line x1="800" y1="530" x2="850" y2="640" stroke="#0d9488" strokeWidth="1" opacity="0.3" />
+      <line x1="1100" y1="530" x2="1200" y2="640" stroke="#0d9488" strokeWidth="1" opacity="0.3" />
+      {/* Scrim behind dialogue band */}
+      <rect y="380" width="1200" height="260" fill="#042f2e" opacity="0.6" />
+    </svg>
+  </div>
+);
+
 export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   slide,
   mentor,
@@ -361,6 +394,10 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   const theme = PRESENTATION_THEMES[themeColor] || PRESENTATION_THEMES.emerald;
   const activeMentor = { ...mentor, ...slide.mentorOverride };
   const isKakGalih = activeMentor.name.toLowerCase().includes('galih');
+  const isDrMaya =
+    activeMentor.name.toLowerCase().includes('maya') ||
+    mentor.name.toLowerCase().includes('maya') ||
+    themeColor === 'teal';
   const isDirgantara =
     activeMentor.name.toLowerCase().includes('dirgantara') ||
     mentor.name.toLowerCase().includes('dirgantara') ||
@@ -419,6 +456,24 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
       );
     }
 
+    if (isDrMaya) {
+      return (
+        <div className="absolute -top-5 sm:-top-6 left-3 sm:left-5 z-20 inline-flex items-center gap-2 sm:gap-2.5 pl-2.5 sm:pl-3 pr-3.5 sm:pr-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-teal-800 via-cyan-700 to-emerald-700 border-2 border-teal-300/90 shadow-[0_6px_0_rgba(15,118,110,0.7)] select-none">
+          <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-teal-400 text-slate-950 flex items-center justify-center shrink-0 border border-teal-200">
+            <span className="text-xs sm:text-sm">🔬</span>
+          </span>
+          <span className="font-black text-[12px] sm:text-sm text-white tracking-wide whitespace-nowrap">
+            {speakerName}
+          </span>
+          {speakerRole && (
+            <span className="hidden sm:inline text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-teal-200 bg-black/35 px-2 py-0.5 rounded-md border border-teal-400/30 whitespace-nowrap">
+              {speakerRole}
+            </span>
+          )}
+        </div>
+      );
+    }
+
     if (isKakGalih) {
       return (
         <div className="absolute -top-5 sm:-top-6 left-3 sm:left-5 z-20 inline-flex items-center gap-2 sm:gap-2.5 pl-2.5 sm:pl-3 pr-3.5 sm:pr-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-600 border-2 border-amber-300/90 shadow-[0_6px_0_rgba(2,44,34,0.55)] select-none">
@@ -454,40 +509,60 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
   // Outer frame styling based on narrative theme
   const frameClass = isDirgantara
     ? 'border-purple-900/50 shadow-[0_18px_40px_-12px_rgba(59,7,100,0.65)] bg-slate-950'
+    : isDrMaya
+    ? 'border-teal-900/50 shadow-[0_18px_40px_-12px_rgba(13,148,136,0.65)] bg-slate-950'
     : 'border-emerald-950/40 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)] bg-emerald-950';
 
   // Title plaque styling
   const plaqueClass = isDirgantara
     ? 'bg-gradient-to-r from-purple-950/95 via-indigo-950/90 to-slate-950/60 border-l-[6px] border-cyan-400'
+    : isDrMaya
+    ? 'bg-gradient-to-r from-teal-950/95 via-cyan-950/90 to-slate-950/60 border-l-[6px] border-teal-400'
     : 'bg-gradient-to-r from-emerald-950/92 via-emerald-900/88 to-emerald-900/55 border-l-[6px] border-amber-400';
 
-  const subtitleClass = isDirgantara ? 'text-cyan-300/95' : 'text-amber-300/95';
+  const subtitleClass = isDirgantara
+    ? 'text-cyan-300/95'
+    : isDrMaya
+    ? 'text-teal-300/95'
+    : 'text-amber-300/95';
 
   // Dialogue box styling
   const dialogueBoxClass = isDirgantara
     ? 'bg-gradient-to-br from-purple-950/95 via-indigo-950/95 to-slate-950/95 border-2 sm:border-[3px] border-cyan-300/80 shadow-[0_12px_30px_rgba(30,27,75,0.7)] text-cyan-50/95'
+    : isDrMaya
+    ? 'bg-gradient-to-br from-teal-950/95 via-cyan-950/95 to-slate-950/95 border-2 sm:border-[3px] border-teal-300/80 shadow-[0_12px_30px_rgba(15,118,110,0.7)] text-teal-50/95'
     : 'bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95 border-2 sm:border-[3px] border-amber-300/80 shadow-[0_12px_30px_rgba(2,44,34,0.6)] text-amber-50/95';
 
   const pointerTriangleClass = isDirgantara
     ? 'border-r-purple-950/95'
+    : isDrMaya
+    ? 'border-r-teal-950/95'
     : 'border-r-emerald-900/95';
 
   // Quest objective card styling
   const questBoxClass = isDirgantara
     ? 'bg-cyan-400/15 border-2 border-cyan-300/70 border-dashed text-cyan-50'
+    : isDrMaya
+    ? 'bg-teal-400/15 border-2 border-teal-300/70 border-dashed text-teal-50'
     : 'bg-amber-400/15 border-2 border-amber-300/70 border-dashed text-amber-50';
 
-  const questTagClass = isDirgantara ? 'text-cyan-300/95' : 'text-amber-300/90';
-  const questIconClass = isDirgantara ? 'text-cyan-300' : 'text-amber-300';
-  const skipPromptClass = isDirgantara ? 'text-cyan-300/90' : 'text-amber-300/90';
-  const cursorBlinkClass = isDirgantara ? 'bg-cyan-400' : 'bg-amber-400';
+  const questTagClass = isDirgantara ? 'text-cyan-300/95' : isDrMaya ? 'text-teal-300/95' : 'text-amber-300/90';
+  const questIconClass = isDirgantara ? 'text-cyan-300' : isDrMaya ? 'text-teal-300' : 'text-amber-300';
+  const skipPromptClass = isDirgantara ? 'text-cyan-300/90' : isDrMaya ? 'text-teal-300/90' : 'text-amber-300/90';
+  const cursorBlinkClass = isDirgantara ? 'bg-cyan-400' : isDrMaya ? 'bg-teal-400' : 'bg-amber-400';
 
   return (
     <div
       className={`relative w-full h-full flex flex-col overflow-hidden rounded-3xl border-4 ${frameClass} animate-in fade-in duration-300`}
     >
       {/* ── DIEGETIC SCENE BACKDROP ─────────────────────── */}
-      {isDirgantara ? <SpaceSceneBackdrop /> : <ForestSceneBackdrop />}
+      {isDirgantara ? (
+        <SpaceSceneBackdrop />
+      ) : isDrMaya ? (
+        <LabSceneBackdrop />
+      ) : (
+        <ForestSceneBackdrop />
+      )}
 
       {/* ── SCENE TITLE PLAQUE ──────────────────────────── */}
       <div className="relative z-20 px-3 sm:px-5 pt-3 sm:pt-4 shrink-0">
@@ -512,7 +587,11 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
           {/* Ground shadow beneath character bust */}
           <div
             className={`absolute bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 w-20 sm:w-28 h-3 sm:h-4 rounded-[100%] ${
-              isDirgantara ? 'bg-purple-950/80 blur-[4px]' : 'bg-emerald-950/70 blur-[3px]'
+              isDirgantara
+                ? 'bg-purple-950/80 blur-[4px]'
+                : isDrMaya
+                ? 'bg-teal-950/80 blur-[4px]'
+                : 'bg-emerald-950/70 blur-[3px]'
             }`}
           />
 
@@ -522,6 +601,13 @@ export const NarrativeHookSlide: React.FC<NarrativeHookSlideProps> = ({
               mood="speaking"
               showSpeechBubble={false}
               className="drop-shadow-[0_14px_22px_rgba(46,16,101,0.7)]"
+            />
+          ) : isDrMaya ? (
+            <DrMayaAvatar
+              size="hero"
+              mood="speaking"
+              showSpeechBubble={false}
+              className="drop-shadow-[0_14px_22px_rgba(15,118,110,0.7)]"
             />
           ) : isKakGalih ? (
             <KakGalihAvatar

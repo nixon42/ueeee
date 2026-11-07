@@ -24,6 +24,23 @@ export interface CanvaMatchPairsGameProps {
   className?: string;
 }
 
+const getHazardPikto = (text: string) => {
+  const lower = text.toLowerCase();
+  if (lower.includes('korosif') || lower.includes('asam')) {
+    return { icon: '⚠️', symbol: '🧪', color: 'bg-amber-500/20 text-amber-300 border-amber-400/40' };
+  }
+  if (lower.includes('toksik') || lower.includes('tengkorak') || lower.includes('racun')) {
+    return { icon: '☠️', symbol: '☣️', color: 'bg-rose-500/20 text-rose-300 border-rose-400/40' };
+  }
+  if (lower.includes('api') || lower.includes('menyala') || lower.includes('bakar')) {
+    return { icon: '🔥', symbol: '⚡', color: 'bg-orange-500/20 text-orange-300 border-orange-400/40' };
+  }
+  if (lower.includes('eksplosif') || lower.includes('reaktif') || lower.includes('ledak')) {
+    return { icon: '💥', symbol: '💣', color: 'bg-red-500/20 text-red-300 border-red-400/40' };
+  }
+  return null;
+};
+
 /**
  * Komponen Game Interaktif: "Neon Laser Conduit Linker / Match A to B"
  * Menghubungkan konsep energi/materi di Kolom A dengan fenomena di Kolom B
@@ -362,6 +379,7 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
               const connectedRightId = connections[item.id];
               const isCorrect = checkedState && connectedRightId === item.id;
               const isWrong = checkedState && connectedRightId && connectedRightId !== item.id;
+              const pikto = getHazardPikto(item.leftText);
 
               return (
                 <button
@@ -389,19 +407,25 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
                       : 'border-emerald-700/40 bg-slate-950/80 text-slate-200 hover:border-amber-400/70 hover:bg-slate-900/90'
                   }`}
                 >
-                  {/* Left Index Badge & Label */}
+                  {/* Left Index Badge or Hazard Icon & Label */}
                   <div className="flex items-center gap-2 truncate pr-2">
-                    <span
-                      className={`w-6 h-6 rounded-lg text-[10.5px] font-black flex items-center justify-center shrink-0 border ${
-                        isSelected
-                          ? isPurple
-                            ? 'bg-cyan-400 text-slate-950 border-cyan-300'
-                            : 'bg-amber-400 text-slate-950 border-amber-300'
-                          : 'bg-slate-900 text-amber-200/90 border-slate-700/60'
-                      }`}
-                    >
-                      {idx + 1}
-                    </span>
+                    {pikto ? (
+                      <span className={`w-6 h-6 rounded-lg text-xs flex items-center justify-center shrink-0 border ${pikto.color}`}>
+                        {pikto.icon}
+                      </span>
+                    ) : (
+                      <span
+                        className={`w-6 h-6 rounded-lg text-[10.5px] font-black flex items-center justify-center shrink-0 border ${
+                          isSelected
+                            ? isPurple
+                              ? 'bg-cyan-400 text-slate-950 border-cyan-300'
+                              : 'bg-amber-400 text-slate-950 border-amber-300'
+                            : 'bg-slate-900 text-amber-200/90 border-slate-700/60'
+                        }`}
+                      >
+                        {idx + 1}
+                      </span>
+                    )}
                     <span className="truncate leading-tight font-black">{item.leftText}</span>
                   </div>
 
@@ -515,11 +539,25 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
 
       {/* ── ACTION CONTROLS HUD DOCK (MIN 48PX CHUNKY BUTTONS) ─── */}
       <div className="relative z-30 px-3 sm:px-5 py-2 shrink-0 flex flex-wrap items-center justify-between gap-2 border-t border-emerald-800/40">
-        {/* Left: Tips */}
+        {/* Left: Tips / Feedback */}
         <div className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-amber-200/80">
-          <span>
-            💡 <em>Pilih terminal di Kolom A lalu sambungkan ke Kolom B.</em>
-          </span>
+          {checkedState ? (
+            isSuccess ? (
+              <span className="text-emerald-300 flex items-center gap-1 font-extrabold">
+                <CheckCircle2 size={14} className="text-emerald-400" />
+                Luar biasa! Seluruh pasangan berhasil dijodohkan dengan tepat!
+              </span>
+            ) : (
+              <span className="text-rose-300 flex items-center gap-1 font-extrabold">
+                <AlertCircle size={14} className="text-rose-400" />
+                Beberapa sambungan belum tepat. Coba periksa garis merah!
+              </span>
+            )
+          ) : (
+            <span>
+              💡 <em>Pilih terminal di Kolom A lalu sambungkan ke Kolom B.</em>
+            </span>
+          )}
         </div>
 
         {/* Action Buttons */}

@@ -112,116 +112,194 @@ const GameIllustrationComponent: React.FC<Props> = ({ gameId, className = '' }) 
         </div>
       );
 
-    // 2. Misteri Lab Sains Maya (Kimia & Mikroskop)
+    // 2. Petualangan Sains: Investigasi Forensik Lab Kimia
     case 'point-click-lab':
       return (
         <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>
           <svg className="w-full h-full object-cover" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" fill="none">
             <defs>
-              <linearGradient id="labBg" x1="0" y1="0" x2="1" y2="1">
+              <linearGradient id="labForensicBg" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor="#042f2e" />
-                <stop offset="60%" stopColor="#111827" />
-                <stop offset="100%" stopColor="#083344" />
+                <stop offset="45%" stopColor="#0b192c" />
+                <stop offset="100%" stopColor="#022c22" />
               </linearGradient>
-              <linearGradient id="flaskLiquid" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2dd4bf" />
-                <stop offset="100%" stopColor="#0d9488" />
+              <linearGradient id="titrationLiquid" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#5eead4" />
+                <stop offset="35%" stopColor="#14b8a6" />
+                <stop offset="100%" stopColor="#0f766e" />
               </linearGradient>
-              <linearGradient id="purpleLiquid" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#c084fc" />
-                <stop offset="100%" stopColor="#7e22ce" />
+              <linearGradient id="phScaleCard" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#ef4444" />
+                <stop offset="25%" stopColor="#f97316" />
+                <stop offset="50%" stopColor="#10b981" />
+                <stop offset="75%" stopColor="#06b6d4" />
+                <stop offset="100%" stopColor="#8b5cf6" />
               </linearGradient>
+              <radialGradient id="reactorCoreGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#2dd4bf" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#042f2e" stopOpacity="0" />
+              </radialGradient>
+              <filter id="neonLabGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
             </defs>
 
-            <rect width="400" height="200" fill="url(#labBg)" />
+            {/* Cleanroom Dark Tech Backdrop */}
+            <rect width="400" height="200" fill="url(#labForensicBg)" />
+            <circle cx="150" cy="110" r="130" fill="url(#reactorCoreGlow)" />
 
-            {/* Subtle Tech Grid Lines */}
-            <g opacity="0.12" stroke="#2dd4bf" strokeWidth="1">
-              <line x1="0" y1="50" x2="400" y2="50" />
-              <line x1="0" y1="100" x2="400" y2="100" />
-              <line x1="0" y1="150" x2="400" y2="150" />
-              <line x1="80" y1="0" x2="80" y2="200" />
-              <line x1="160" y1="0" x2="160" y2="200" />
-              <line x1="240" y1="0" x2="240" y2="200" />
-              <line x1="320" y1="0" x2="320" y2="200" />
+            {/* High-Tech Cleanroom Hexagonal Molecular Matrix */}
+            <g stroke="#14b8a6" strokeWidth="1" opacity="0.16" fill="none">
+              <polygon points="40,30 55,22 70,30 70,48 55,56 40,48" />
+              <polygon points="70,30 85,22 100,30 100,48 85,56 70,48" />
+              <polygon points="55,56 70,48 70,66 55,74 40,66 40,48" />
+              <circle cx="55" cy="22" r="2.5" fill="#2dd4bf" />
+              <circle cx="85" cy="56" r="2.5" fill="#2dd4bf" />
+              {/* Additional benzene cluster right */}
+              <polygon points="340,35 355,27 370,35 370,53 355,61 340,53" />
+              <polygon points="355,61 370,53 370,71 355,79 340,71 340,53" />
+              <circle cx="355" cy="27" r="2" fill="#5eead4" />
             </g>
 
-            {/* Molecular Benzene Ring Graphic */}
-            <g transform="translate(180, 50)" stroke="#14b8a6" strokeWidth="1.5" fill="none" opacity="0.3">
-              <polygon points="0,-18 16,-9 16,9 0,18 -16,9 -16,-9" />
-              <circle cx="0" cy="0" r="10" strokeDasharray="3 2" />
-              <line x1="16" y1="9" x2="32" y2="18" />
-              <circle cx="32" cy="18" r="3" fill="#2dd4bf" />
-            </g>
+            {/* Tactical Viewfinder Corners */}
+            <path d="M20 30 L20 18 L32 18" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+            <path d="M380 30 L380 18 L368 18" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+            <path d="M20 170 L20 182 L32 182" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+            <path d="M380 170 L380 182 L368 182" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
 
-            {/* Compound Microscope on Left */}
-            <g transform="translate(60, 65) scale(0.85)">
-              {/* Base */}
-              <ellipse cx="40" cy="120" rx="28" ry="7" fill="#334155" />
-              {/* Stand / Arm */}
-              <path d="M40 120 C40 80 20 60 25 35 C28 20 40 20 45 25" stroke="#64748b" strokeWidth="9" strokeLinecap="round" fill="none" />
-              {/* Eyepiece tube */}
-              <rect x="42" y="10" width="8" height="22" rx="2" transform="rotate(-30 46 21)" fill="#94a3b8" />
-              {/* Objective revolving turret */}
-              <circle cx="48" cy="48" r="7" fill="#475569" />
-              <rect x="42" y="52" width="5" height="12" fill="#0d9488" />
-              <rect x="49" y="50" width="5" height="15" fill="#38bdf8" />
-              {/* Specimen Stage */}
-              <rect x="25" y="74" width="38" height="5" rx="2" fill="#1e293b" />
-              {/* Specimen Slide with glowing specimen */}
-              <rect x="32" y="72" width="24" height="2" fill="#f8fafc" opacity="0.9" />
-              <circle cx="44" cy="73" r="3" fill="#34d399" />
-              {/* Light Source Condenser */}
-              <circle cx="44" cy="98" r="6" fill="#fef08a" opacity="0.8" />
-              <path d="M44 98 L44 75" stroke="#fef08a" strokeWidth="4" opacity="0.25" />
-            </g>
-
-            {/* Glowing Erlenmeyer Flask with Liquid */}
-            <g transform="translate(260, 80) scale(0.9)">
-              {/* Liquid inside flask */}
-              <path d="M28 45 L5 88 C3 92 6 96 11 96 L65 96 C70 96 73 92 71 88 L48 45 Z" fill="url(#flaskLiquid)" opacity="0.85" />
-              {/* Meniscus surface */}
-              <ellipse cx="38" cy="45" rx="10" ry="2.5" fill="#5eead4" />
-              {/* Glass Body */}
-              <path d="M30 15 L30 35 L5 88 C3 92 6 96 11 96 L65 96 C70 96 73 92 71 88 L46 35 L46 15 Z" stroke="#99f6e4" strokeWidth="2.5" fill="none" opacity="0.8" />
-              {/* Neck Rim */}
-              <ellipse cx="38" cy="15" rx="9" ry="2.5" stroke="#99f6e4" strokeWidth="2" fill="none" opacity="0.8" />
-              {/* Graduated lines */}
-              <line x1="26" y1="65" x2="35" y2="65" stroke="#ffffff" strokeWidth="1.5" opacity="0.6" />
-              <line x1="23" y1="75" x2="36" y2="75" stroke="#ffffff" strokeWidth="1.5" opacity="0.6" />
-              <line x1="20" y1="85" x2="37" y2="85" stroke="#ffffff" strokeWidth="1.5" opacity="0.6" />
-              {/* Rising bubbles */}
-              <circle cx="32" cy="70" r="2.5" fill="#ffffff" opacity="0.8" />
-              <circle cx="42" cy="58" r="3" fill="#ffffff" opacity="0.7" />
-              <circle cx="36" cy="40" r="2" fill="#ffffff" opacity="0.9" />
-              <circle cx="40" cy="22" r="1.5" fill="#a7f3d0" opacity="0.7" />
-            </g>
-
-            {/* Test Tube Rack on Far Right */}
-            <g transform="translate(335, 95) scale(0.85)">
-              {/* Tube 1: Cyan */}
-              <rect x="0" y="20" width="10" height="40" rx="5" fill="url(#flaskLiquid)" opacity="0.8" />
-              <rect x="0" y="5" width="10" height="55" rx="5" stroke="#99f6e4" strokeWidth="1.5" fill="none" opacity="0.8" />
-              {/* Tube 2: Purple */}
-              <rect x="16" y="15" width="10" height="45" rx="5" fill="url(#purpleLiquid)" opacity="0.8" />
-              <rect x="16" y="5" width="10" height="55" rx="5" stroke="#e9d5ff" strokeWidth="1.5" fill="none" opacity="0.8" />
-              {/* Tube Rack Stand */}
-              <rect x="-8" y="58" width="42" height="4" rx="2" fill="#475569" />
-            </g>
-
-            {/* Reticle Pin: Preparat Daun */}
-            <g transform="translate(145, 110)">
-              <circle cx="0" cy="0" r="12" stroke="#2dd4bf" strokeWidth="1.5" strokeDasharray="3 2" fill="none" />
-              <circle cx="0" cy="0" r="3" fill="#2dd4bf" />
-              <rect x="15" y="-10" width="85" height="20" rx="10" fill="#042f2e" stroke="#2dd4bf" strokeWidth="1.2" />
-              <text x="24" y="4" fill="#ccfbf1" fontSize="8" fontWeight="bold" fontFamily="sans-serif">
-                🔬 Preparat Sel
+            {/* Top HUD Status Pill */}
+            <g transform="translate(230, 16)">
+              <rect x="0" y="0" width="148" height="20" rx="10" fill="#042f2e" stroke="#14b8a6" strokeWidth="1.2" opacity="0.95" />
+              <circle cx="10" cy="10" r="3.5" fill="#22c55e" />
+              <text x="20" y="14" fill="#a7f3d0" fontSize="8" fontWeight="bold" fontFamily="monospace">
+                REAKTOR 04: MONITORING
               </text>
             </g>
 
-            <text x="25" y="186" fill="#5eead4" fontSize="8" fontWeight="bold" fontFamily="monospace" opacity="0.75">
-              LAB STERILE • REAKSI ASAM-BASA pH 7
-            </text>
+            {/* Titration Burette Tip Dropping Reagent */}
+            <g transform="translate(136, 12)">
+              <rect x="0" y="0" width="6" height="50" rx="1" fill="#cbd5e1" stroke="#475569" strokeWidth="1" opacity="0.9" />
+              <line x1="1" y1="15" x2="5" y2="15" stroke="#0d9488" strokeWidth="1" />
+              <line x1="1" y1="25" x2="5" y2="25" stroke="#0d9488" strokeWidth="1" />
+              <line x1="1" y1="35" x2="5" y2="35" stroke="#0d9488" strokeWidth="1" />
+              {/* Dropper Nozzle */}
+              <polygon points="0,50 6,50 3,58" fill="#94a3b8" />
+              {/* Falling Neutralizer Titration Droplet */}
+              <circle cx="3" cy="67" r="2.5" fill="#38bdf8" filter="url(#neonLabGlow)" />
+            </g>
+
+            {/* Centerpiece: Glowing Volumetric Erlenmeyer Flask */}
+            <g transform="translate(90, 68) scale(1.05)">
+              {/* Borosilicate Glass Flask Liquid */}
+              <path
+                d="M36 34 L12 88 C9 94 13 100 20 100 L76 100 C83 100 87 94 84 88 L60 34 Z"
+                fill="url(#titrationLiquid)"
+                opacity="0.9"
+              />
+              {/* Liquid Meniscus Surface */}
+              <ellipse cx="48" cy="34" rx="12" ry="3.5" fill="#99f6e4" />
+
+              {/* Glass Outline Body */}
+              <path
+                d="M38 12 L38 28 L12 88 C9 94 13 100 20 100 L76 100 C83 100 87 94 84 88 L58 28 L58 12 Z"
+                stroke="#ccfbf1"
+                strokeWidth="2.5"
+                fill="none"
+                opacity="0.95"
+              />
+              {/* Neck Lip Rim */}
+              <ellipse cx="48" cy="12" rx="11" ry="3" stroke="#ccfbf1" strokeWidth="2.2" fill="none" />
+
+              {/* Volumetric Graduations (ml) */}
+              <line x1="28" y1="80" x2="42" y2="80" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
+              <text x="44" y="82" fill="#e6fffa" fontSize="6.5" fontWeight="bold" fontFamily="monospace">200ml</text>
+
+              <line x1="32" y1="65" x2="44" y2="65" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
+              <text x="46" y="67" fill="#e6fffa" fontSize="6.5" fontWeight="bold" fontFamily="monospace">150ml</text>
+
+              <line x1="36" y1="50" x2="46" y2="50" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
+              <text x="48" y="52" fill="#e6fffa" fontSize="6.5" fontWeight="bold" fontFamily="monospace">100ml</text>
+
+              {/* Effervescent Chemical Bubbles */}
+              <circle cx="36" cy="85" r="2.5" fill="#ffffff" opacity="0.85" />
+              <circle cx="58" cy="78" r="3" fill="#ffffff" opacity="0.8" />
+              <circle cx="45" cy="62" r="2.2" fill="#ffffff" opacity="0.95" />
+              <circle cx="52" cy="46" r="1.8" fill="#99f6e4" opacity="0.9" />
+              <circle cx="42" cy="30" r="1.5" fill="#5eead4" opacity="0.75" />
+            </g>
+
+            {/* pH Meter Digital Display with Litmus Scale (0 - 14) */}
+            <g transform="translate(200, 48)">
+              {/* Frame Card */}
+              <rect x="0" y="0" width="180" height="66" rx="10" fill="#042023" stroke="#14b8a6" strokeWidth="1.5" opacity="0.9" />
+
+              <text x="10" y="16" fill="#f8fafc" fontSize="8.5" fontWeight="900" fontFamily="sans-serif" letterSpacing="0.5">
+                INDIKATOR SKALA pH (0 - 14)
+              </text>
+
+              {/* Litmus pH Gradient Bar */}
+              <rect x="10" y="22" width="160" height="14" rx="4" fill="url(#phScaleCard)" stroke="#334155" strokeWidth="1" />
+
+              {/* pH 7.00 Netral Target Cursor Pin */}
+              <polygon points="90,18 86,13 94,13" fill="#38bdf8" />
+              <line x1="90" y1="21" x2="90" y2="37" stroke="#ffffff" strokeWidth="2" strokeDasharray="2 1" />
+              <polygon points="90,41 86,46 94,46" fill="#38bdf8" />
+
+              {/* Labels */}
+              <text x="12" y="47" fill="#f87171" fontSize="7" fontWeight="bold">0 Asam</text>
+              <text x="90" y="54" textAnchor="middle" fill="#34d399" fontSize="8" fontWeight="black">pH 7.00 NETRAL</text>
+              <text x="168" y="47" textAnchor="end" fill="#c084fc" fontSize="7" fontWeight="bold">14 Basa</text>
+            </g>
+
+            {/* K3 Laboratorium Hazard Badges Card */}
+            <g transform="translate(200, 122)">
+              <rect x="0" y="0" width="180" height="56" rx="10" fill="#042023" stroke="#14b8a6" strokeWidth="1.5" opacity="0.9" />
+
+              <text x="10" y="14" fill="#cbd5e1" fontSize="7.5" fontWeight="800" fontFamily="sans-serif">
+                PROTOKOL K3 GHS LABORATORIUM
+              </text>
+
+              {/* 3 Red Diamonds for GHS Symbols */}
+              {/* 1. Korosif */}
+              <g transform="translate(18, 22)">
+                <polygon points="12,0 24,12 12,24 0,12" fill="#ffffff" stroke="#dc2626" strokeWidth="1.8" />
+                <text x="12" y="16" textAnchor="middle" fontSize="10">⚠️</text>
+                <text x="12" y="32" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="bold">Korosif</text>
+              </g>
+
+              {/* 2. Toksik */}
+              <g transform="translate(68, 22)">
+                <polygon points="12,0 24,12 12,24 0,12" fill="#ffffff" stroke="#dc2626" strokeWidth="1.8" />
+                <text x="12" y="16" textAnchor="middle" fontSize="10">☠️</text>
+                <text x="12" y="32" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="bold">Toksik</text>
+              </g>
+
+              {/* 3. Menyala */}
+              <g transform="translate(118, 22)">
+                <polygon points="12,0 24,12 12,24 0,12" fill="#ffffff" stroke="#dc2626" strokeWidth="1.8" />
+                <text x="12" y="16" textAnchor="middle" fontSize="10">🔥</text>
+                <text x="12" y="32" textAnchor="middle" fill="#94a3b8" fontSize="6" fontWeight="bold">Menyala</text>
+              </g>
+            </g>
+
+            {/* Interactive Target Reticle on Erlenmeyer Flask */}
+            <g transform="translate(56, 125)">
+              <circle cx="0" cy="0" r="14" stroke="#2dd4bf" strokeWidth="1.5" strokeDasharray="3 2" fill="none" />
+              <circle cx="0" cy="0" r="3" fill="#2dd4bf" />
+              <line x1="-18" y1="0" x2="-6" y2="0" stroke="#2dd4bf" strokeWidth="1.2" />
+              <line x1="6" y1="0" x2="18" y2="0" stroke="#2dd4bf" strokeWidth="1.2" />
+              <line x1="0" y1="-18" x2="0" y2="-6" stroke="#2dd4bf" strokeWidth="1.2" />
+              <line x1="0" y1="6" x2="0" y2="18" stroke="#2dd4bf" strokeWidth="1.2" />
+            </g>
+
+            {/* Bottom Status Ticker */}
+            <g transform="translate(20, 184)">
+              <circle cx="4" cy="4" r="2.5" fill="#14b8a6" />
+              <text x="12" y="7" fill="#5eead4" fontSize="7.5" fontWeight="bold" fontFamily="monospace" opacity="0.9">
+                UNIT 04 FORENSIK • TITRASI NETRALISASI • METODE ILMIAH
+              </text>
+            </g>
           </svg>
         </div>
       );

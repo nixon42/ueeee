@@ -43,7 +43,7 @@ export const AUTHORITATIVE_GAMES_SPEC: Record<string, AuthoritativeGameSpec> = {
   },
   'point-click-lab': {
     gameId: 'point-click-lab',
-    expectedTitle: 'Point & Click: Misteri Lab Sains Maya',
+    expectedTitle: 'Petualangan Sains: Investigasi Forensik Lab Kimia',
     category: 'sains',
     gradeLevel: 'SMP Kelas 7',
     mentorName: 'Dr. Maya Arisandi, M.Sc.',
