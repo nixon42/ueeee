@@ -512,9 +512,6 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
                 {/* Signal Pulses */}
                 <circle cx="90" cy="90" r="24" fill="none" stroke="#38bdf8" strokeWidth="1.5" opacity="0.6" />
               </svg>
-              <div className="mt-1 px-2.5 py-0.5 rounded-full bg-slate-950/80 border border-cyan-400/40 text-[9px] font-black uppercase tracking-wider text-cyan-300">
-                Stasiun Relai Kosmis 🛰️
-              </div>
             </div>
           )}
 
