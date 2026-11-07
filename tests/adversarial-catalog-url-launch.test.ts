@@ -271,15 +271,23 @@ describe('Empirical Adversarial Suite: Milestone 4 Catalog & URL Launch Contract
         const hasMiniGame = middleSlides.some(s => s.type.startsWith('mini-game-'));
         expect(hasMiniGame).toBe(true);
 
-        // Slide N-1: Story Resolution
-        const slideResolution = deck.slides[total - 2];
-        expect(slideResolution.type).toBe('story-resolution');
-        expect(slideResolution.title.length).toBeGreaterThan(3);
+        if (id === 'ular-tangga-tatasurya') {
+          // Slide 7: Unified Story Resolution & HOTS Reflection Spark
+          const finalSlide = deck.slides[total - 1];
+          expect(finalSlide.type).toBe('story-resolution');
+          expect(finalSlide.title.length).toBeGreaterThan(3);
+          expect((finalSlide as any).sparkCards?.length).toBe(3);
+        } else {
+          // Slide N-1: Story Resolution
+          const slideResolution = deck.slides[total - 2];
+          expect(slideResolution.type).toBe('story-resolution');
+          expect(slideResolution.title.length).toBeGreaterThan(3);
 
-        // Slide N: Reflection Spark
-        const slideReflection = deck.slides[total - 1];
-        expect(slideReflection.type).toBe('reflection-spark');
-        expect(slideReflection.title.length).toBeGreaterThan(3);
+          // Slide N: Reflection Spark
+          const slideReflection = deck.slides[total - 1];
+          expect(slideReflection.type).toBe('reflection-spark');
+          expect(slideReflection.title.length).toBeGreaterThan(3);
+        }
       }
     });
   });

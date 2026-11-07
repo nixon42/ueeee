@@ -47,6 +47,7 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
 }) => {
   const isPurple = themeColor === 'purple';
   const isTeal = themeColor === 'teal';
+  const isWaterCycle = !isPurple && !isTeal;
   const hasSparks = Boolean(slide.sparkCards && slide.sparkCards.length > 0) || !isPurple;
   const sparkCards = slide.sparkCards || (!isPurple ? DEFAULT_SPARK_CARDS : []);
 
@@ -81,7 +82,7 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
           } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
         >
           <div className="flex items-center gap-2">
-            {!isPurple && (
+            {!isPurple && !isWaterCycle && (
               <span
                 className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
                   isTeal ? 'bg-teal-400 text-slate-950' : 'bg-amber-400 text-emerald-950'
@@ -105,7 +106,7 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
           )}
         </div>
         {/* Right Trophy Badge */}
-        {!isPurple && (
+        {!isPurple && !isWaterCycle && (
           <div className="shrink-0 flex items-center gap-2">
             <div
               className={`px-3 py-1.5 rounded-xl border backdrop-blur-sm text-xs font-black flex items-center gap-1.5 shadow-md ${
@@ -179,19 +180,29 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
 
               <div className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5">
                 {sparkCards.map((card, idx) => {
-                  const borderClass =
-                    idx === 0
-                      ? 'border-blue-400/50 hover:border-blue-300 shadow-[0_4px_14px_rgba(59,130,246,0.15)] bg-slate-900/90'
+                  const borderClass = isPurple
+                    ? idx === 0
+                      ? 'border-indigo-400/50 hover:border-indigo-300 shadow-[0_4px_14px_rgba(99,102,241,0.2)] bg-slate-900/90'
                       : idx === 1
-                      ? 'border-amber-400/50 hover:border-amber-300 shadow-[0_4px_14px_rgba(245,158,11,0.15)] bg-slate-900/90'
-                      : 'border-emerald-400/50 hover:border-emerald-300 shadow-[0_4px_14px_rgba(16,185,129,0.15)] bg-slate-900/90';
+                      ? 'border-amber-400/50 hover:border-amber-300 shadow-[0_4px_14px_rgba(245,158,11,0.2)] bg-slate-900/90'
+                      : 'border-cyan-400/50 hover:border-cyan-300 shadow-[0_4px_14px_rgba(6,182,212,0.2)] bg-slate-900/90'
+                    : idx === 0
+                    ? 'border-blue-400/50 hover:border-blue-300 shadow-[0_4px_14px_rgba(59,130,246,0.15)] bg-slate-900/90'
+                    : idx === 1
+                    ? 'border-amber-400/50 hover:border-amber-300 shadow-[0_4px_14px_rgba(245,158,11,0.15)] bg-slate-900/90'
+                    : 'border-emerald-400/50 hover:border-emerald-300 shadow-[0_4px_14px_rgba(16,185,129,0.15)] bg-slate-900/90';
 
-                  const badgeClass =
-                    idx === 0
-                      ? 'bg-blue-500 text-white'
+                  const badgeClass = isPurple
+                    ? idx === 0
+                      ? 'bg-indigo-500 text-white'
                       : idx === 1
                       ? 'bg-amber-400 text-slate-950 font-black'
-                      : 'bg-emerald-500 text-white';
+                      : 'bg-cyan-400 text-slate-950 font-black'
+                    : idx === 0
+                    ? 'bg-blue-500 text-white'
+                    : idx === 1
+                    ? 'bg-amber-400 text-slate-950 font-black'
+                    : 'bg-emerald-500 text-white';
 
                   return (
                     <div
@@ -212,13 +223,21 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
                         </div>
 
                         {/* Question Text */}
-                        <p className="text-[10px] sm:text-[11px] text-amber-50/90 font-medium leading-relaxed">
+                        <p
+                          className={`text-[10px] sm:text-[11px] font-medium leading-relaxed ${
+                            isPurple ? 'text-cyan-50/90' : isTeal ? 'text-teal-50/90' : 'text-amber-50/90'
+                          }`}
+                        >
                           {card.question}
                         </p>
                       </div>
 
                       {/* Micro Tag */}
-                      <div className="pt-1 border-t border-slate-800/60 text-[8.5px] font-extrabold uppercase tracking-wider text-amber-300/70">
+                      <div
+                        className={`pt-1 border-t border-slate-800/60 text-[8.5px] font-extrabold uppercase tracking-wider ${
+                          isPurple ? 'text-cyan-300/80' : isTeal ? 'text-teal-300/80' : 'text-amber-300/70'
+                        }`}
+                      >
                         Diskusi Kritis Kelompok
                       </div>
                     </div>
@@ -229,11 +248,23 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
           )}
         </div>
 
-        {/* RIGHT COLUMN: Kak Galih Avatar Pod (Positioned on the RIGHT, different from Slide 1) */}
-        <div className="w-full md:w-[280px] lg:w-[320px] shrink-0 flex flex-col justify-between items-center gap-2 p-3 rounded-2xl sm:rounded-3xl bg-slate-950/80 border-2 border-emerald-500/35 backdrop-blur-md shadow-xl overflow-hidden">
+        {/* RIGHT COLUMN: Kak Galih / Kapten Dirgantara Avatar Pod (Positioned on the RIGHT, different from Slide 1) */}
+        <div
+          className={`w-full md:w-[280px] lg:w-[320px] shrink-0 flex flex-col justify-between items-center gap-2 p-3 rounded-2xl sm:rounded-3xl backdrop-blur-md shadow-xl overflow-hidden ${
+            isPurple
+              ? 'bg-slate-950/85 border-2 border-cyan-400/40 shadow-[0_10px_30px_rgba(6,182,212,0.15)]'
+              : isTeal
+              ? 'bg-slate-950/80 border-2 border-teal-500/35'
+              : 'bg-slate-950/80 border-2 border-emerald-500/35'
+          }`}
+        >
           {/* Avatar anchored at the top of the debrief console */}
           <div className="relative shrink-0 flex flex-col items-center justify-center select-none pt-1">
-            <div className="absolute inset-0 rounded-full bg-emerald-400/15 blur-2xl animate-pulse" />
+            <div
+              className={`absolute inset-0 rounded-full blur-2xl animate-pulse ${
+                isPurple ? 'bg-cyan-400/20' : isTeal ? 'bg-teal-400/15' : 'bg-emerald-400/15'
+              }`}
+            />
             {isPurple ? (
               <KaptenDirgantaraAvatar
                 size="md"
@@ -259,9 +290,26 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
           </div>
 
           {/* Conversational Question Prompt from Kak Galih / Dr. Maya / Kapten Dirgantara */}
-          <div className="w-full rounded-xl bg-gradient-to-r from-emerald-950/90 to-slate-900/90 border border-amber-400/30 p-2.5 text-center">
-            <div className="flex items-center justify-center gap-1.5 text-amber-300 text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider mb-1">
-              <Sparkles size={12} className="text-amber-300 shrink-0" />
+          <div
+            className={`w-full rounded-xl p-2.5 text-center border ${
+              isPurple
+                ? 'bg-gradient-to-r from-purple-950/90 to-slate-900/90 border-cyan-400/30'
+                : isTeal
+                ? 'bg-gradient-to-r from-teal-950/90 to-slate-900/90 border-teal-400/30'
+                : 'bg-gradient-to-r from-emerald-950/90 to-slate-900/90 border-amber-400/30'
+            }`}
+          >
+            <div
+              className={`flex items-center justify-center gap-1.5 text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider mb-1 ${
+                isPurple ? 'text-cyan-300' : isTeal ? 'text-teal-300' : 'text-amber-300'
+              }`}
+            >
+              <Sparkles
+                size={12}
+                className={`shrink-0 ${
+                  isPurple ? 'text-cyan-300' : isTeal ? 'text-teal-300' : 'text-amber-300'
+                }`}
+              />
               <span>
                 {isPurple
                   ? 'Kapten Dirgantara Menantang:'
@@ -270,7 +318,11 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
                   : 'Kak Galih Bertanya:'}
               </span>
             </div>
-            <p className="text-[10px] sm:text-[11px] text-amber-50 font-medium leading-relaxed">
+            <p
+              className={`text-[10px] sm:text-[11px] font-medium leading-relaxed ${
+                isPurple ? 'text-cyan-50' : isTeal ? 'text-teal-50' : 'text-amber-50'
+              }`}
+            >
               &ldquo;
               {slide.mentorPrompt ||
                 'Petualang cilik, hutan dan air telah selamat! Sekarang, mari asah nalar kritis kalian: bagaimana pendapat kelompokmu tentang 3 pertanyaan di samping?'}
@@ -278,21 +330,21 @@ export const StoryResolutionSlide: React.FC<StoryResolutionSlideProps> = ({
             </p>
           </div>
 
-          {/* FAT ARCADE VICTORY BUTTON (48PX MIN HEIGHT) */}
-          <button
-            type="button"
-            onClick={handleFinish}
-            className={`w-full min-h-[48px] px-4 py-2.5 rounded-xl sm:rounded-2xl ${
-              isPurple
-                ? 'bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-500 text-slate-950 border-2 border-cyan-200 shadow-[0_4px_0_#0891b2] hover:shadow-[0_4px_16px_rgba(6,182,212,0.6)]'
-                : isTeal
-                ? 'bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-300 hover:to-emerald-400 text-slate-950 border-2 border-teal-200 shadow-[0_4px_0_#0f766e] hover:shadow-[0_4px_16px_rgba(45,212,191,0.6)]'
-                : 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-slate-950 border-2 border-amber-200 shadow-[0_4px_0_#b45309] hover:shadow-[0_4px_20px_rgba(251,191,36,0.6)]'
-            } active:scale-95 active:translate-y-0.5 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-lg`}
-          >
-            <Trophy size={16} />
-            <span>{slide.victoryButtonText || 'Selesaikan Ekspedisi & Rayakan! 🏆'}</span>
-          </button>
+          {/* FAT ARCADE VICTORY BUTTON - HIDDEN FOR TATASURYA AS REQUESTED ("tombol selesaikan ekpekdisi haspu aja") */}
+          {!isPurple && (
+            <button
+              type="button"
+              onClick={handleFinish}
+              className={`w-full min-h-[48px] px-4 py-2.5 rounded-xl sm:rounded-2xl ${
+                isTeal
+                  ? 'bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-300 hover:to-emerald-400 text-slate-950 border-2 border-teal-200 shadow-[0_4px_0_#0f766e] hover:shadow-[0_4px_16px_rgba(45,212,191,0.6)]'
+                  : 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-slate-950 border-2 border-amber-200 shadow-[0_4px_0_#b45309] hover:shadow-[0_4px_20px_rgba(251,191,36,0.6)]'
+              } active:scale-95 active:translate-y-0.5 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all shadow-lg`}
+            >
+              <Trophy size={16} />
+              <span>{slide.victoryButtonText || 'Selesaikan Ekspedisi & Rayakan! 🏆'}</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

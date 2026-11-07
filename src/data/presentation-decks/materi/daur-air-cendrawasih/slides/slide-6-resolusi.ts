@@ -13,5 +13,31 @@ export const slide6Resolusi: StoryResolutionSlide = {
     { label: 'Master Siklus Hidrologi 4 Tahap' },
     { label: 'Penjaga Transformasi Energi Alam' },
   ],
-  actionButtonText: 'Buka Lembar Diskusi Guru & Refleksi',
+  actionButtonText: 'Selesaikan Ekspedisi & Rayakan! 🏆',
+  mentorPrompt:
+    'Petualang cilik, hutan dan mata air telah selamat! Sekarang Kak Galih ingin menantang daya nalar kalian: bagaimana pendapat kelompokmu tentang 3 pertanyaan kritis di samping?',
+  sparkCards: [
+    {
+      number: 1,
+      badgeColor: 'blue',
+      title: 'Dampak Penggundulan Hutan',
+      question:
+        'Bagaimana penebangan pohon di lereng bukit mengganggu proses infiltrasi air tanah dan memicu bencana banjir bandang di hilir sungai?',
+    },
+    {
+      number: 2,
+      badgeColor: 'amber',
+      title: 'Peran Energi Surya di Rantai Pangan',
+      question:
+        'Jika awan abu vulkanik menutupi sinar matahari selama berbulan-bulan, bagaimana dampaknya terhadap produsen dan konsumen puncak ekosistem?',
+    },
+    {
+      number: 3,
+      badgeColor: 'emerald',
+      title: 'Aksi Konservasi Air Sekolah',
+      question:
+        'Langkah praktis apa (seperti membuat lubang biopori atau memanen air hujan) yang bisa kita terapkan di lingkungan sekolah untuk menjaga siklus air?',
+    },
+  ],
+  victoryButtonText: 'Selesaikan Ekspedisi & Rayakan! 🏆',
 };

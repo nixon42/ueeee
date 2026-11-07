@@ -114,7 +114,7 @@ export const AUTHORITATIVE_GAMES_SPEC: Record<string, AuthoritativeGameSpec> = {
     category: 'sains',
     gradeLevel: 'SD Kelas 6',
     mentorName: 'Kapten Dirgantara',
-    mentorRole: 'Astro-Komandan Misi Dirgantara',
+    mentorRole: 'Kapten Misi Antariksa',
     slideCount: 8,
     learningTopics: ['8 Planet Tata Surya', 'Planet Terestrial vs Jovian', 'Mekanika Orbit & Gerhana'],
     miniGames: [
