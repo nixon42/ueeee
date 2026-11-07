@@ -52,8 +52,8 @@ export const GAMES_CATALOG: GameItem[] = [
   {
     id: 'point-click-lab',
     title: 'Petualangan Sains: Investigasi Forensik Lab Kimia',
-    subtitle: 'Pecahkan anomali reaktor, kuasai protokol K3, uji lakmus pH, & terapkan metode ilmiah!',
-    description: 'Petualangan sains forensik interaktif bersama Dr. Maya Arisandi, M.Sc.! Selidiki anomali kebocoran reaktor Unit 04, kuasai regulasi keselamatan K3, kalibrasi derajat keasaman pH 0-14, dan buktikan hipotesis lewat titrasi netralisasi.',
+    subtitle: 'Pecahkan misteri keasaman larutan, kuasai bahaya asam, uji lakmus pH, & terapkan metode ilmiah!',
+    description: 'Petualangan sains interaktif bersama Dr. Maya Arisandi, M.Sc.! Selidiki hakikat zat asam (ion H⁺), bahaya sifat korosif asam pekat & hujan asam, skala derajat keasaman pH 0-14, dan buktikan reaksi netralisasi asam-basa.',
     type: 'point-and-click',
     category: 'sains',
     gradeLevel: 'SMP',
@@ -70,26 +70,26 @@ export const GAMES_CATALOG: GameItem[] = [
     slideCount: 8,
     mentorName: 'Dr. Maya Arisandi, M.Sc.',
     tags: [
-      'lab sains', 'sains', 'kimia', 'forensik', 'k3', 'asam basa',
-      'derajat ph', 'metode ilmiah', 'dr maya', 'eksperimen', 'titrasi'
+      'lab sains', 'sains', 'kimia', 'asam basa', 'ion hidrogen', 'bahaya asam',
+      'derajat ph', 'metode ilmiah', 'dr maya', 'eksperimen', 'netralisasi'
     ],
     prolog: {
-      story: 'Sirine darurat berbunyi di Laboratorium Forensik Kimia-Biologi Unit 04! Reaktor utama mendeteksi anomali larutan kimia misterius dengan lonjakan keasaman ekstrem yang berisiko merusak instrumen analitis. Bersama Dr. Maya Arisandi, M.Sc., kamu dipanggil sebagai peneliti forensik muda untuk mengamankan laboratorium. Sebelum menetralkan tangki reaktor, kamu harus menguasai standar keselamatan K3, memahami skala derajat pH 0-14, dan menerapkan 5 langkah metode ilmiah secara presisi!',
+      story: 'Penyelidikan sains dimulai bersama Dr. Maya Arisandi, M.Sc.! Kita menemukan anomali larutan kimia misterius dengan lonjakan keasaman ekstrem yang berisiko korosif. Sebagai peneliti muda di kelas sains, kamu diajak mengungkap apa sebenarnya zat asam itu, mengapa ion Hidrogen (H⁺) menentukan keasaman, apa saja bahaya asam pekat di sekitar kita, bagaimana skala pH 0-14 bekerja, dan bagaimana zat basa menetralkan asam hingga seimbang pada pH 7.00!',
       learningGoals: [
-        'Menerapkan 5 tahapan metode ilmiah secara sistematis (Observasi, Rumusan Masalah, Hipotesis, Eksperimen Terkontrol, dan Kesimpulan).',
-        'Mengidentifikasi standar keselamatan kerja K3 laboratorium serta arti piktogram bahaya GHS (Korosif, Toksik, Mudah Menyala, dan Eksplosif).',
-        'Menganalisis sifat larutan berdasarkan skala derajat keasaman (pH 0-14), dari asam kuat, titik netral pH 7.00, hingga basa kuat.',
-        'Menguasai prinsip pengujian larutan menggunakan indikator kertas lakmus merah dan biru serta reaksi titrasi netralisasi asam-basa.'
+        'Memahami hakikat asam secara kimiawi: pelepasan ion Hidrogen (H⁺) saat zat terlarut dalam air.',
+        'Mengidentifikasi bahaya sifat korosif asam pekat (seperti HCl dan H2SO4), fenomena hujan asam, serta aturan keselamatan di kelas.',
+        'Membedakan contoh nyata asam kuat vs asam lemah serta zat basa penyeimbang asam (seperti antasida obat maag Mg(OH)2).',
+        'Menganalisis skala derajat pH 0-14 dan menguji sifat larutan menggunakan indikator lakmus serta reaksi netralisasi.'
       ],
       howToPlay: [
-        'Simak arahan misi darurat dari Dr. Maya Arisandi pada slide pembuka presentasi interaktif.',
-        'Pelajari infografis keselamatan K3, alat pelindung diri (APD), dan skala derajat pH keasaman larutan.',
-        'Selesaikan mini-game menjodohkan simbol bahaya K3, susun urutan 5 langkah metode ilmiah, dan balik kartu uji indikator lakmus.',
-        'Diskusikan pertanyaan pemantik HOTS seputar hujan asam, etika data ilmiah, dan indikator alami bersama guru dan teman sekelas.'
+        'Simak arahan investigasi dari Dr. Maya Arisandi pada slide pembuka presentasi interaktif.',
+        'Pelajari infografis hakikat asam, ion H⁺, bahaya sifat korosif, dan simulasi spektrum reaktor pH 0-14.',
+        'Selesaikan mini-game menjodohkan simbol bahaya zat kimia, susun urutan 5 langkah metode ilmiah, dan balik kartu uji indikator lakmus.',
+        'Diskusikan pertanyaan pemantik HOTS seputar bahaya hujan asam, reaksi netralisasi obat maag, dan indikator alami.'
       ],
       rules: [
         'Ikuti alur slide investigasi secara bertahap atau navigasikan langsung via titik indikator di bagian bawah.',
-        'Pada tantangan simbol K3, pasangkan 4 piktogram bahaya dengan karakteristik resiko yang tepat.',
+        'Pada tantangan simbol bahaya, pasangkan 4 piktogram bahaya dengan karakteristik resiko yang tepat.',
         'Pada tantangan metode ilmiah, seret dan posisikan kartu hingga urutan tahapan penalaran ilmiah 100% tepat.',
         'Pada tantangan indikator lakmus, balik kartu untuk menguji daya ingat aktif analisis asam-basa.',
         'Reaktor Unit 04 berhasil dinetralkan saat pH 7.00 tercapai dan seluruh 8 babak investigasi forensik selesai!'
