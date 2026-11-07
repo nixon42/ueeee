@@ -1,398 +1,592 @@
-import React, { useState } from 'react';
-import { Lightbulb } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Lightbulb, Play, Pause, Sparkles, FlaskConical } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
 import { PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
 import { getDeckIllustration } from '@/components/visuals';
+import { HydrologyCycleStage } from '../stages/HydrologyCycleStage';
+import { PhotosynthesisPlantStage } from '../stages/PhotosynthesisPlantStage';
+import { SolarSystemOrbitStage } from '../stages/SolarSystemOrbitStage';
+import { EclipseMechanicsStage } from '../stages/EclipseMechanicsStage';
 
 export interface ConceptInfographicSlideProps {
   slide: ConceptSlideData;
-  themeColor: PresentationThemeKey;
+  themeColor?: PresentationThemeKey;
   gameId?: string;
   onNext?: () => void;
 }
 
-const CARD_THEME_COLORS: Record<string, { bg: string; border: string; text: string; badge: string; ring: string; iconBg: string }> = {
-  emerald: {
-    bg: 'bg-gradient-to-b from-white/95 to-emerald-50/90',
-    border: 'border-emerald-300/90 hover:border-emerald-400',
-    text: 'text-emerald-950',
-    badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-    ring: 'ring-emerald-400',
-    iconBg: 'from-emerald-100 to-teal-50',
-  },
-  teal: {
-    bg: 'bg-gradient-to-b from-white/95 to-teal-50/90',
-    border: 'border-teal-300/90 hover:border-teal-400',
-    text: 'text-teal-950',
-    badge: 'bg-teal-100 text-teal-800 border-teal-300',
-    ring: 'ring-teal-400',
-    iconBg: 'from-teal-100 to-cyan-50',
-  },
-  rose: {
-    bg: 'bg-gradient-to-b from-white/95 to-rose-50/90',
-    border: 'border-rose-300/90 hover:border-rose-400',
-    text: 'text-rose-950',
-    badge: 'bg-rose-100 text-rose-800 border-rose-300',
-    ring: 'ring-rose-400',
-    iconBg: 'from-rose-100 to-red-50',
-  },
-  purple: {
-    bg: 'bg-gradient-to-b from-white/95 to-purple-50/90',
-    border: 'border-purple-300/90 hover:border-purple-400',
-    text: 'text-purple-950',
-    badge: 'bg-purple-100 text-purple-800 border-purple-300',
-    ring: 'ring-purple-400',
-    iconBg: 'from-purple-100 to-indigo-50',
-  },
+const PHASE_THEMES: Record<
+  string,
+  { solid: string; glow: string; text: string; ring: string; badge: string }
+> = {
   amber: {
-    bg: 'bg-gradient-to-b from-white/95 to-amber-50/90',
-    border: 'border-amber-300/90 hover:border-amber-400',
-    text: 'text-amber-950',
-    badge: 'bg-amber-100 text-amber-800 border-amber-300',
+    solid: 'bg-gradient-to-br from-amber-500 to-amber-600 border-amber-400 text-slate-950',
+    glow: 'border-amber-400/80 shadow-[0_0_20px_rgba(251,191,36,0.35)]',
+    text: 'text-amber-300',
     ring: 'ring-amber-400',
-    iconBg: 'from-amber-100 to-yellow-50',
+    badge: 'bg-amber-400 text-slate-950',
   },
   blue: {
-    bg: 'bg-gradient-to-b from-white/95 to-blue-50/90',
-    border: 'border-blue-300/90 hover:border-blue-400',
-    text: 'text-blue-950',
-    badge: 'bg-blue-100 text-blue-800 border-blue-300',
-    ring: 'ring-blue-400',
-    iconBg: 'from-blue-100 to-sky-50',
+    solid: 'bg-gradient-to-br from-sky-500 to-blue-600 border-sky-400 text-white',
+    glow: 'border-sky-400/80 shadow-[0_0_20px_rgba(56,189,248,0.35)]',
+    text: 'text-sky-300',
+    ring: 'ring-sky-400',
+    badge: 'bg-sky-400 text-slate-950',
   },
   indigo: {
-    bg: 'bg-gradient-to-b from-white/95 to-indigo-50/90',
-    border: 'border-indigo-300/90 hover:border-indigo-400',
-    text: 'text-indigo-950',
-    badge: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+    solid: 'bg-gradient-to-br from-indigo-500 to-blue-700 border-indigo-400 text-white',
+    glow: 'border-indigo-400/80 shadow-[0_0_20px_rgba(129,140,248,0.35)]',
+    text: 'text-indigo-300',
     ring: 'ring-indigo-400',
-    iconBg: 'from-indigo-100 to-blue-50',
+    badge: 'bg-indigo-400 text-slate-950',
   },
-  orange: {
-    bg: 'bg-gradient-to-b from-white/95 to-orange-50/90',
-    border: 'border-orange-300/90 hover:border-orange-400',
-    text: 'text-orange-950',
-    badge: 'bg-orange-100 text-orange-800 border-orange-300',
-    ring: 'ring-orange-400',
-    iconBg: 'from-orange-100 to-amber-50',
+  emerald: {
+    solid: 'bg-gradient-to-br from-emerald-500 to-teal-600 border-emerald-400 text-slate-950',
+    glow: 'border-emerald-400/80 shadow-[0_0_20px_rgba(52,211,153,0.35)]',
+    text: 'text-emerald-300',
+    ring: 'ring-emerald-400',
+    badge: 'bg-emerald-400 text-slate-950',
+  },
+  teal: {
+    solid: 'bg-gradient-to-br from-teal-500 to-emerald-600 border-teal-400 text-slate-950',
+    glow: 'border-teal-400/80 shadow-[0_0_20px_rgba(45,212,191,0.35)]',
+    text: 'text-teal-300',
+    ring: 'ring-teal-400',
+    badge: 'bg-teal-400 text-slate-950',
   },
 };
 
-const WATER_CYCLE_HOTSPOTS = [
-  {
-    id: 'evaporasi',
-    emoji: '☀️',
-    label: '1. Evaporasi',
-    sub: 'Penguapan H2O',
-    desc: 'Panas surya memanaskan air permukaan laut, sungai, dan danau sehingga molekul air menguap membubung ke atmosfer (termasuk transpirasi dari daun tumbuhan).',
-  },
-  {
-    id: 'kondensasi',
-    emoji: '☁️',
-    label: '2. Kondensasi',
-    sub: 'Pembentukan Awan',
-    desc: 'Uap air di atmosfer dingin mendingin dan mengembun menjadi miliaran titik-titik air mikro yang saling berkumpul membentuk awan mendung tebal.',
-  },
-  {
-    id: 'presipitasi',
-    emoji: '🌧️',
-    label: '3. Presipitasi',
-    sub: 'Curah Hujan',
-    desc: 'Awan jenuh tidak mampu lagi menahan berat air, sehingga gravitasi bumi menarik butiran air jatuh ke tanah sebagai hujan membasahi pegunungan.',
-  },
-  {
-    id: 'infiltrasi',
-    emoji: '🌱',
-    label: '4. Infiltrasi',
-    sub: 'Mata Air Tanah',
-    desc: 'Air hujan meresap ke dalam pori-pori tanah berkat jalinan akar pohon hutan, tersaring alami menjadi cadangan mata air pegunungan yang jernih.',
-  },
-  {
-    id: 'fotosintesis',
-    emoji: '🌿',
-    label: '5. Fotosintesis',
-    sub: 'Pertukaran Gas O2',
-    desc: 'Stomata daun menyerap CO2 dan energi foton surya untuk memproduksi glukosa serta melepaskan oksigen segar bagi seluruh makhluk hidup.',
-  },
+const PH_SCALE_CHIPS = [
+  { ph: 0, label: 'Asam Kuat Ekstrem', color: '#ef4444', type: 'asam' },
+  { ph: 1, label: 'Asam Lambung', color: '#f87171', type: 'asam' },
+  { ph: 2, label: 'Jus Lemon', color: '#fb923c', type: 'asam' },
+  { ph: 3, label: 'Cuka Dapur', color: '#f59e0b', type: 'asam' },
+  { ph: 4, label: 'Jus Tomat', color: '#fbbf24', type: 'asam' },
+  { ph: 5, label: 'Kopi Hitam', color: '#facc15', type: 'asam' },
+  { ph: 6, label: 'Susu Murni', color: '#a3e635', type: 'asam' },
+  { ph: 7, label: 'Air Murni (Netral)', color: '#4ade80', type: 'netral' },
+  { ph: 8, label: 'Air Laut / Telur', color: '#2dd4bf', type: 'basa' },
+  { ph: 9, label: 'Baking Soda', color: '#38bdf8', type: 'basa' },
+  { ph: 10, label: 'Obat Maag', color: '#60a5fa', type: 'basa' },
+  { ph: 11, label: 'Amonia Pembersih', color: '#818cf8', type: 'basa' },
+  { ph: 12, label: 'Air Sabun', color: '#a78bfa', type: 'basa' },
+  { ph: 13, label: 'Pemutih Pakaian', color: '#c084fc', type: 'basa' },
+  { ph: 14, label: 'Pembersih Saluran', color: '#e879f9', type: 'basa' },
 ];
 
 export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = ({
   slide,
+  themeColor = 'emerald',
   gameId,
 }) => {
-  const isFourCards = slide.cards.length === 4;
-  const IllustrationComponent = gameId ? getDeckIllustration(gameId) : null;
-  const isWaterCycleGame = gameId === 'ular-tangga-sains';
-  const isPhSlide =
-    slide.title?.toLowerCase().includes('ph') ||
-    slide.cards.some(
-      (c) =>
-        c.levelBadge?.toLowerCase().includes('ph') ||
-        c.title?.toLowerCase().includes('ph')
-    );
+  const cards = slide.cards ?? [];
+  const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [selectedPh, setSelectedPh] = useState<number>(7);
 
-  // For games with illustrations other than water cycle (like point-click-lab), default to cards view
-  const [activeView, setActiveView] = useState<'cards' | 'illustration'>('cards');
-  const [selectedCardId, setSelectedCardId] = useState<string>(
-    slide.cards.length > 0 ? slide.cards[0].id || 'card-0' : ''
-  );
+  // Determine specialized interactive simulation stage
+  const slideTitleLower = slide.title.toLowerCase();
+  const isHydrologySlide =
+    slide.id === 'uts-slide-2' ||
+    slideTitleLower.includes('hidrologi') ||
+    slideTitleLower.includes('siklus air');
 
-  // Tablet-first UX: default selected hotspot is the first one for water cycle deck
-  const [selectedHotspot, setSelectedHotspot] = useState<string>('evaporasi');
-  const activeHotspotInfo = WATER_CYCLE_HOTSPOTS.find((h) => h.id === selectedHotspot);
+  const isPhotosynthesisSlide =
+    slide.id === 'uts-slide-3' ||
+    slideTitleLower.includes('fotosintesis');
+
+  const isSolarOrbitSlide =
+    slide.id === 'tatasurya-slide-2' ||
+    slideTitleLower.includes('8 planet') ||
+    slideTitleLower.includes('pembagian rumpun');
+
+  const isEclipseSlide =
+    slide.id === 'tatasurya-slide-4' ||
+    slideTitleLower.includes('gerhana') ||
+    slideTitleLower.includes('mekanika orbit');
+
+  const isChemistryLab =
+    gameId === 'point-click-lab' ||
+    themeColor === 'teal' ||
+    slideTitleLower.includes('asam-basa') ||
+    slideTitleLower.includes('reaktor') ||
+    slideTitleLower.includes('kimia');
+
+  const FallbackIllustration = gameId ? getDeckIllustration(gameId) : null;
+
+  // Auto-cycle timelapse playback
+  useEffect(() => {
+    if (!isPlaying || cards.length <= 1) return;
+    const interval = setInterval(() => {
+      setSelectedIdx((prev) => (prev + 1) % cards.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, [isPlaying, cards.length]);
+
+  const activeCard = cards[selectedIdx] ?? cards[0];
+  const isPurple = themeColor === 'purple' || gameId === 'ular-tangga-tatasurya';
+  const isTeal = themeColor === 'teal' || isChemistryLab;
+  const activeTheme =
+    PHASE_THEMES[activeCard?.badgeColor ?? (isTeal ? 'teal' : 'amber')] ?? PHASE_THEMES.amber;
+
+  const currentPhInfo = PH_SCALE_CHIPS.find((p) => p.ph === selectedPh) || PH_SCALE_CHIPS[7];
+
+  const toggleAutoPlay = () => {
+    sound.playClick();
+    setIsPlaying((prev) => !prev);
+  };
+
+  const getMechanismCallout = (idx: number) => {
+    if (isChemistryLab) {
+      switch (idx) {
+        case 0:
+          return 'Larutan Asam: Menghasilkan ion hidrogen (H+) saat dilarutkan dalam air, pH < 7, mengubah lakmus biru jadi merah.';
+        case 1:
+          return 'Larutan Netral: Konsentrasi H+ seimbang dengan OH-, pH tepat 7, tidak mengubah warna kertas lakmus.';
+        case 2:
+          return 'Larutan Basa: Menghasilkan ion hidroksida (OH-), pH > 7, licin di kulit, mengubah lakmus merah jadi biru.';
+        case 3:
+          return 'Reaksi Netralisasi: Asam bereaksi dengan Basa menghasilkan garam mineral (NaCl) dan molekul air murni (H2O).';
+        default:
+          return 'Spektrum pH 0-14 menentukan tingkat keasaman atau kebasaan analit laboratorium.';
+      }
+    }
+    if (isHydrologySlide) {
+      switch (idx) {
+        case 0:
+          return 'Molekul H2O menyerap kalor surya, berubah wujud menjadi uap tak kasat mata dan naik ke atmosfer.';
+        case 1:
+          return 'Suhu dingin di atmosfer memaksa uap air memadat kembali menjadi kristal cair pembentuk awan tebal.';
+        case 2:
+          return 'Massa titik air di awan melampaui daya apung udara, jatuh membasahi ekosistem lewat gravitasi.';
+        case 3:
+          return 'Air hujan meresap memulihkan cadangan air tanah (akuifer) serta mengalir kembali ke laut lepas.';
+        default:
+          return 'Siklus terus berlanjut tanpa henti menjaga keseimbangan abadi air di planet Bumi.';
+      }
+    }
+    if (isPhotosynthesisSlide) {
+      switch (idx) {
+        case 0:
+          return 'Klorofil di kloroplas menyerap spektrum foton merah-biru, xilem membawa H2O dari akar, dan stomata menghirup CO2.';
+        case 1:
+          return 'Reaksi Terang (Fotolisis): Foton surya memecah H2O, melepaskan gas O2 murni ke atmosfer dan mengikat energi kimia.';
+        case 2:
+          return 'Siklus Calvin (Reaksi Gelap): Fiksasi atom karbon menghasilkan molekul Glukosa (C6H12O6) sebagai cadangan makanan dan energi ekosistem.';
+        default:
+          return 'Aliran energi foton matahari tersimpan sempurna dalam senyawa organik bagi konsumen ekosistem.';
+      }
+    }
+    if (isSolarOrbitSlide) {
+      switch (idx) {
+        case 0:
+          return 'Planet Terestrial (Kebumian): Batuan silikat padat dengan inti besi, jarak orbit 0.39-1.52 AU dari Matahari.';
+        case 1:
+          return 'Sabuk Asteroid: Jutaan batuan primordial dan logam sisa tata surya pada jarak 2.2-3.2 AU, dipengaruhi gravitasi Jupiter.';
+        case 2:
+          return 'Planet Jovian (Gas & Es): Raksasa gas hidrogen, helium, dan es metana di luar sabuk asteroid hingga 30 AU dari Matahari.';
+        default:
+          return 'Matahari mengikat 8 orbit planet dalam harmoni gravitasi semesta.';
+      }
+    }
+    if (isEclipseSlide) {
+      switch (idx) {
+        case 0:
+          return 'Gravitasi Semesta: Massa Matahari (99.8% tata surya) melengkungkan ruang-waktu dan menjaga orbit elips 8 planet stabil.';
+        case 1:
+          return 'Kerucut Bayangan: Umbra membentuk proyeksi gelap total, sedangkan Penumbra menyebarkan bayangan kabur sebagian.';
+        case 2:
+          return 'Kesejajaran Syzygy: Bulan menutupi piringan surya secara presisi, memunculkan cincin berlian dan korona putih.';
+        default:
+          return 'Kesejajaran tiga benda langit menciptakan peristiwa astronomi spektakuler.';
+      }
+    }
+    return activeCard?.description || 'Amati interaksi molekuler dan aliran energi pada simulator interaktif.';
+  };
 
   return (
-    <div className="w-full h-full flex flex-col justify-between max-w-4xl mx-auto my-auto space-y-2 sm:space-y-3 animate-in fade-in duration-300 relative z-10 overflow-hidden">
-      {/* Header: Title & Subtitle */}
-      <div className="text-center space-y-1 shrink-0">
-        <h2 className="text-lg sm:text-2xl font-black text-slate-900 leading-tight">
-          {slide.title}
-        </h2>
-        {slide.subtitle && (
-          <p className="text-xs sm:text-sm text-slate-500 font-semibold max-w-2xl mx-auto truncate sm:whitespace-normal">
-            {slide.subtitle}
-          </p>
-        )}
-      </div>
-
-      {/* Main Content Area */}
-      {isWaterCycleGame && IllustrationComponent ? (
-        /* Dedicated Water Cycle Infographic & Hotspots Dock for Ular Tangga Sains */
-        <div className="flex-1 min-h-0 w-full flex flex-col justify-between space-y-2 overflow-hidden my-auto">
-          {/* Framed Interactive High-Res Looping SVG Infographic */}
-          <div className="flex-1 min-h-0 w-full max-h-[34vh] sm:max-h-[38vh] aspect-[16/10] mx-auto rounded-3xl overflow-hidden border-2 border-emerald-400/50 shadow-md bg-emerald-950/5 relative flex items-center justify-center">
-            <IllustrationComponent className="w-full h-full object-contain" />
+    <div
+      className={`relative w-full h-full flex flex-col overflow-hidden rounded-3xl border-4 ${
+        isPurple
+          ? 'border-purple-900/40 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 shadow-[0_18px_40px_-12px_rgba(59,7,100,0.55)]'
+          : isTeal
+          ? 'border-teal-900/40 bg-gradient-to-br from-slate-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(13,148,136,0.55)]'
+          : 'border-emerald-950/40 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)]'
+      } animate-in fade-in duration-300 select-none`}
+    >
+      {/* ── COCKPIT HUD TOP BAR ───────────────────────────── */}
+      <div className="relative z-20 px-3 sm:px-5 pt-2.5 sm:pt-3.5 pb-1 shrink-0 flex items-center justify-between gap-2.5">
+        <div
+          className={`inline-block max-w-[75%] sm:max-w-[80%] rounded-2xl ${
+            isPurple
+              ? 'bg-gradient-to-r from-purple-950/95 via-indigo-900/90 to-slate-950/55 border-l-[6px] border-cyan-400'
+              : isTeal
+              ? 'bg-gradient-to-r from-teal-950/95 via-cyan-950/90 to-slate-950/55 border-l-[6px] border-teal-400'
+              : 'bg-gradient-to-r from-emerald-950/95 via-emerald-900/90 to-emerald-900/55 border-l-[6px] border-amber-400'
+          } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
+        >
+          <div className="flex items-center gap-2">
+            <span
+              className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
+                isPurple
+                  ? 'bg-cyan-400 text-slate-950'
+                  : isTeal
+                  ? 'bg-teal-400 text-slate-950'
+                  : 'bg-amber-400 text-emerald-950'
+              }`}
+            >
+              SIMULATOR
+            </span>
+            <h2 className="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight drop-shadow truncate">
+              {slide.title}
+            </h2>
           </div>
-
-          {/* Chunky Tablet Action Dock for Water Cycle Phases */}
-          <div className="bg-slate-100/70 p-1.5 sm:p-2 rounded-3xl border border-slate-200/80 shadow-2xs shrink-0 w-full max-w-3xl mx-auto">
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2">
-              {WATER_CYCLE_HOTSPOTS.map((hotspot, idx) => {
-                const isSelected = selectedHotspot === hotspot.id;
-                const isLastOnMobile = idx === WATER_CYCLE_HOTSPOTS.length - 1;
-
-                return (
-                  <button
-                    key={hotspot.id}
-                    type="button"
-                    onClick={() => {
-                      sound.playClick();
-                      setSelectedHotspot(hotspot.id);
-                    }}
-                    className={`min-h-[46px] sm:min-h-[50px] px-3 sm:px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-black transition-all duration-150 cursor-pointer border-2 flex items-center justify-center gap-1.5 shadow-xs active:scale-95 ${
-                      isSelected
-                        ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-3 ring-emerald-300/60 -translate-y-0.5'
-                        : 'bg-white hover:bg-emerald-50 text-slate-800 border-slate-200 hover:border-emerald-300 hover:shadow-xs'
-                    } ${isLastOnMobile ? 'col-span-2 sm:col-span-1' : ''}`}
-                  >
-                    <span className="text-base sm:text-lg select-none shrink-0">{hotspot.emoji}</span>
-                    <span className="truncate">{hotspot.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Active Hotspot Tablet Callout Info Box */}
-          {activeHotspotInfo && (
-            <div className="bg-emerald-50/95 border-2 border-emerald-300/90 px-4 py-2 sm:py-2.5 rounded-2xl text-left animate-in fade-in duration-150 shrink-0 shadow-2xs">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-base select-none">{activeHotspotInfo.emoji}</span>
-                <span className="font-black text-xs sm:text-sm text-emerald-950">{activeHotspotInfo.label}</span>
-                <span className="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-extrabold uppercase tracking-wide">
-                  {activeHotspotInfo.sub}
-                </span>
-              </div>
-              <p className="text-xs sm:text-sm text-emerald-950 font-medium leading-snug">{activeHotspotInfo.desc}</p>
-            </div>
+          {slide.subtitle && (
+            <p
+              className={`text-[10.5px] sm:text-xs font-bold leading-snug mt-0.5 truncate hidden sm:block ${
+                isPurple ? 'text-cyan-300/95' : isTeal ? 'text-teal-300/95' : 'text-amber-300/95'
+              }`}
+            >
+              {slide.subtitle}
+            </p>
           )}
         </div>
-      ) : (
-        /* Native Tablet Game: Collectible TCG Cards with Mode Switcher if Illustration exists */
-        <div className="flex-1 min-h-0 w-full flex flex-col justify-between space-y-2 overflow-hidden my-auto">
-          {/* Tablet Game View Mode Switcher for Decks with Dedicated SVG */}
-          {IllustrationComponent && (
-            <div className="flex items-center justify-center gap-2 shrink-0 py-0.5">
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setActiveView('cards');
-                }}
-                className={`min-h-[38px] px-3.5 py-1.5 rounded-2xl text-xs sm:text-sm font-black transition-all cursor-pointer border-2 flex items-center gap-1.5 shadow-xs ${
-                  activeView === 'cards'
-                    ? 'bg-teal-600 text-white border-teal-700 shadow-md ring-2 ring-teal-300'
-                    : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
-                }`}
-              >
-                <span>🗂️</span>
-                <span>Kartu Analisis ({slide.cards.length})</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setActiveView('illustration');
-                }}
-                className={`min-h-[38px] px-3.5 py-1.5 rounded-2xl text-xs sm:text-sm font-black transition-all cursor-pointer border-2 flex items-center gap-1.5 shadow-xs ${
-                  activeView === 'illustration'
-                    ? 'bg-teal-600 text-white border-teal-700 shadow-md ring-2 ring-teal-300'
-                    : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
-                }`}
-              >
-                <span>🔬</span>
-                <span>Visualisasi Lab Holo-3D</span>
-              </button>
-            </div>
-          )}
 
-          {activeView === 'illustration' && IllustrationComponent ? (
-            /* Framed High-Res Interactive SVG Infographic View */
-            <div className="flex-1 min-h-0 w-full max-h-[46vh] aspect-[16/10] mx-auto rounded-3xl overflow-hidden border-2 border-teal-400/60 shadow-xl bg-teal-950/10 relative flex items-center justify-center">
-              <IllustrationComponent className="w-full h-full object-contain" />
-            </div>
+        {/* Timelapse auto-play control */}
+        <button
+          type="button"
+          onClick={toggleAutoPlay}
+          className={`shrink-0 min-h-[44px] px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl border-2 font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all duration-150 cursor-pointer shadow-md active:scale-95 ${
+            isPlaying
+              ? isPurple
+                ? 'bg-cyan-400 text-slate-950 border-cyan-300 shadow-[0_0_16px_rgba(6,182,212,0.6)] animate-pulse'
+                : isTeal
+                ? 'bg-teal-400 text-slate-950 border-teal-300 shadow-[0_0_16px_rgba(45,212,191,0.6)] animate-pulse'
+                : 'bg-amber-400 text-slate-950 border-amber-300 shadow-[0_0_16px_rgba(251,191,36,0.6)] animate-pulse'
+              : isPurple
+              ? 'bg-purple-900/80 hover:bg-purple-800 text-cyan-200 border-cyan-400/50 backdrop-blur-sm'
+              : isTeal
+              ? 'bg-teal-900/80 hover:bg-teal-800 text-teal-200 border-teal-400/50 backdrop-blur-sm'
+              : 'bg-emerald-900/80 hover:bg-emerald-800 text-amber-200 border-amber-400/50 backdrop-blur-sm'
+          }`}
+        >
+          {isPlaying ? (
+            <>
+              <Pause size={15} className="text-slate-950 fill-slate-950" />
+              <span>Jeda</span>
+            </>
           ) : (
             <>
-              {/* Interactive pH 0-14 Universal Scale Bar for Chemistry Decks */}
-              {isPhSlide && (
-                <div className="w-full bg-slate-900/90 backdrop-blur-md rounded-2xl p-2 sm:p-2.5 border border-teal-500/40 shadow-md text-white shrink-0 select-none">
-                  <div className="flex items-center justify-between text-[10px] sm:text-xs font-black uppercase tracking-wider mb-1.5 px-1">
-                    <span className="flex items-center gap-1 text-rose-400">
-                      <span>🔴</span> Asam (pH &lt; 7)
-                    </span>
-                    <span className="flex items-center gap-1 text-emerald-400 font-extrabold bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
-                      <span>💧</span> Netral (pH 7)
-                    </span>
-                    <span className="flex items-center gap-1 text-indigo-400">
-                      Basa (pH &gt; 7) <span>🟣</span>
-                    </span>
-                  </div>
-
-                  {/* 0 - 14 Spectrum Gradient Bar */}
-                  <div className="relative w-full h-5 sm:h-6 rounded-xl overflow-hidden flex shadow-inner border border-white/20">
-                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((phVal) => {
-                      const phCardId = phVal < 7 ? 'card-p1' : phVal === 7 ? 'card-p2' : 'card-p3';
-                      const isSelected = selectedCardId === phCardId;
-
-                      const phColors = [
-                        '#dc2626', '#ef4444', '#f87171', '#f97316', '#fb923c', '#facc15', '#a3e635',
-                        '#22c55e',
-                        '#10b981', '#14b8a6', '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6', '#7c3aed'
-                      ];
-
-                      return (
-                        <button
-                          key={phVal}
-                          type="button"
-                          onClick={() => {
-                            sound.playClick();
-                            const targetCard = slide.cards.find(
-                              (c) =>
-                                (phVal < 7 && (c.levelBadge?.includes('< 7') || c.id === 'card-p1')) ||
-                                (phVal === 7 && (c.levelBadge?.includes('= 7') || c.id === 'card-p2')) ||
-                                (phVal > 7 && (c.levelBadge?.includes('> 7') || c.id === 'card-p3'))
-                            );
-                            if (targetCard?.id) {
-                              setSelectedCardId(targetCard.id);
-                            } else {
-                              setSelectedCardId(phCardId);
-                            }
-                          }}
-                          style={{ backgroundColor: phColors[phVal] }}
-                          className={`flex-1 h-full flex items-center justify-center transition-all cursor-pointer relative ${
-                            isSelected
-                              ? 'scale-y-110 z-10 brightness-115 ring-2 ring-white shadow-md'
-                              : 'opacity-85 hover:opacity-100'
-                          }`}
-                          title={`pH ${phVal} - Klik untuk telaah kartu terkait`}
-                        >
-                          <span className="text-[9px] sm:text-[10px] font-black text-white drop-shadow-md">
-                            {phVal}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Chunky Tactile Collectible TCG Cards Grid */}
-              <div
-                className={`grid ${
-                  isFourCards
-                    ? 'grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3.5'
-                    : 'grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4'
-                } flex-1 min-h-0 items-stretch my-auto w-full overflow-hidden`}
-              >
-              {slide.cards.map((card, idx) => {
-                const cardColor =
-                  card.badgeColor && CARD_THEME_COLORS[card.badgeColor]
-                    ? CARD_THEME_COLORS[card.badgeColor]
-                    : CARD_THEME_COLORS.teal;
-                const isSelected = selectedCardId === card.id || (!selectedCardId && idx === 0);
-
-                return (
-                  <div
-                    key={card.id || `card-${idx}`}
-                    onClick={() => {
-                      sound.playClick();
-                      setSelectedCardId(card.id);
-                    }}
-                    className={`p-3.5 sm:p-5 rounded-3xl ${cardColor.bg} border-3 ${cardColor.border} border-b-6 shadow-md hover:shadow-lg transition-all duration-150 flex flex-col justify-between cursor-pointer active:translate-y-1 active:border-b-3 backdrop-blur-md overflow-hidden relative group ${
-                      isSelected ? `ring-4 ${cardColor.ring}/60 shadow-xl -translate-y-0.5` : ''
-                    }`}
-                  >
-                    {/* Card Header: 3D Icon Emblem + Level Badge */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <div
-                          className={`w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-tr ${cardColor.iconBg} shadow-inner border border-white/80 flex items-center justify-center text-2xl sm:text-3xl select-none group-hover:scale-105 transition-transform`}
-                        >
-                          {card.iconEmoji || '📘'}
-                        </div>
-                        {card.levelBadge && (
-                          <span
-                            className={`text-[10px] sm:text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-xl border shadow-2xs ${cardColor.badge}`}
-                          >
-                            {card.levelBadge}
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="font-black text-sm sm:text-base md:text-lg text-slate-900 leading-snug">
-                        {card.title}
-                      </h3>
-                    </div>
-
-                    {/* Card Body: Explanation */}
-                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-semibold mt-2 mb-1">
-                      {card.description}
-                    </p>
-
-                    {/* Card Tactical Footer */}
-                    <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[10px] font-bold text-slate-400">
-                      <span>SPESIMEN 0{idx + 1}</span>
-                      <span className="text-teal-600 font-extrabold">
-                        {isSelected ? '✓ TELAAH AKTIF' : 'KETUK UNTUK TELAAH'}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+              <Play
+                size={15}
+                className={
+                  isPurple
+                    ? 'text-cyan-300 fill-cyan-300'
+                    : isTeal
+                    ? 'text-teal-300 fill-teal-300'
+                    : 'text-amber-300 fill-amber-300'
+                }
+              />
+              <span className="hidden sm:inline">
+                {isChemistryLab
+                  ? 'Putar Titrasi'
+                  : isHydrologySlide
+                  ? 'Putar Siklus'
+                  : isSolarOrbitSlide
+                  ? 'Putar Orbit'
+                  : isEclipseSlide
+                  ? 'Simulasi Gerhana'
+                  : 'Putar Simulasi'}
+              </span>
+              <span className="sm:hidden">Putar</span>
             </>
           )}
-        </div>
-      )}
+        </button>
+      </div>
 
-      {/* Teacher Speaker Prompt Banner */}
-      <div className="bg-white/90 backdrop-blur-xs px-3.5 py-2 rounded-2xl border border-slate-200/90 flex items-center gap-2.5 text-xs text-slate-700 shrink-0 shadow-2xs">
-        <Lightbulb className="text-amber-500 shrink-0" size={16} />
-        <span className="line-clamp-2">
-          <strong>Panduan Guru di Kelas:</strong>{' '}
-          {slide.teacherNotes ||
-            'Ajak siswa mendiskusikan konsep inti pada kartu dan hubungannya dengan pemecahan anomali.'}
-        </span>
+      {/* ── MAIN COCKPIT BODY (LANDSCAPE GAME ARENA) ──────── */}
+      <div className="relative z-20 flex-1 min-h-0 flex flex-col md:flex-row gap-2.5 sm:gap-3.5 px-3 sm:px-5 py-2 sm:py-2.5 overflow-hidden">
+        {/* ── LEFT: INTERACTIVE WORLD STAGE VIEWPORT ───────── */}
+        <div
+          className={`flex-1 min-h-0 relative rounded-2xl overflow-hidden border-2 ${
+            isPurple
+              ? 'border-purple-400/40'
+              : isTeal
+              ? 'border-teal-400/40'
+              : 'border-emerald-400/40'
+          } bg-slate-950/70 shadow-inner flex items-center justify-center`}
+        >
+          {isHydrologySlide ? (
+            <HydrologyCycleStage
+              activePhase={selectedIdx}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
+          ) : isPhotosynthesisSlide ? (
+            <PhotosynthesisPlantStage
+              activePhase={selectedIdx}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
+          ) : isSolarOrbitSlide ? (
+            <SolarSystemOrbitStage
+              activePhase={selectedIdx}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
+          ) : isEclipseSlide ? (
+            <EclipseMechanicsStage
+              activePhase={selectedIdx}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
+          ) : isChemistryLab ? (
+            /* Interactive Universal pH 0-14 Reactor Console for Dr. Maya */
+            <div className="w-full h-full flex flex-col justify-between p-3 sm:p-4 bg-gradient-to-b from-slate-950 via-teal-950/30 to-slate-950 relative overflow-hidden">
+              <div className="flex items-center justify-between z-10">
+                <div className="flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center justify-center font-bold">
+                    <FlaskConical size={16} />
+                  </span>
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-black text-white">
+                      Spektrum Reaktor pH Universal
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] text-teal-300/80 font-medium">
+                      Pilih nilai pH di bawah untuk mengamati perubahan warna indikator analit
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="px-2.5 py-0.5 rounded-lg text-[11px] font-black uppercase tracking-wider border shadow-sm"
+                  style={{
+                    backgroundColor: `${currentPhInfo.color}25`,
+                    borderColor: currentPhInfo.color,
+                    color: currentPhInfo.color,
+                  }}
+                >
+                  pH {currentPhInfo.ph} : {currentPhInfo.type.toUpperCase()}
+                </div>
+              </div>
+
+              {/* Dynamic Flask Display */}
+              <div className="flex-1 flex flex-col items-center justify-center py-2 z-10">
+                <div
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center transition-all duration-300 border-4 shadow-lg"
+                  style={{
+                    borderColor: currentPhInfo.color,
+                    backgroundColor: `${currentPhInfo.color}30`,
+                    boxShadow: `0 0 35px ${currentPhInfo.color}55`,
+                  }}
+                >
+                  <FlaskConical
+                    size={46}
+                    style={{ color: currentPhInfo.color }}
+                    className="transition-transform duration-300 hover:scale-110 drop-shadow"
+                  />
+                </div>
+                <div className="mt-2 text-center">
+                  <div className="text-sm sm:text-base font-black text-white">
+                    {currentPhInfo.label}
+                  </div>
+                  <div className="text-[10.5px] sm:text-xs text-slate-300">
+                    {currentPhInfo.type === 'asam'
+                      ? 'Kaya ion H⁺ • Lakmus Biru ➔ Merah'
+                      : currentPhInfo.type === 'basa'
+                      ? 'Kaya ion OH⁻ • Lakmus Merah ➔ Biru'
+                      : 'H⁺ = OH⁻ • Titik Ekuivalen Netral'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Universal Scale Bar Dock */}
+              <div className="bg-slate-900/90 border border-teal-500/30 rounded-xl p-1.5 sm:p-2 z-10">
+                <div className="flex items-center justify-between text-[9px] font-extrabold uppercase tracking-wider mb-1 px-1">
+                  <span className="text-rose-400">◀ Asam (0)</span>
+                  <span className="text-emerald-400">Netral (7)</span>
+                  <span className="text-purple-400">Basa (14) ▶</span>
+                </div>
+                <div className="grid grid-cols-15 gap-1">
+                  {PH_SCALE_CHIPS.map((p) => {
+                    const isSelected = selectedPh === p.ph;
+                    return (
+                      <button
+                        key={p.ph}
+                        type="button"
+                        onClick={() => {
+                          sound.playClick();
+                          setSelectedPh(p.ph);
+                        }}
+                        style={{ backgroundColor: p.color }}
+                        className={`h-7 sm:h-8 rounded flex items-center justify-center text-[10px] font-black text-slate-950 transition-all ${
+                          isSelected
+                            ? 'ring-2 ring-white scale-110 z-20 shadow-[0_0_10px_white]'
+                            : 'opacity-85 hover:opacity-100 hover:scale-105'
+                        }`}
+                        title={`pH ${p.ph}: ${p.label}`}
+                      >
+                        {p.ph}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : FallbackIllustration ? (
+            <div className="w-full h-full p-2 flex items-center justify-center">
+              <FallbackIllustration className="w-full h-full object-contain" />
+            </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-emerald-200 text-sm font-bold">
+              Simulator Interaktif
+            </div>
+          )}
+        </div>
+
+        {/* ── RIGHT: TCG CARD & ARCADEDOCK CONSOLE ─────────── */}
+        <div className="w-full md:w-[360px] lg:w-[410px] shrink-0 min-h-0 flex flex-col gap-2 justify-between overflow-hidden">
+          {/* Active Phase TCG Card */}
+          {activeCard && (
+            <div
+              className={`flex-1 min-h-0 rounded-2xl sm:rounded-3xl ${
+                isPurple
+                  ? 'bg-gradient-to-br from-purple-950/95 via-indigo-950/95 to-slate-950/95'
+                  : isTeal
+                  ? 'bg-gradient-to-br from-teal-950/95 via-cyan-950/95 to-slate-950/95'
+                  : 'bg-gradient-to-br from-emerald-900/95 via-emerald-950/95 to-slate-950/95'
+              } border-2 ${activeTheme.glow} p-3.5 sm:p-4 flex flex-col justify-between overflow-hidden backdrop-blur-md transition-all duration-200`}
+            >
+              <div>
+                {/* Header: Phase badge & Progress dots */}
+                <div
+                  className={`flex items-center justify-between gap-2 pb-2 border-b ${
+                    isTeal ? 'border-teal-800/40' : 'border-emerald-800/40'
+                  }`}
+                >
+                  <span
+                    className={`px-2.5 py-0.5 rounded-md font-black text-[10px] sm:text-[11px] uppercase tracking-wider ${activeTheme.badge}`}
+                  >
+                    {activeCard.levelBadge || `Tahap ${selectedIdx + 1}`}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {cards.map((_, i) => (
+                      <span
+                        key={`dot-${i}`}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                          selectedIdx === i
+                            ? 'bg-amber-400 w-4 ring-2 ring-amber-300/80'
+                            : 'bg-slate-950/90 border border-slate-600/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Title & Emoji */}
+                <div className="flex items-center gap-2.5 mt-2 sm:mt-2.5">
+                  <span className="text-3xl sm:text-4xl filter drop-shadow select-none shrink-0">
+                    {activeCard.iconEmoji || (isTeal ? '⚗️' : '💧')}
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-white leading-tight">
+                    {activeCard.title}
+                  </h3>
+                </div>
+
+                {/* Narrative Description */}
+                <p className="text-[12px] sm:text-[13.5px] font-medium leading-relaxed text-slate-100 mt-2 tracking-tight">
+                  {activeCard.description}
+                </p>
+              </div>
+
+              {/* Scientific Mechanism Callout Inset */}
+              <div
+                className={`mt-2 rounded-xl border p-2 sm:p-2.5 flex items-start gap-2 ${
+                  isTeal
+                    ? 'bg-teal-400/10 border-teal-300/40 text-teal-100'
+                    : 'bg-amber-400/10 border-amber-300/40 text-amber-100'
+                }`}
+              >
+                <Sparkles
+                  size={16}
+                  className={`shrink-0 mt-0.5 ${isTeal ? 'text-teal-300' : 'text-amber-300'}`}
+                />
+                <p className="text-[10.5px] sm:text-[11.5px] font-semibold leading-snug">
+                  {getMechanismCallout(selectedIdx)}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Chunky Arcade Selector Dock */}
+          <div className="shrink-0 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 gap-1.5 sm:gap-2">
+            {cards.map((card, idx) => {
+              const isSelected = selectedIdx === idx;
+              const theme =
+                PHASE_THEMES[card.badgeColor ?? (isTeal ? 'teal' : 'amber')] ?? PHASE_THEMES.amber;
+              return (
+                <button
+                  key={card.id || `card-${idx}`}
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setIsPlaying(false);
+                    setSelectedIdx(idx);
+                  }}
+                  className={`min-h-[48px] sm:min-h-[52px] px-2.5 py-1.5 rounded-xl sm:rounded-2xl text-xs sm:text-[13px] font-black transition-all duration-150 cursor-pointer border-2 flex items-center gap-2 active:scale-95 shadow-md ${
+                    isSelected
+                      ? `${theme.solid} shadow-[0_4px_0_rgba(0,0,0,0.4)] ring-2 ${theme.ring} -translate-y-0.5`
+                      : isTeal
+                      ? 'bg-teal-950/70 hover:bg-teal-900/80 text-teal-100 border-teal-800/60 shadow-[0_3px_0_rgba(0,0,0,0.3)]'
+                      : 'bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-100 border-emerald-800/60 shadow-[0_3px_0_rgba(0,0,0,0.3)]'
+                  }`}
+                >
+                  <span className="text-xl select-none shrink-0">
+                    {card.iconEmoji || (isTeal ? '⚗️' : '💧')}
+                  </span>
+                  <div className="min-w-0 text-left leading-tight">
+                    <div className="text-[9px] uppercase tracking-wider opacity-80">
+                      {card.levelBadge || `Tahap ${idx + 1}`}
+                    </div>
+                    <div className="truncate font-black">{card.title.split('&')[0].trim()}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Teacher Guide Inset */}
+          <div
+            className={`shrink-0 border px-3 py-1.5 rounded-xl flex items-center gap-2 text-[10.5px] sm:text-[11.5px] shadow-sm ${
+              isTeal
+                ? 'bg-teal-950/90 border-teal-400/30 text-teal-100/90'
+                : 'bg-emerald-950/90 border-amber-400/30 text-amber-100/90'
+            }`}
+          >
+            <Lightbulb
+              className={`shrink-0 ${isTeal ? 'text-teal-400' : 'text-amber-400'}`}
+              size={14}
+            />
+            <span className="truncate">
+              <strong>Panduan Guru:</strong>{' '}
+              {slide.teacherNotes ||
+                (isChemistryLab
+                  ? 'Ajak siswa menganalisis indikator asam-basa dan mengapa reaktor kimia memerlukan titik netralisasi yang stabil.'
+                  : isPhotosynthesisSlide
+                  ? 'Ajak siswa menganalisis bagaimana energi cahaya matahari diikat menjadi molekul gula glukosa di daun.'
+                  : 'Ajak siswa mengamati animasi pergerakan molekul air dari penguapan surya hingga infiltrasi akuifer tanah.')}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

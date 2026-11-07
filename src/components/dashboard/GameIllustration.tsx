@@ -606,7 +606,7 @@ const GameIllustrationComponent: React.FC<Props> = ({ gameId, className = '' }) 
         </div>
       );
 
-    // 6. Ular Tangga: Orbit Tata Surya
+    // 6. Petualangan Sains: Tata Surya & Gravitasi
     case 'ular-tangga-tatasurya':
       return (
         <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className}`}>

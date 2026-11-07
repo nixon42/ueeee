@@ -241,19 +241,17 @@ export const GAMES_CATALOG: GameItem[] = [
   },
   {
     id: 'ular-tangga-tatasurya',
-    title: 'Ular Tangga: Orbit Tata Surya',
-    subtitle: 'Meluncur di antara planet, sabuk asteroid, dan gravitasi antariksa!',
-    description: 'Papan antariksa seru dari Merkurius sampai sabuk Kuiper. Dadu roket dan petak gravitasi yang menguji wawasan astronomi, planet, bintang, dan gravitasi antariksa.',
+    title: 'Petualangan Sains: Tata Surya & Gravitasi',
+    subtitle: 'Jelajahi orbit 8 planet, sabuk asteroid, dan rahasia gravitasi gerhana bersama Kapten Dirgantara!',
+    description: 'Misi antariksa interaktif bersama Kapten Dirgantara! Amati infografis tata surya beranimasi, susun urutan 8 planet, cocokkan karakteristik benda langit, dan pecahkan geometri gerhana matahari.',
     type: 'ular-tangga',
     category: 'sains',
     gradeLevel: 'SD Kelas 4-6',
-    badge: 'Astronomi',
-    badgeColor: 'bg-purple-100 text-purple-800 border-purple-300',
     accentColor: '#7c3aed',
     gradient: 'from-purple-600 via-indigo-600 to-violet-800',
     iconName: 'Rocket',
     playTimeMinutes: 12,
-    subjectDetail: 'Tata Surya, Planet & Bintang',
+    subjectDetail: 'IPA / Tata Surya & Gravitasi (SD Kelas 6)',
     rating: 4.8,
     playsCount: 1810,
     hasStoryPresentation: true,
@@ -261,28 +259,30 @@ export const GAMES_CATALOG: GameItem[] = [
     slideCount: 8,
     mentorName: 'Kapten Dirgantara',
     tags: [
-      'tata surya', 'tatasurya', 'planet', 'astronomi', 'antariksa', 
-      'roket', 'mars', 'jupiter', 'bumi', 'matahari', 'gravitasi', 'ular tangga'
+      'tata surya', 'tatasurya', 'gravitasi', 'planet', 'astronomi', 'antariksa', 
+      'roket', 'mars', 'jupiter', 'saturnus', 'bumi', 'matahari', 
+      'gerhana', 'kapten dirgantara', 'ekspedisi orbit'
     ],
     prolog: {
-      story: 'Misi Apollo Edukasi siap meluncur! Kemudikan wahana roket antariksamu melintasi orbit planet kebumian, menerobos sabuk asteroid, dan bermanuver di sekitar raksasa gas bercincin menuju stasiun riset petak 100.',
+      story: 'Bersama Kapten Dirgantara (Astro-Komandan Misi Dirgantara), kamu memimpin peluncuran wahana riset Garuda Orbital menjelajahi batas tata surya. Dari orbit terdekat Merkurius yang membara, menerobos sabuk batuan asteroid, menembus cincin es Saturnus, hingga mendarat di Stasiun Antariksa Sabuk Kuiper. Misimu adalah menghitung orbit presisi 8 planet, mengidentifikasi karakteristik benda langit, dan memecahkan geometri gerhana matahari!',
       learningGoals: [
-        'Menghafal urutan dan ciri khas 8 planet tata surya dari Merkurius hingga Neptunus.',
-        'Memahami peran Matahari sebagai pusat tata surya serta gravitasi yang mengikat orbit planet.',
-        'Membedakan benda langit: Planet, Satelit alami, Komet, Asteroid, dan Meteoroid.',
-        'Mengenal fenomena gerhana matahari, gerhana bulan, dan revolusi bumi mengelilingi matahari.'
+        'Memahami pembagian dan urutan 8 planet tata surya (Planet Dalam & Luar) dari Merkurius hingga Neptunus.',
+        'Menganalisis peran Matahari sebagai pusat gravitasi yang mengikat pergerakan revolusi seluruh tata surya.',
+        'Membedakan karakteristik unik benda antariksa: Planet, Satelit alami, Komet, Asteroid, dan Meteoroid.',
+        'Menguasai geometri kesejajaran tiga benda langit pada peristiwa Gerhana Matahari Total dan Gerhana Bulan.'
       ],
       howToPlay: [
-        'Nyalakan pendorong roket dengan mengocok dadu antariksa.',
-        'Roket meluncur maju melompati orbit demi orbit petak luar angkasa.',
-        'Jawab pertanyaan astronomi ketika mendarat di petak anomali gravitasi.',
-        'Tantang dirimu melawan sistem kendali autopilot Bot atau main berdua.'
+        'Simak arahan misi antariksa dari Kapten Dirgantara pada pembuka slide presentasi interaktif.',
+        'Amati bagan infografis sistem tata surya dan mekanika orbit untuk mengenali ciri khas masing-masing planet.',
+        'Selesaikan tantangan urutan 8 planet, hubungkan karakteristik benda antariksa, dan susun geometri gerhana matahari.',
+        'Pelajari pertanyaan pemantik HOTS astronomi bersama guru dan teman sekelas untuk memperdalam diskusi ilmiah.'
       ],
       rules: [
-        'Petak Pelontar Gravitasi (Tangga): Melontarkan roket menembus lintasan orbit jauh ke depan jika jawaban benar.',
-        'Petak Badai Asteroid (Ular): Menarik roket mundur karena turbulensi jika jawaban salah.',
-        'Kuis bonus bintang memberikan kesempatan manuver tambahan.',
-        'Pemenang adalah astronaut pertama yang mendarat tepat di stasiun luar angkasa petak 100.'
+        'Ikuti alur slide ekspedisi secara runtut atau navigasikan langsung via titik progress di bagian bawah.',
+        'Pada tantangan urutan orbit planet dan geometri gerhana, geser kartu hingga urutan posisi 100% presisi.',
+        'Pada tantangan menjodohkan karakteristik antariksa, klik kartu di Kolom A lalu hubungkan dengan pasangannya di Kolom B.',
+        'Gunakan tombol Mode Layar Penuh (Fullscreen) untuk kenyamanan pandangan proyektor kelas atau tablet.',
+        'Tuntaskan seluruh 8 slide ekspedisi hingga Garuda Orbital sukses mendarat di Stasiun Sabuk Kuiper!'
       ]
     }
   },

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { RotateCcw, CheckCircle2, AlertCircle, Link as LinkIcon } from 'lucide-react';
+import { RotateCcw, CheckCircle2, AlertCircle, Zap } from 'lucide-react';
 import { sound } from '@/lib/sound';
 
 export interface MatchPairItem {
@@ -14,6 +14,8 @@ export interface CanvaMatchPairsGameProps {
   title?: string;
   subtitle?: string; // Backward compatibility alias for instructions
   instructions?: string;
+  chapterBadge?: string;
+  gameId?: string;
   pairs: MatchPairItem[];
   onComplete?: (isAllCorrect: boolean) => void;
   theme?: MatchTheme;
@@ -22,160 +24,44 @@ export interface CanvaMatchPairsGameProps {
   className?: string;
 }
 
-const MATCH_THEME_STYLES: Record<MatchTheme, {
-  container: string;
-  badge: string;
-  tag: string;
-  checkBtn: string;
-  activeLine: string;
-  leftHeader: string;
-  rightHeader: string;
-  leftSelected: string;
-  rightHover: string;
-  dotLeft: string;
-  dotRight: string;
-}> = {
-  purple: {
-    container: 'bg-purple-50/40 border-purple-200/80',
-    badge: 'text-purple-700 bg-purple-100',
-    tag: 'text-purple-700/80 bg-purple-100/60 border-purple-200/50',
-    checkBtn: 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-200',
-    activeLine: '#a855f7',
-    leftHeader: 'text-purple-700',
-    rightHeader: 'text-blue-700',
-    leftSelected: 'border-purple-600 bg-purple-100 text-purple-900 shadow-md ring-2 ring-purple-300',
-    rightHover: 'border-blue-400 bg-blue-50/50 text-blue-900 hover:bg-blue-100 ring-2 ring-blue-200',
-    dotLeft: 'bg-purple-400',
-    dotRight: 'bg-blue-400',
-  },
-  blue: {
-    container: 'bg-blue-50/40 border-blue-200/80',
-    badge: 'text-blue-700 bg-blue-100',
-    tag: 'text-blue-700/80 bg-blue-100/60 border-blue-200/50',
-    checkBtn: 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200',
-    activeLine: '#0284c7',
-    leftHeader: 'text-blue-700',
-    rightHeader: 'text-indigo-700',
-    leftSelected: 'border-blue-600 bg-blue-100 text-blue-900 shadow-md ring-2 ring-blue-300',
-    rightHover: 'border-indigo-400 bg-indigo-50/50 text-indigo-900 hover:bg-indigo-100 ring-2 ring-indigo-200',
-    dotLeft: 'bg-blue-400',
-    dotRight: 'bg-indigo-400',
-  },
-  emerald: {
-    container: 'bg-emerald-50/40 border-emerald-200/80',
-    badge: 'text-emerald-700 bg-emerald-100',
-    tag: 'text-emerald-700/80 bg-emerald-100/60 border-emerald-200/50',
-    checkBtn: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-200',
-    activeLine: '#10b981',
-    leftHeader: 'text-emerald-700',
-    rightHeader: 'text-teal-700',
-    leftSelected: 'border-emerald-600 bg-emerald-100 text-emerald-900 shadow-md ring-2 ring-emerald-300',
-    rightHover: 'border-teal-400 bg-teal-50/50 text-teal-900 hover:bg-teal-100 ring-2 ring-teal-200',
-    dotLeft: 'bg-emerald-400',
-    dotRight: 'bg-teal-400',
-  },
-  amber: {
-    container: 'bg-amber-50/40 border-amber-200/80',
-    badge: 'text-amber-700 bg-amber-100',
-    tag: 'text-amber-700/80 bg-amber-100/60 border-amber-200/50',
-    checkBtn: 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-200',
-    activeLine: '#f59e0b',
-    leftHeader: 'text-amber-700',
-    rightHeader: 'text-orange-700',
-    leftSelected: 'border-amber-600 bg-amber-100 text-amber-900 shadow-md ring-2 ring-amber-300',
-    rightHover: 'border-orange-400 bg-orange-50/50 text-orange-900 hover:bg-orange-100 ring-2 ring-orange-200',
-    dotLeft: 'bg-amber-400',
-    dotRight: 'bg-orange-400',
-  },
-  rose: {
-    container: 'bg-rose-50/40 border-rose-200/80',
-    badge: 'text-rose-700 bg-rose-100',
-    tag: 'text-rose-700/80 bg-rose-100/60 border-rose-200/50',
-    checkBtn: 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-200',
-    activeLine: '#f43f5e',
-    leftHeader: 'text-rose-700',
-    rightHeader: 'text-pink-700',
-    leftSelected: 'border-rose-600 bg-rose-100 text-rose-900 shadow-md ring-2 ring-rose-300',
-    rightHover: 'border-pink-400 bg-pink-50/50 text-pink-900 hover:bg-pink-100 ring-2 ring-pink-200',
-    dotLeft: 'bg-rose-400',
-    dotRight: 'bg-pink-400',
-  },
-  indigo: {
-    container: 'bg-indigo-50/40 border-indigo-200/80',
-    badge: 'text-indigo-700 bg-indigo-100',
-    tag: 'text-indigo-700/80 bg-indigo-100/60 border-indigo-200/50',
-    checkBtn: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200',
-    activeLine: '#6366f1',
-    leftHeader: 'text-indigo-700',
-    rightHeader: 'text-purple-700',
-    leftSelected: 'border-indigo-600 bg-indigo-100 text-indigo-900 shadow-md ring-2 ring-indigo-300',
-    rightHover: 'border-purple-400 bg-purple-50/50 text-purple-900 hover:bg-purple-100 ring-2 ring-purple-200',
-    dotLeft: 'bg-indigo-400',
-    dotRight: 'bg-purple-400',
-  },
-  teal: {
-    container: 'bg-teal-50/40 border-teal-200/80',
-    badge: 'text-teal-700 bg-teal-100',
-    tag: 'text-teal-700/80 bg-teal-100/60 border-teal-200/50',
-    checkBtn: 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-200',
-    activeLine: '#0d9488',
-    leftHeader: 'text-teal-700',
-    rightHeader: 'text-emerald-700',
-    leftSelected: 'border-teal-600 bg-teal-100 text-teal-900 shadow-md ring-2 ring-teal-300',
-    rightHover: 'border-emerald-400 bg-emerald-50/50 text-emerald-900 hover:bg-emerald-100 ring-2 ring-emerald-200',
-    dotLeft: 'bg-teal-400',
-    dotRight: 'bg-emerald-400',
-  },
-  orange: {
-    container: 'bg-orange-50/40 border-orange-200/80',
-    badge: 'text-orange-700 bg-orange-100',
-    tag: 'text-orange-700/80 bg-orange-100/60 border-orange-200/50',
-    checkBtn: 'bg-orange-600 hover:bg-orange-700 text-white shadow-orange-200',
-    activeLine: '#ea580c',
-    leftHeader: 'text-orange-700',
-    rightHeader: 'text-amber-700',
-    leftSelected: 'border-orange-600 bg-orange-100 text-orange-900 shadow-md ring-2 ring-orange-300',
-    rightHover: 'border-amber-400 bg-amber-50/50 text-amber-900 hover:bg-amber-100 ring-2 ring-amber-200',
-    dotLeft: 'bg-orange-400',
-    dotRight: 'bg-amber-400',
-  },
-};
-
 const getHazardPikto = (text: string) => {
   const lower = text.toLowerCase();
   if (lower.includes('korosif') || lower.includes('asam')) {
-    return { icon: '⚠️', symbol: '🧪', color: 'bg-amber-100 text-amber-900 border-amber-300' };
+    return { icon: '⚠️', symbol: '🧪', color: 'bg-amber-500/20 text-amber-300 border-amber-400/40' };
   }
   if (lower.includes('toksik') || lower.includes('tengkorak') || lower.includes('racun')) {
-    return { icon: '☠️', symbol: '☣️', color: 'bg-rose-100 text-rose-900 border-rose-300' };
+    return { icon: '☠️', symbol: '☣️', color: 'bg-rose-500/20 text-rose-300 border-rose-400/40' };
   }
   if (lower.includes('api') || lower.includes('menyala') || lower.includes('bakar')) {
-    return { icon: '🔥', symbol: '⚡', color: 'bg-orange-100 text-orange-900 border-orange-300' };
+    return { icon: '🔥', symbol: '⚡', color: 'bg-orange-500/20 text-orange-300 border-orange-400/40' };
   }
   if (lower.includes('eksplosif') || lower.includes('reaktif') || lower.includes('ledak')) {
-    return { icon: '💥', symbol: '💣', color: 'bg-red-100 text-red-900 border-red-300' };
+    return { icon: '💥', symbol: '💣', color: 'bg-red-500/20 text-red-300 border-red-400/40' };
   }
   return null;
 };
 
 /**
- * Komponen Game Interaktif Canva Education: "Match the Pairs / Match A to B"
- * Menjodohkan konsep di kolom kiri dengan pasangan di kolom kanan.
- * Dilengkapi garis rubber-band SVG dinamis berakurasi tinggi dengan ResizeObserver.
+ * Komponen Game Interaktif: "Neon Laser Conduit Linker / Match A to B"
+ * Menghubungkan konsep energi/materi di Kolom A dengan fenomena di Kolom B
+ * menggunakan garis laser neon SVG dinamis dan touchpad arcade taktil (zero-scroll).
  */
 export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   title = 'Jodohkan Pasangan yang Sesuai',
   subtitle,
   instructions,
+  chapterBadge,
+  gameId,
   pairs,
   onComplete,
-  theme = 'purple',
-  leftColumnHeader = 'Kolom A: Konsep',
-  rightColumnHeader = 'Kolom B: Pasangan',
+  theme = 'amber',
+  leftColumnHeader = 'Kolom A: Bentuk Energi',
+  rightColumnHeader = 'Kolom B: Pemanfaatan / Fenomena',
   className = '',
 }) => {
-  const displayInstructions = instructions || subtitle || 'Klik istilah di kolom kiri, lalu klik pasangannya di kolom kanan untuk menghubungkan.';
-  const themeStyle = MATCH_THEME_STYLES[theme] || MATCH_THEME_STYLES.purple;
+  const displayInstructions =
+    instructions || subtitle || 'Klik satu terminal di Kolom A, lalu klik pasangannya di Kolom B untuk menyambungkan laser energi.';
+  const isPurple = theme === 'purple' || gameId === 'ular-tangga-tatasurya';
 
   // Kolom kiri urutan tetap, kolom kanan diacak
   const [leftItems, setLeftItems] = useState<MatchPairItem[]>(pairs);
@@ -189,11 +75,13 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   const [checkedState, setCheckedState] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
-  // Posisi elemen untuk menggambar SVG garis dinamis
+  // Posisi elemen untuk menggambar SVG garis laser dinamis
   const containerRef = useRef<HTMLDivElement | null>(null);
   const leftRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const rightRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [lines, setLines] = useState<Array<{ leftId: string; rightId: string; x1: number; y1: number; x2: number; y2: number }>>([]);
+  const [lines, setLines] = useState<
+    Array<{ leftId: string; rightId: string; x1: number; y1: number; x2: number; y2: number }>
+  >([]);
 
   // Sinkronisasi bila pairs berubah dari deck
   useEffect(() => {
@@ -209,7 +97,14 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
   const updateLinePositions = useCallback(() => {
     if (!containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
-    const newLines: Array<{ leftId: string; rightId: string; x1: number; y1: number; x2: number; y2: number }> = [];
+    const newLines: Array<{
+      leftId: string;
+      rightId: string;
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+    }> = [];
 
     Object.entries(connections).forEach(([leftId, rightId]) => {
       const leftEl = leftRefs.current[leftId];
@@ -253,7 +148,11 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
 
   const handleSelectLeft = (id: string) => {
     sound.playClick();
-    setSelectedLeftId(id);
+    if (selectedLeftId === id) {
+      setSelectedLeftId(null);
+    } else {
+      setSelectedLeftId(id);
+    }
     setCheckedState(false);
   };
 
@@ -262,10 +161,10 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
     sound.playClick();
 
     // Hubungkan leftId terpilih ke rightId
-    setConnections(prev => {
+    setConnections((prev) => {
       const next = { ...prev };
       // Hapus jika rightId ini sudah tersambung ke left lain
-      Object.keys(next).forEach(key => {
+      Object.keys(next).forEach((key) => {
         if (next[key] === id) delete next[key];
       });
       next[selectedLeftId] = id;
@@ -290,7 +189,6 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
 
     let correctCount = 0;
     Object.entries(connections).forEach(([leftId, rightId]) => {
-      // leftId dan rightId harus sama karena berasal dari objek pair yang sama
       if (leftId === rightId) {
         correctCount++;
       }
@@ -312,197 +210,383 @@ export const CanvaMatchPairsGame: React.FC<CanvaMatchPairsGameProps> = ({
     }
   };
 
+  const connectedCount = Object.keys(connections).length;
+  const totalCount = pairs.length;
+
   return (
     <div
       ref={containerRef}
-      className={`w-full h-full flex flex-col items-center justify-between relative overflow-hidden ${className}`}
+      className={`relative w-full h-full flex flex-col justify-between overflow-hidden rounded-3xl border-4 ${
+        isPurple
+          ? 'border-purple-900/40 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 shadow-[0_18px_40px_-12px_rgba(59,7,100,0.55)]'
+          : 'border-emerald-950/40 bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 shadow-[0_18px_40px_-12px_rgba(2,44,34,0.55)]'
+      } select-none animate-in fade-in duration-300 ${className}`}
     >
-      {/* SVG Garis Penghubung (Rubber-Band Bezier Lines Khas Canva Game) */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+      {/* ── COCKPIT HUD TOP BAR ───────────────────────────── */}
+      <div className="relative z-30 px-3 sm:px-5 pt-2.5 sm:pt-3.5 pb-1 shrink-0 flex items-center justify-between gap-2.5">
+        <div
+          className={`inline-block max-w-[75%] sm:max-w-[80%] rounded-2xl ${
+            isPurple
+              ? 'bg-gradient-to-r from-purple-950/95 via-indigo-900/90 to-slate-950/55 border-l-[6px] border-cyan-400'
+              : 'bg-gradient-to-r from-emerald-950/95 via-emerald-900/90 to-emerald-900/55 border-l-[6px] border-amber-400'
+          } backdrop-blur-sm pl-3 sm:pl-4 pr-4 sm:pr-6 py-1.5 sm:py-2 shadow-xl`}
+        >
+          <div className="flex items-center gap-2">
+            <span
+              className={`px-1.5 py-0.5 rounded-md font-black text-[9px] sm:text-[10px] tracking-widest uppercase ${
+                isPurple ? 'bg-cyan-400 text-slate-950' : 'bg-amber-400 text-emerald-950'
+              }`}
+            >
+              {chapterBadge || 'TANTANGAN KONEKSI'}
+            </span>
+            <h2 className="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight drop-shadow truncate">
+              {title}
+            </h2>
+          </div>
+          {displayInstructions && (
+            <p
+              className={`text-[10.5px] sm:text-xs font-bold leading-snug mt-0.5 truncate hidden sm:block ${
+                isPurple ? 'text-cyan-300/95' : 'text-amber-300/95'
+              }`}
+            >
+              {displayInstructions}
+            </p>
+          )}
+        </div>
+
+        {/* Dynamic Connection Status Indicator */}
+        <div className="shrink-0 flex items-center gap-2">
+          <div
+            className={`px-3 py-1.5 rounded-xl border backdrop-blur-sm text-xs font-black flex items-center gap-1.5 shadow-md ${
+              checkedState
+                ? isSuccess
+                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                  : 'bg-rose-500/20 border-rose-400 text-rose-200 shadow-[0_0_12px_rgba(244,63,94,0.3)]'
+                : connectedCount === totalCount
+                ? 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-[0_0_12px_rgba(251,191,36,0.3)]'
+                : isPurple
+                ? 'bg-purple-900/60 border-purple-500/40 text-cyan-200'
+                : 'bg-emerald-900/60 border-emerald-500/40 text-amber-200'
+            }`}
+          >
+            <Zap
+              size={13}
+              className={
+                isSuccess
+                  ? 'text-emerald-400 fill-emerald-400'
+                  : connectedCount === totalCount
+                  ? 'text-amber-400 fill-amber-400'
+                  : isPurple
+                  ? 'text-cyan-400'
+                  : 'text-amber-400'
+              }
+            />
+            <span>
+              {checkedState
+                ? isSuccess
+                  ? 'Sirkuit 100% Sempurna!'
+                  : 'Ada Sambungan Keliru'
+                : `${connectedCount} / ${totalCount} Jalur Terhubung`}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── LASER CONDUIT SVG ENGINE LAYER ────────────────── */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-20">
+        <defs>
+          <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
         {lines.map((line, idx) => {
           const isCorrect = checkedState && line.leftId === line.rightId;
           const isWrong = checkedState && line.leftId !== line.rightId;
 
-          const strokeColor = isCorrect ? '#10b981' : isWrong ? '#f43f5e' : themeStyle.activeLine;
+          const coreColor = isCorrect
+            ? '#34d399'
+            : isWrong
+            ? '#fb7185'
+            : isPurple
+            ? '#38bdf8'
+            : '#fbbf24';
+
+          const glowColor = isCorrect
+            ? 'rgba(16,185,129,0.5)'
+            : isWrong
+            ? 'rgba(244,63,94,0.5)'
+            : isPurple
+            ? 'rgba(56,189,248,0.5)'
+            : 'rgba(251,191,36,0.5)';
+
           const midX = (line.x1 + line.x2) / 2;
+          const pathD = `M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`;
 
           return (
-            <g key={`line-${idx}`}>
-              {/* Outer soft glow beam */}
+            <g key={`laser-line-${idx}`}>
+              {/* Outer Glowing Beam */}
               <path
-                d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
+                d={pathD}
                 fill="none"
-                stroke={strokeColor}
-                strokeWidth={isCorrect ? '8' : isWrong ? '7' : '6'}
-                strokeOpacity={0.3}
+                stroke={glowColor}
+                strokeWidth={isCorrect || isWrong ? '8' : '6'}
                 strokeLinecap="round"
+                filter="url(#laserGlow)"
               />
-              {/* Core laser beam */}
+              {/* Inner High-Intensity Core Laser */}
               <path
-                d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
+                d={pathD}
                 fill="none"
-                stroke={strokeColor}
+                stroke={coreColor}
                 strokeWidth={isCorrect || isWrong ? '3.5' : '2.5'}
-                strokeDasharray={isCorrect ? undefined : '6 4'}
+                strokeDasharray={isCorrect ? undefined : '8 4'}
                 strokeLinecap="round"
                 className="transition-colors duration-200"
               />
-              {/* Lingkaran Titik Temu di Ujung Garis */}
-              <circle cx={line.x1} cy={line.y1} r="6" fill={strokeColor} stroke="#ffffff" strokeWidth="2" />
-              <circle cx={line.x2} cy={line.y2} r="6" fill={strokeColor} stroke="#ffffff" strokeWidth="2" />
+              {/* Terminal Port Node Rings */}
+              <circle cx={line.x1} cy={line.y1} r="6" fill={coreColor} className="animate-pulse" />
+              <circle cx={line.x1} cy={line.y1} r="2.5" fill="#ffffff" />
+              <circle cx={line.x2} cy={line.y2} r="6" fill={coreColor} className="animate-pulse" />
+              <circle cx={line.x2} cy={line.y2} r="2.5" fill="#ffffff" />
             </g>
           );
         })}
       </svg>
 
-      {/* Header Tantangan Canva */}
-      <div className="text-center max-w-xl mb-3 sm:mb-5 z-20 shrink-0">
-        <h3 className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">{title}</h3>
-        <p className="text-xs sm:text-sm text-slate-600 font-semibold mt-1">{displayInstructions}</p>
-      </div>
-
-      {/* Grid Dua Kolom Sejajar (Full Canvas Space Utilization) */}
-      <div className="w-full max-w-4xl grid grid-cols-2 gap-4 sm:gap-8 md:gap-12 my-auto z-20">
-        {/* Kolom Kiri: Istilah / Konsep */}
-        <div className="flex flex-col space-y-2.5 sm:space-y-3">
-          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider px-1 ${themeStyle.leftHeader}`}>
-            {leftColumnHeader}
-          </span>
-          {leftItems.map(item => {
-            const isSelected = selectedLeftId === item.id;
-            const connectedRightId = connections[item.id];
-            const isCorrect = checkedState && connectedRightId === item.id;
-            const isWrong = checkedState && connectedRightId && connectedRightId !== item.id;
-            const pikto = getHazardPikto(item.leftText);
-
-            return (
-              <button
-                key={`left-${item.id}`}
-                ref={el => { leftRefs.current[item.id] = el; }}
-                type="button"
-                onClick={() => handleSelectLeft(item.id)}
-                className={`w-full p-2.5 sm:p-3.5 rounded-2xl sm:rounded-3xl text-left border-2.5 sm:border-3 border-b-5 sm:border-b-6 transition-all duration-150 flex items-center justify-between font-bold text-xs sm:text-sm cursor-pointer active:translate-y-1 active:border-b-2.5 backdrop-blur-xs ${
-                  isCorrect
-                    ? 'border-emerald-500 border-b-emerald-600 bg-emerald-50/95 text-emerald-950 shadow-md ring-2 ring-emerald-300'
-                    : isWrong
-                    ? 'border-rose-400 border-b-rose-500 bg-rose-50/95 text-rose-950 shadow-md ring-2 ring-rose-300'
-                    : isSelected
-                    ? `${themeStyle.leftSelected} -translate-y-0.5`
-                    : connectedRightId
-                    ? 'border-slate-300 border-b-slate-400 bg-white/95 text-slate-900 shadow-xs'
-                    : 'border-slate-200 border-b-slate-300 bg-white/95 text-slate-800 hover:border-teal-300 hover:border-b-teal-400 hover:bg-teal-50/40 shadow-xs'
+      {/* ── DUAL CONDUIT TERMINAL TOUCHPADS (MAIN ARENA) ─── */}
+      <div className="relative z-10 flex-1 min-h-0 px-3 sm:px-6 py-2 flex items-center justify-center my-auto">
+        <div className="w-full max-w-4xl grid grid-cols-2 gap-4 sm:gap-8 md:gap-14 items-center">
+          {/* KOLOM KIRI: Terminal Sumber Energi */}
+          <div className="flex flex-col gap-2 sm:gap-2.5">
+            <div className="flex items-center gap-2 px-1 mb-0.5">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isPurple ? 'bg-cyan-400' : 'bg-amber-400'
+                } animate-ping`}
+              />
+              <span
+                className={`text-[10px] sm:text-xs font-black uppercase tracking-wider ${
+                  isPurple ? 'text-cyan-300' : 'text-amber-300'
                 }`}
               >
-                <div className="flex items-center gap-2 sm:gap-2.5 pr-2">
-                  {pikto && (
-                    <span className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center text-sm sm:text-base border-2 shadow-2xs shrink-0 select-none ${pikto.color}`}>
-                      {pikto.icon}
-                    </span>
-                  )}
-                  <span className="leading-snug">{item.leftText}</span>
-                </div>
-                <span className="shrink-0">
-                  {isCorrect ? (
-                    <CheckCircle2 size={18} className="text-emerald-600" />
-                  ) : isWrong ? (
-                    <AlertCircle size={18} className="text-rose-500" />
-                  ) : (
-                    <span className={`w-3 h-3 rounded-full ${themeStyle.dotLeft} inline-block shadow-2xs`}></span>
-                  )}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                {leftColumnHeader}
+              </span>
+            </div>
 
-        {/* Kolom Kanan: Definisi / Pasangan */}
-        <div className="flex flex-col space-y-2.5 sm:space-y-3">
-          <span className={`text-[11px] sm:text-xs font-black uppercase tracking-wider px-1 ${themeStyle.rightHeader}`}>
-            {rightColumnHeader}
-          </span>
-          {rightItems.map(item => {
-            const isConnected = Object.values(connections).includes(item.id);
-            const connectedLeftId = Object.keys(connections).find(k => connections[k] === item.id);
-            const isCorrect = checkedState && connectedLeftId === item.id;
-            const isWrong = checkedState && connectedLeftId && connectedLeftId !== item.id;
+            {leftItems.map((item, idx) => {
+              const isSelected = selectedLeftId === item.id;
+              const connectedRightId = connections[item.id];
+              const isCorrect = checkedState && connectedRightId === item.id;
+              const isWrong = checkedState && connectedRightId && connectedRightId !== item.id;
+              const pikto = getHazardPikto(item.leftText);
 
-            return (
-              <button
-                key={`right-${item.id}`}
-                ref={el => { rightRefs.current[item.id] = el; }}
-                type="button"
-                onClick={() => handleSelectRight(item.id)}
-                className={`w-full p-2.5 sm:p-3.5 rounded-2xl sm:rounded-3xl text-left border-2.5 sm:border-3 border-b-5 sm:border-b-6 transition-all duration-150 flex items-center justify-between font-bold text-xs sm:text-sm cursor-pointer active:translate-y-1 active:border-b-2.5 backdrop-blur-xs ${
-                  isCorrect
-                    ? 'border-emerald-500 border-b-emerald-600 bg-emerald-50/95 text-emerald-950 shadow-md ring-2 ring-emerald-300'
-                    : isWrong
-                    ? 'border-rose-400 border-b-rose-500 bg-rose-50/95 text-rose-950 shadow-md ring-2 ring-rose-300'
-                    : isConnected
-                    ? 'border-slate-300 border-b-slate-400 bg-white/95 text-slate-900 shadow-xs'
-                    : selectedLeftId
-                    ? `${themeStyle.rightHover} -translate-y-0.5`
-                    : 'border-slate-200 border-b-slate-300 bg-white/95 text-slate-800 hover:border-teal-300 hover:border-b-teal-400 hover:bg-teal-50/40 shadow-xs'
-                }`}
-              >
-                <span className={`w-3 h-3 rounded-full ${themeStyle.dotRight} inline-block mr-2.5 shrink-0 shadow-2xs`}></span>
-                <span className="flex-1 pr-2 leading-snug">{item.rightText}</span>
-                {checkedState && (
-                  <span className="shrink-0">
-                    {isCorrect ? (
-                      <CheckCircle2 size={18} className="text-emerald-600" />
+              return (
+                <button
+                  key={`left-${item.id}`}
+                  ref={(el) => {
+                    leftRefs.current[item.id] = el;
+                  }}
+                  type="button"
+                  onClick={() => handleSelectLeft(item.id)}
+                  className={`group relative w-full min-h-[50px] sm:min-h-[56px] px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-left border-2 transition-all flex items-center justify-between font-extrabold text-xs sm:text-sm cursor-pointer select-none active:scale-[0.98] ${
+                    isCorrect
+                      ? 'border-emerald-400 bg-emerald-950/90 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                      : isWrong
+                      ? 'border-rose-400 bg-rose-950/90 text-rose-100 shadow-[0_0_20px_rgba(244,63,94,0.35)]'
+                      : isSelected
+                      ? isPurple
+                        ? 'border-cyan-300 bg-slate-900/95 text-cyan-200 ring-4 ring-cyan-400 shadow-[0_0_24px_rgba(6,182,212,0.6)] scale-[1.02]'
+                        : 'border-amber-300 bg-slate-900/95 text-amber-200 ring-4 ring-amber-400 shadow-[0_0_24px_rgba(251,191,36,0.6)] scale-[1.02]'
+                      : connectedRightId
+                      ? isPurple
+                        ? 'border-indigo-400/70 bg-slate-900/90 text-indigo-100'
+                        : 'border-emerald-400/70 bg-slate-900/90 text-emerald-100'
+                      : isPurple
+                      ? 'border-purple-600/40 bg-slate-950/80 text-slate-200 hover:border-cyan-400/70 hover:bg-slate-900/90'
+                      : 'border-emerald-700/40 bg-slate-950/80 text-slate-200 hover:border-amber-400/70 hover:bg-slate-900/90'
+                  }`}
+                >
+                  {/* Left Index Badge or Hazard Icon & Label */}
+                  <div className="flex items-center gap-2 truncate pr-2">
+                    {pikto ? (
+                      <span className={`w-6 h-6 rounded-lg text-xs flex items-center justify-center shrink-0 border ${pikto.color}`}>
+                        {pikto.icon}
+                      </span>
                     ) : (
-                      <AlertCircle size={18} className="text-rose-500" />
+                      <span
+                        className={`w-6 h-6 rounded-lg text-[10.5px] font-black flex items-center justify-center shrink-0 border ${
+                          isSelected
+                            ? isPurple
+                              ? 'bg-cyan-400 text-slate-950 border-cyan-300'
+                              : 'bg-amber-400 text-slate-950 border-amber-300'
+                            : 'bg-slate-900 text-amber-200/90 border-slate-700/60'
+                        }`}
+                      >
+                        {idx + 1}
+                      </span>
+                    )}
+                    <span className="truncate leading-tight font-black">{item.leftText}</span>
+                  </div>
+
+                  {/* Terminal Node Port */}
+                  <span className="shrink-0 flex items-center">
+                    {isCorrect ? (
+                      <CheckCircle2 size={18} className="text-emerald-400" />
+                    ) : isWrong ? (
+                      <AlertCircle size={18} className="text-rose-400" />
+                    ) : (
+                      <span
+                        className={`w-3.5 h-3.5 rounded-full border-2 transition-all ${
+                          isSelected
+                            ? isPurple
+                              ? 'bg-cyan-400 border-white ring-4 ring-cyan-400/60 animate-ping'
+                              : 'bg-amber-400 border-white ring-4 ring-amber-400/60 animate-ping'
+                            : connectedRightId
+                            ? isPurple
+                              ? 'bg-cyan-400 border-cyan-300'
+                              : 'bg-amber-400 border-amber-300'
+                            : 'bg-slate-800 border-slate-600'
+                        }`}
+                      />
                     )}
                   </span>
-                )}
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* KOLOM KANAN: Terminal Pemanfaatan / Reseptor Energi */}
+          <div className="flex flex-col gap-2 sm:gap-2.5">
+            <div className="flex items-center gap-2 px-1 mb-0.5 justify-end">
+              <span
+                className={`text-[10px] sm:text-xs font-black uppercase tracking-wider ${
+                  isPurple ? 'text-indigo-300' : 'text-teal-300'
+                }`}
+              >
+                {rightColumnHeader}
+              </span>
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isPurple ? 'bg-indigo-400' : 'bg-teal-400'
+                } animate-ping`}
+              />
+            </div>
+
+            {rightItems.map((item) => {
+              const connectedLeftId = Object.keys(connections).find(
+                (k) => connections[k] === item.id
+              );
+              const isConnected = !!connectedLeftId;
+              const isCorrect = checkedState && connectedLeftId === item.id;
+              const isWrong = checkedState && connectedLeftId && connectedLeftId !== item.id;
+
+              return (
+                <button
+                  key={`right-${item.id}`}
+                  ref={(el) => {
+                    rightRefs.current[item.id] = el;
+                  }}
+                  type="button"
+                  onClick={() => handleSelectRight(item.id)}
+                  className={`group relative w-full min-h-[50px] sm:min-h-[56px] px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl text-left border-2 transition-all flex items-center justify-between font-extrabold text-xs sm:text-sm cursor-pointer select-none active:scale-[0.98] ${
+                    isCorrect
+                      ? 'border-emerald-400 bg-emerald-950/90 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                      : isWrong
+                      ? 'border-rose-400 bg-rose-950/90 text-rose-100 shadow-[0_0_20px_rgba(244,63,94,0.35)]'
+                      : selectedLeftId
+                      ? isPurple
+                        ? 'border-cyan-400/80 bg-slate-900/90 text-cyan-100 hover:ring-2 hover:ring-cyan-300'
+                        : 'border-amber-400/80 bg-slate-900/90 text-amber-100 hover:ring-2 hover:ring-amber-300'
+                      : isConnected
+                      ? isPurple
+                        ? 'border-indigo-400/70 bg-slate-900/90 text-indigo-100'
+                        : 'border-emerald-400/70 bg-slate-900/90 text-emerald-100'
+                      : isPurple
+                      ? 'border-purple-600/40 bg-slate-950/80 text-slate-200 hover:border-indigo-400/70 hover:bg-slate-900/90'
+                      : 'border-teal-700/40 bg-slate-950/80 text-slate-200 hover:border-emerald-400/70 hover:bg-slate-900/90'
+                  }`}
+                >
+                  {/* Left Receptor Port */}
+                  <span className="shrink-0 flex items-center mr-2.5">
+                    {isCorrect ? (
+                      <CheckCircle2 size={18} className="text-emerald-400" />
+                    ) : isWrong ? (
+                      <AlertCircle size={18} className="text-rose-400" />
+                    ) : (
+                      <span
+                        className={`w-3.5 h-3.5 rounded-full border-2 transition-all ${
+                          isConnected
+                            ? isPurple
+                              ? 'bg-cyan-400 border-cyan-300 ring-2 ring-cyan-400/40'
+                              : 'bg-amber-400 border-amber-300 ring-2 ring-amber-400/40'
+                            : selectedLeftId
+                            ? 'bg-slate-700 border-amber-300 animate-pulse'
+                            : 'bg-slate-800 border-slate-600'
+                        }`}
+                      />
+                    )}
+                  </span>
+
+                  {/* Receptor Label */}
+                  <span className="flex-1 truncate leading-tight font-black">{item.rightText}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Umpan Balik Hasil Validasi */}
-      {checkedState && (
-        <div
-          className={`w-full max-w-md my-2 sm:my-3 p-3 rounded-2xl border-2 text-center text-xs sm:text-sm font-bold flex items-center justify-center gap-2 z-20 shadow-md animate-in fade-in duration-200 ${
-            isSuccess
-              ? 'bg-emerald-100 border-emerald-400 text-emerald-950'
-              : 'bg-rose-100 border-rose-400 text-rose-950'
-          }`}
-        >
-          {isSuccess ? (
-            <>
-              <CheckCircle2 size={18} className="text-emerald-700 shrink-0" />
-              <span>Luar biasa! Seluruh pasangan berhasil dijodohkan dengan tepat!</span>
-            </>
+      {/* ── ACTION CONTROLS HUD DOCK (MIN 48PX CHUNKY BUTTONS) ─── */}
+      <div className="relative z-30 px-3 sm:px-5 py-2 shrink-0 flex flex-wrap items-center justify-between gap-2 border-t border-emerald-800/40">
+        {/* Left: Tips / Feedback */}
+        <div className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-amber-200/80">
+          {checkedState ? (
+            isSuccess ? (
+              <span className="text-emerald-300 flex items-center gap-1 font-extrabold">
+                <CheckCircle2 size={14} className="text-emerald-400" />
+                Luar biasa! Seluruh pasangan berhasil dijodohkan dengan tepat!
+              </span>
+            ) : (
+              <span className="text-rose-300 flex items-center gap-1 font-extrabold">
+                <AlertCircle size={14} className="text-rose-400" />
+                Beberapa sambungan belum tepat. Coba periksa garis merah!
+              </span>
+            )
           ) : (
-            <>
-              <AlertCircle size={18} className="text-rose-700 shrink-0" />
-              <span>Beberapa pasangan belum tepat atau belum tersambung. Coba periksa garis merah!</span>
-            </>
+            <span>
+              💡 <em>Pilih terminal di Kolom A lalu sambungkan ke Kolom B.</em>
+            </span>
           )}
         </div>
-      )}
 
-      {/* Action Buttons Bawah */}
-      <div className="flex items-center gap-3 mt-3 w-full max-w-md justify-center z-20 shrink-0">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="flex-1 py-2.5 sm:py-3 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 border-2 border-b-4 border-slate-300 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all"
-        >
-          <RotateCcw size={16} />
-          <span>Reset Garis</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 sm:gap-3 ml-auto w-full sm:w-auto justify-end">
+          {/* Tombol Reset */}
+          <button
+            type="button"
+            onClick={handleReset}
+            className="min-h-[46px] sm:min-h-[48px] px-4 sm:px-5 rounded-xl sm:rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-amber-200 border-2 border-amber-400/40 shadow-[0_3px_0_rgba(0,0,0,0.4)] active:scale-95 active:translate-y-0.5 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all"
+          >
+            <RotateCcw size={15} />
+            <span>Reset Garis</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={handleCheckMatches}
-          className={`flex-1 py-2.5 sm:py-3 px-4 rounded-2xl ${themeStyle.checkBtn} border-2 border-b-4 border-teal-800 active:translate-y-0.5 active:border-b-2 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg cursor-pointer transition-all`}
-        >
-          <LinkIcon size={16} />
-          <span>Periksa Pasangan</span>
-        </button>
+          {/* Tombol Check Matches */}
+          <button
+            type="button"
+            onClick={handleCheckMatches}
+            disabled={connectedCount === 0}
+            className={`min-h-[46px] sm:min-h-[48px] px-5 sm:px-6 rounded-xl sm:rounded-2xl ${
+              isPurple
+                ? 'bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 text-slate-950 border-2 border-cyan-200 shadow-[0_4px_0_#0891b2] hover:shadow-[0_4px_16px_rgba(6,182,212,0.6)]'
+                : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 border-2 border-amber-300 shadow-[0_4px_0_#b45309] hover:shadow-[0_4px_16px_rgba(251,191,36,0.6)]'
+            } active:scale-95 active:translate-y-0.5 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed`}
+          >
+            <CheckCircle2 size={16} />
+            <span>Periksa Pasangan</span>
+          </button>
+        </div>
       </div>
     </div>
   );
