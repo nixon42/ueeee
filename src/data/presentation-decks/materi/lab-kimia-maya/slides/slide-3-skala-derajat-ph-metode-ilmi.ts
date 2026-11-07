@@ -3,34 +3,34 @@ import { SlideDefinition } from '@/types/presentation';
 export const slide3SkalaDerajatPhMetodeIlmi: SlideDefinition = {
   "id": "lab-slide-3",
   "type": "concept-infographic",
-  "chapterBadge": "BABAK 3: MATERI INTI 2 - SKALA DERAJAT pH",
-  "title": "Skala Derajat pH & Metode Ilmiah",
-  "subtitle": "Konsentrasi ion hidrogen (H+) menentukan sifat keasaman larutan:",
+  "chapterBadge": "BABAK 3: MATERI INTI 2 - SKALA pH & NETRALISASI",
+  "title": "Skala Derajat pH & Reaksi Netralisasi",
+  "subtitle": "Keseimbangan konsentrasi ion H⁺ vs OH⁻ menentukan sifat asam, netral, dan basa:",
   "cards": [
     {
       "id": "card-p1",
-      "levelBadge": "pH < 7",
+      "levelBadge": "pH 0 - 6 (Asam)",
       "badgeColor": "rose",
-      "iconEmoji": "🍋",
-      "title": "Larutan Asam (Kaya H+)",
-      "description": "Memiliki rasa masam, bersifat elektrolit korosif terhadap logam, dan mengubah kertas lakmus biru menjadi merah."
+      "iconEmoji": "🧪",
+      "title": "Skala pH: Derajat Keasaman (Kaya H⁺)",
+      "description": "pH (power of Hydrogen) mengukur kepadatan ion H⁺. Nilai pH 0–3 menandakan asam kuat (sangat reaktif), sedangkan pH 4–6 adalah asam lemah. Semakin kecil nilai pH, semakin masif ion H⁺ bebas di dalam larutan."
     },
     {
       "id": "card-p2",
-      "levelBadge": "pH = 7",
-      "badgeColor": "emerald",
-      "iconEmoji": "💧",
-      "title": "Titik Netral Sempurna",
-      "description": "Konsentrasi ion H+ dan OH- setara seimbang. Air murni pada suhu 25°C berada pada pH 7.00, aman bagi sel tubuh makhluk hidup."
+      "levelBadge": "pH 8 - 14 (Basa)",
+      "badgeColor": "purple",
+      "iconEmoji": "🧼",
+      "title": "Zat Basa: Penyeimbang Asam (Kaya OH⁻)",
+      "description": "Basa melepaskan ion Hidroksida (OH⁻) saat larut dalam air. Terasa licin di kulit (saponifikasi) dan mengubah lakmus merah menjadi biru. Contoh nyata: sabun mandi (NaOH), pasta gigi, dan obat antasida lambung (Mg(OH)₂)."
     },
     {
       "id": "card-p3",
-      "levelBadge": "pH > 7",
-      "badgeColor": "purple",
-      "iconEmoji": "🧼",
-      "title": "Larutan Basa (Kaya OH-)",
-      "description": "Terasa licin di kulit (saponifikasi), berasa pahit, mereduksi keasaman, dan mengubah kertas lakmus merah menjadi biru."
+      "levelBadge": "pH 7 (Netral)",
+      "badgeColor": "emerald",
+      "iconEmoji": "💧",
+      "title": "Reaksi Netralisasi: H⁺ + OH⁻ ➔ H₂O",
+      "description": "Reaksi netralisasi terjadi saat asam bereaksi dengan basa membentuk air murni (H₂O) dan garam mineral (seperti NaCl). Contoh sehari-hari: obat maag antasida yang basa menetralkan kelebihan asam klorida (HCl) di lambung!"
     }
   ],
-  "teacherNotes": "Peringatkan siswa secara tegas: Jangan pernah mencicipi atau menghirup zat kimia secara langsung untuk menguji sifat asam-basa!"
+  "teacherNotes": "Ajak siswa mengamati label kemasan obat maag: Bahan aktif magnesium hidroksida adalah basa yang bertugas menetralkan asam lambung berlebih."
 };

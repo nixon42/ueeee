@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, Sparkles, FlaskConical } from 'lucide-react';
+import { Play, Pause, Sparkles } from 'lucide-react';
 import { ConceptInfographicSlide as ConceptSlideData } from '@/types/presentation';
 import { PresentationThemeKey } from '@/lib/presentation-themes';
 import { sound } from '@/lib/sound';
@@ -8,6 +8,8 @@ import { HydrologyCycleStage } from '../stages/HydrologyCycleStage';
 import { PhotosynthesisPlantStage } from '../stages/PhotosynthesisPlantStage';
 import { SolarSystemOrbitStage } from '../stages/SolarSystemOrbitStage';
 import { EclipseMechanicsStage } from '../stages/EclipseMechanicsStage';
+import { AcidBaseReactorStage } from '../stages/AcidBaseReactorStage';
+import { AcidNatureCorrosionStage } from '../stages/AcidNatureCorrosionStage';
 
 export interface ConceptInfographicSlideProps {
   slide: ConceptSlideData;
@@ -57,24 +59,6 @@ const PHASE_THEMES: Record<
   },
 };
 
-const PH_SCALE_CHIPS = [
-  { ph: 0, label: 'Asam Kuat Ekstrem', color: '#ef4444', type: 'asam' },
-  { ph: 1, label: 'Asam Lambung', color: '#f87171', type: 'asam' },
-  { ph: 2, label: 'Jus Lemon', color: '#fb923c', type: 'asam' },
-  { ph: 3, label: 'Cuka Dapur', color: '#f59e0b', type: 'asam' },
-  { ph: 4, label: 'Jus Tomat', color: '#fbbf24', type: 'asam' },
-  { ph: 5, label: 'Kopi Hitam', color: '#facc15', type: 'asam' },
-  { ph: 6, label: 'Susu Murni', color: '#a3e635', type: 'asam' },
-  { ph: 7, label: 'Air Murni (Netral)', color: '#4ade80', type: 'netral' },
-  { ph: 8, label: 'Air Laut / Telur', color: '#2dd4bf', type: 'basa' },
-  { ph: 9, label: 'Baking Soda', color: '#38bdf8', type: 'basa' },
-  { ph: 10, label: 'Obat Maag', color: '#60a5fa', type: 'basa' },
-  { ph: 11, label: 'Amonia Pembersih', color: '#818cf8', type: 'basa' },
-  { ph: 12, label: 'Air Sabun', color: '#a78bfa', type: 'basa' },
-  { ph: 13, label: 'Pemutih Pakaian', color: '#c084fc', type: 'basa' },
-  { ph: 14, label: 'Pembersih Saluran', color: '#e879f9', type: 'basa' },
-];
-
 export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = ({
   slide,
   themeColor = 'emerald',
@@ -83,7 +67,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const cards = slide.cards ?? [];
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [selectedPh, setSelectedPh] = useState<number>(7);
 
   // Determine specialized interactive simulation stage
   const slideTitleLower = slide.title.toLowerCase();
@@ -105,6 +88,11 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
     slide.id === 'tatasurya-slide-4' ||
     slideTitleLower.includes('gerhana') ||
     slideTitleLower.includes('mekanika orbit');
+
+  const isAcidNatureSlide =
+    slide.id === 'lab-slide-2' ||
+    slideTitleLower.includes('hakikat') ||
+    slideTitleLower.includes('korosif');
 
   const isChemistryLab =
     gameId === 'point-click-lab' ||
@@ -130,8 +118,6 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
   const activeTheme =
     PHASE_THEMES[activeCard?.badgeColor ?? (isTeal ? 'teal' : 'amber')] ?? PHASE_THEMES.amber;
 
-  const currentPhInfo = PH_SCALE_CHIPS.find((p) => p.ph === selectedPh) || PH_SCALE_CHIPS[7];
-
   const toggleAutoPlay = () => {
     sound.playClick();
     setIsPlaying((prev) => !prev);
@@ -139,15 +125,26 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
 
   const getMechanismCallout = (idx: number) => {
     if (isChemistryLab) {
+      if (slideTitleLower.includes('hakikat') || slide.id === 'lab-slide-2') {
+        switch (idx) {
+          case 0:
+            return 'Hakikat Asam: Zat melepaskan ion Hidrogen (H⁺) saat dilarutkan dalam air. Semakin banyak ion H⁺ bebas, tingkat keasaman semakin tinggi (pH < 7).';
+          case 1:
+            return 'Asam Kuat vs Lemah: Asam Kuat (HCl, H₂SO₄) terurai sempurna 100% dan reaktif. Asam Lemah (asam sitrat jeruk & cuka CH₃COOH) terurai sebagian kecil.';
+          case 2:
+            return 'Bahaya Asam & Korosi: Asam pekat merusak kulit & melarutkan logam. Gas SO₂/NOₓ memicu Hujan Asam (pH < 5.6). Dilarang mencicipi zat kimia di kelas!';
+          default:
+            return 'Penyelidikan sifat asam berfokus pada pelepasan ion H⁺ dan pengujian indikator lakmus.';
+        }
+      }
+      // Slide 3 or general chemistry
       switch (idx) {
         case 0:
-          return 'Larutan Asam: Menghasilkan ion hidrogen (H+) saat dilarutkan dalam air, pH < 7, mengubah lakmus biru jadi merah.';
+          return 'Skala Derajat pH (0-6): Derajat keasaman berbasis konsentrasi ion H⁺. Nilai pH 0–3 adalah asam kuat korosif, sedangkan pH 4–6 adalah asam lemah.';
         case 1:
-          return 'Larutan Netral: Konsentrasi H+ seimbang dengan OH-, pH tepat 7, tidak mengubah warna kertas lakmus.';
+          return 'Zat Basa (8-14): Melepaskan ion Hidroksida (OH⁻), terasa licin (saponifikasi minyak kulit), dan mengubah kertas lakmus merah jadi biru.';
         case 2:
-          return 'Larutan Basa: Menghasilkan ion hidroksida (OH-), pH > 7, licin di kulit, mengubah lakmus merah jadi biru.';
-        case 3:
-          return 'Reaksi Netralisasi: Asam bereaksi dengan Basa menghasilkan garam mineral (NaCl) dan molekul air murni (H2O).';
+          return 'Reaksi Netralisasi (pH 7): H⁺ + OH⁻ ➔ H₂O (Air Murni) + Garam. Obat maag antasida Mg(OH)₂ menetralkan lonjakan asam lambung HCl!';
         default:
           return 'Spektrum pH 0-14 menentukan tingkat keasaman atau kebasaan analit laboratorium.';
       }
@@ -278,7 +275,9 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                 }
               />
               <span className="hidden sm:inline">
-                {isChemistryLab
+                {isAcidNatureSlide
+                  ? 'Putar Hakikat'
+                  : isChemistryLab
                   ? 'Putar Titrasi'
                   : isHydrologySlide
                   ? 'Putar Siklus'
@@ -340,99 +339,28 @@ export const ConceptInfographicSlide: React.FC<ConceptInfographicSlideProps> = (
                 setSelectedIdx(idx);
               }}
             />
+          ) : isAcidNatureSlide ? (
+            /* Molecular Dissociation & Corrosion Apparatus for Slide 2 */
+            <AcidNatureCorrosionStage
+              activePhase={selectedIdx}
+              isPlaying={isPlaying}
+              slideId={slide.id}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
           ) : isChemistryLab ? (
             /* Interactive Universal pH 0-14 Reactor Console for Dr. Maya */
-            <div className="w-full h-full flex flex-col justify-between p-3 sm:p-4 bg-gradient-to-b from-slate-950 via-teal-950/30 to-slate-950 relative overflow-hidden">
-              <div className="flex items-center justify-between z-10">
-                <div className="flex items-center gap-2">
-                  <span className="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center justify-center font-bold">
-                    <FlaskConical size={16} />
-                  </span>
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-black text-white">
-                      Spektrum Reaktor pH Universal
-                    </h3>
-                    <p className="text-[10px] sm:text-[11px] text-teal-300/80 font-medium">
-                      Pilih nilai pH di bawah untuk mengamati perubahan warna indikator analit
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="px-2.5 py-0.5 rounded-lg text-[11px] font-black uppercase tracking-wider border shadow-sm"
-                  style={{
-                    backgroundColor: `${currentPhInfo.color}25`,
-                    borderColor: currentPhInfo.color,
-                    color: currentPhInfo.color,
-                  }}
-                >
-                  pH {currentPhInfo.ph} : {currentPhInfo.type.toUpperCase()}
-                </div>
-              </div>
-
-              {/* Dynamic Flask Display */}
-              <div className="flex-1 flex flex-col items-center justify-center py-2 z-10">
-                <div
-                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center transition-all duration-300 border-4 shadow-lg"
-                  style={{
-                    borderColor: currentPhInfo.color,
-                    backgroundColor: `${currentPhInfo.color}30`,
-                    boxShadow: `0 0 35px ${currentPhInfo.color}55`,
-                  }}
-                >
-                  <FlaskConical
-                    size={46}
-                    style={{ color: currentPhInfo.color }}
-                    className="transition-transform duration-300 hover:scale-110 drop-shadow"
-                  />
-                </div>
-                <div className="mt-2 text-center">
-                  <div className="text-sm sm:text-base font-black text-white">
-                    {currentPhInfo.label}
-                  </div>
-                  <div className="text-[10.5px] sm:text-xs text-slate-300">
-                    {currentPhInfo.type === 'asam'
-                      ? 'Kaya ion H⁺ • Lakmus Biru ➔ Merah'
-                      : currentPhInfo.type === 'basa'
-                      ? 'Kaya ion OH⁻ • Lakmus Merah ➔ Biru'
-                      : 'H⁺ = OH⁻ • Titik Ekuivalen Netral'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Universal Scale Bar Dock */}
-              <div className="bg-slate-900/90 border border-teal-500/30 rounded-xl p-1.5 sm:p-2 z-10">
-                <div className="flex items-center justify-between text-[9px] font-extrabold uppercase tracking-wider mb-1 px-1">
-                  <span className="text-rose-400">◀ Asam (0)</span>
-                  <span className="text-emerald-400">Netral (7)</span>
-                  <span className="text-purple-400">Basa (14) ▶</span>
-                </div>
-                <div className="grid grid-cols-15 gap-1">
-                  {PH_SCALE_CHIPS.map((p) => {
-                    const isSelected = selectedPh === p.ph;
-                    return (
-                      <button
-                        key={p.ph}
-                        type="button"
-                        onClick={() => {
-                          sound.playClick();
-                          setSelectedPh(p.ph);
-                        }}
-                        style={{ backgroundColor: p.color }}
-                        className={`h-7 sm:h-8 rounded flex items-center justify-center text-[10px] font-black text-slate-950 transition-all ${
-                          isSelected
-                            ? 'ring-2 ring-white scale-110 z-20 shadow-[0_0_10px_white]'
-                            : 'opacity-85 hover:opacity-100 hover:scale-105'
-                        }`}
-                        title={`pH ${p.ph}: ${p.label}`}
-                      >
-                        {p.ph}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            <AcidBaseReactorStage
+              activePhase={selectedIdx}
+              isPlaying={isPlaying}
+              slideId={slide.id}
+              onSelectPhase={(idx) => {
+                setIsPlaying(false);
+                setSelectedIdx(idx);
+              }}
+            />
           ) : FallbackIllustration ? (
             <div className="w-full h-full p-2 flex items-center justify-center">
               <FallbackIllustration className="w-full h-full object-contain" />
