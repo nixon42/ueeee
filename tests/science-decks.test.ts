@@ -239,6 +239,21 @@ describe('Milestone 2: Science & Lab Curriculum Presentation Decks Verification'
           expect(pair.rightText.length).toBeGreaterThan(0);
         });
       }
+
+      // Slide 6: Story Resolution & Consolidated HOTS Reflection
+      const slide6 = deck.slides[5];
+      expect(slide6.type).toBe('story-resolution');
+      if (slide6.type === 'story-resolution') {
+        expect(slide6.sparkCards).toBeDefined();
+        expect(slide6.sparkCards?.length).toBe(3);
+        expect(slide6.mentorPrompt).toContain('Kak Galih');
+        expect(slide6.victoryButtonText).toContain('Selesaikan Ekspedisi & Rayakan!');
+        slide6.sparkCards?.forEach((card, idx) => {
+          expect(card.number).toBe(idx + 1);
+          expect(card.title.length).toBeGreaterThan(3);
+          expect(card.question.length).toBeGreaterThan(15);
+        });
+      }
     });
 
     test('Deck 2 (point-click-lab): K3 match, scientific method sequence, and litmus flashcards', () => {
