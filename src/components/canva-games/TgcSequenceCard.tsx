@@ -189,7 +189,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
   }
 
   // 5. Metode Ilmiah - 1. Observasi Fenomena
-  if (id.includes('m1') || id.includes('observasi') || label.includes('observasi')) {
+  if (id === 'm1' || id === 'metode-1' || id.includes('observasi') || label.includes('observasi')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <defs>
@@ -229,7 +229,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
   }
 
   // 6. Metode Ilmiah - 2. Perumusan Masalah
-  if (id.includes('m2') || id.includes('masalah') || label.includes('masalah')) {
+  if (id === 'm2' || id === 'metode-2' || id.includes('masalah') || label.includes('masalah')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <defs>
@@ -263,7 +263,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
   }
 
   // 7. Metode Ilmiah - 3. Pengajuan Hipotesis
-  if (id.includes('m3') || id.includes('hipotesis') || label.includes('hipotesis')) {
+  if (id === 'm3' || id === 'metode-3' || id.includes('hipotesis') || label.includes('hipotesis')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <defs>
@@ -303,7 +303,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
   }
 
   // 8. Metode Ilmiah - 4. Eksperimen Terkontrol
-  if (id.includes('m4') || id.includes('eksperimen') || label.includes('eksperimen')) {
+  if (id === 'm4' || id === 'metode-4' || id.includes('eksperimen') || label.includes('eksperimen')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <defs>
@@ -343,7 +343,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
   }
 
   // 9. Metode Ilmiah - 5. Analisis & Kesimpulan
-  if (id.includes('m5') || id.includes('kesimpulan') || label.includes('kesimpulan') || label.includes('analisis')) {
+  if (id === 'm5' || id === 'metode-5' || id.includes('kesimpulan') || label.includes('kesimpulan') || label.includes('analisis')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <defs>
@@ -433,8 +433,8 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
     );
   }
 
-  // Bumi (p3)
-  if (id === 'p3' || label.includes('bumi')) {
+  // Bumi (p3) - Planet Ketiga Tata Surya
+  if (id === 'p3' || (label.includes('bumi') && !label.includes('umbra'))) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <rect width="200" height="130" fill="#030712" />
@@ -704,7 +704,7 @@ export const TgcCardArtwork: React.FC<{ item: SequenceItem; theme?: SequenceThem
   }
 
   // Bumi / Umbra (gm3) - Zona Gerhana Total & Diamond Ring
-  if (id === 'gm3' || label.includes('umbra') || label.includes('bumi (daerah umbra)')) {
+  if (id === 'gm3' || label.includes('umbra') || label.includes('zona umbra') || label.includes('bumi (daerah umbra)')) {
     return (
       <svg viewBox="0 0 200 130" className="w-full h-full object-cover" fill="none">
         <rect width="200" height="130" fill="#010206" />
