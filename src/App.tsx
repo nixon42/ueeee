@@ -19,6 +19,7 @@ const UlarTanggaModal = lazy(() => import('@/games/ular-tangga/UlarTanggaModal')
 const PointAndClickModal = lazy(() => import('@/games/point-and-click/PointAndClickModal').then(m => ({ default: m.PointAndClickModal })));
 const PuzzleModal = lazy(() => import('@/games/puzzle/PuzzleModal').then(m => ({ default: m.PuzzleModal })));
 const ChessPuzzleModal = lazy(() => import('@/games/chess-puzzle').then(m => ({ default: m.ChessPuzzleModal })));
+const MarioDeskripsiModal = lazy(() => import('@/games/mario-deskripsi').then(m => ({ default: m.MarioDeskripsiModal })));
 const InteractiveStoryPresentationModal = lazy(() => import('@/components/canva-games').then(m => ({ default: m.InteractiveStoryPresentationModal })));
 const PrologModal = lazy(() => import('@/components/dashboard/PrologModal').then(m => ({ default: m.PrologModal })));
 const SuperadminModal = lazy(() => import('@/components/dashboard/SuperadminModal').then(m => ({ default: m.SuperadminModal })));
@@ -115,6 +116,7 @@ export default function App() {
   const [activePointAndClickScene, setActivePointAndClickScene] = useState<string>('lab-sains');
   const [isPuzzleOpen, setIsPuzzleOpen] = useState<boolean>(false);
   const [isChessOpen, setIsChessOpen] = useState<boolean>(false);
+  const [isMarioDeskripsiOpen, setIsMarioDeskripsiOpen] = useState<boolean>(false);
   const [isPresentationOpen, setIsPresentationOpen] = useState<boolean>(false);
   const [activePresentationDeck, setActivePresentationDeck] = useState<PresentationDeckData | null>(null);
   const [presentationInitialSlide, setPresentationInitialSlide] = useState<number>(1);
@@ -150,6 +152,8 @@ export default function App() {
           const pathSlide = parseInt(segments[2], 10);
           if (!isNaN(pathSlide) && pathSlide >= 1) slide = pathSlide;
         }
+      } else if (segments[0] === 'mario-teks-deskripsi' || segments[0] === 'petualangan-teks-deskripsi') {
+        gameId = 'mario-teks-deskripsi';
       } else {
         const match = GAMES_CATALOG.find(g => g.id === segments[0]);
         if (match) {
@@ -236,7 +240,12 @@ export default function App() {
   useEffect(() => {
     const route = parseCurrentRoute();
 
-    if (route.gameId) {
+    if (route.gameId === 'mario-teks-deskripsi' || route.gameId === 'petualangan-teks-deskripsi') {
+      setIsMarioDeskripsiOpen(true);
+      if (typeof document !== 'undefined') {
+        document.title = 'Super Mario: Petualangan Teks Deskripsi Kelas 7 | UEEEE Game Edukasi Interaktif';
+      }
+    } else if (route.gameId) {
       const match = GAMES_CATALOG.find(g => g.id === route.gameId);
       if (match) {
         openGameDirectly(match, route.mode, route.slide);
@@ -257,6 +266,10 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const route = parseCurrentRoute();
+      if (route.gameId === 'mario-teks-deskripsi' || route.gameId === 'petualangan-teks-deskripsi') {
+        setIsMarioDeskripsiOpen(true);
+        return;
+      }
       if (route.gameId) {
         const match = GAMES_CATALOG.find(g => g.id === route.gameId);
         if (match) {
@@ -266,6 +279,7 @@ export default function App() {
       }
 
       // Close all modals when returning to root
+      setIsMarioDeskripsiOpen(false);
       setIsPresentationOpen(false);
       setActivePresentationDeck(null);
       setIsUlarTanggaOpen(false);
@@ -320,7 +334,29 @@ export default function App() {
     openGameDirectly(game, mode, initialSlide);
   };
 
-  const closeGameModal = (which: 'ular' | 'point' | 'puzzle' | 'chess' | 'presentation') => {
+  const launchMarioDeskripsi = () => {
+    recordRecentPlay('mario-teks-deskripsi');
+    recordPlay('mario-teks-deskripsi').catch(() => {});
+    if (typeof window !== 'undefined' && window.location && window.history) {
+      try {
+        const url = new URL(window.location.href);
+        url.pathname = '/game/mario-teks-deskripsi';
+        url.searchParams.delete('game');
+        url.searchParams.delete('mode');
+        url.searchParams.delete('slide');
+        window.history.pushState({ gameId: 'mario-teks-deskripsi' }, '', url.toString());
+      } catch {
+        // Safe fallback
+      }
+    }
+    setIsMarioDeskripsiOpen(true);
+    if (typeof document !== 'undefined') {
+      document.title = 'Super Mario: Petualangan Teks Deskripsi Kelas 7 | UEEEE Game Edukasi Interaktif';
+    }
+  };
+
+  const closeGameModal = (which: 'ular' | 'point' | 'puzzle' | 'chess' | 'presentation' | 'mario') => {
+    if (which === 'mario') setIsMarioDeskripsiOpen(false);
     if (which === 'ular') setIsUlarTanggaOpen(false);
     if (which === 'point') setIsPointAndClickOpen(false);
     if (which === 'puzzle') setIsPuzzleOpen(false);
@@ -486,6 +522,7 @@ export default function App() {
         {/* Canva Feature Banner Cards */}
         {!searchQuery && selectedCategory === 'all' && selectedGrade === 'Semua Kelas' && activeTab === 'all' && (
           <FeaturedBanner
+            onPlayMarioDeskripsi={launchMarioDeskripsi}
             onPlayUlarTangga={() => {
               const game = GAMES_CATALOG.find(g => g.id === 'ular-tangga-sains');
               if (game) launchGame(game, 'presentation');
@@ -562,6 +599,12 @@ export default function App() {
           <ChessPuzzleModal
             isOpen={isChessOpen}
             onClose={() => closeGameModal('chess')}
+          />
+        )}
+        {isMarioDeskripsiOpen && (
+          <MarioDeskripsiModal
+            isOpen={isMarioDeskripsiOpen}
+            onClose={() => closeGameModal('mario')}
           />
         )}
         {isPresentationOpen && (
