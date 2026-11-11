@@ -116,6 +116,26 @@ function runPrerender() {
     console.log(`✓ Generated static route: /game/${game.id} & /${game.id}`);
   }
 
+  // 2b. Generate static route for Mario Teks Deskripsi (Bahasa Indonesia Kelas 7)
+  const marioUrl = `https://ueeee.my.id/game/mario-teks-deskripsi`;
+  const marioTitle = `Super Mario: Petualangan Teks Deskripsi Kelas 7 | UEEEE Game Edukasi Interaktif`;
+  const marioDesc = `Game platformer edukasi mirip Mario untuk materi Teks Deskripsi SMP Kelas 7. Mainkan 3 tokoh berbeda (Rian, Maya, Bimo), sundul balok misteri, dan selesaikan tantangan kebahasaan!`;
+
+  let marioHtml = baseHtml
+    .replace(/<title>.*?<\/title>/i, `<title>${marioTitle}</title>`)
+    .replace(/<meta\s+name="title"\s+content=".*?"\s*\/>/i, `<meta name="title" content="${marioTitle}" />`)
+    .replace(/<meta\s+name="description"\s+content=".*?"\s*\/>/i, `<meta name="description" content="${marioDesc}" />`)
+    .replace(/<link\s+rel="canonical"\s+href=".*?"\s*\/>/i, `<link rel="canonical" href="${marioUrl}" />`);
+
+  const marioGameDir = path.join(DIST_DIR, 'game', 'mario-teks-deskripsi');
+  fs.mkdirSync(marioGameDir, { recursive: true });
+  fs.writeFileSync(path.join(marioGameDir, 'index.html'), marioHtml, 'utf-8');
+
+  const marioDirectDir = path.join(DIST_DIR, 'mario-teks-deskripsi');
+  fs.mkdirSync(marioDirectDir, { recursive: true });
+  fs.writeFileSync(path.join(marioDirectDir, 'index.html'), marioHtml, 'utf-8');
+  console.log('✓ Generated static route: /game/mario-teks-deskripsi & /mario-teks-deskripsi');
+
   // 3. Generate static route for /admin and /superadmin
   const adminDir = path.join(DIST_DIR, 'admin');
   fs.mkdirSync(adminDir, { recursive: true });
